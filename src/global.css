@@ -1,9 +1,41 @@
-:root {
-  --font-display:
-    Spline Sans, Inter, ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji,
-    Segoe UI Symbol, Noto Color Emoji;
-  --font-mono:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
-  --font-rounded: 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif;
-  --font-serif: Georgia, 'Times New Roman', serif;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+
+@import "nativewind/theme";
+
+@theme {
+  --color-accent: #059669;
+  --color-accent-pressed: #047857;
+
+  --font-satoshi-light: "Satoshi-Light";
+  --font-satoshi: "Satoshi-Regular";
+  --font-satoshi-medium: "Satoshi-Medium";
+  --font-satoshi-bold: "Satoshi-Bold";
+  --font-satoshi-black: "Satoshi-Black";
+}
+
+@utility bg-primary {
+  background-color: var(--color-neutral-100);
+  @variant dark {
+    background-color: var(--color-neutral-950);
+  }
+}
+
+@utility text-primary {
+  color: var(--color-black);
+  @variant dark {
+    color: var(--color-white);
+  }
+}
+
+@utility bg-secundary {
+  background-color: var(--color-white);
+  @variant dark {
+    background-color: var(--color-neutral-900);
+  }
+}
+
+@utility text-secundary {
+  color: var(--color-neutral-400);
 }
