@@ -66,7 +66,7 @@ export const HorizontalCalendar = ({selected, onSelect}: HorizontalCalendarProps
 
   return (
     <View className="gap-3">
-      <Text className="font-satoshi-bold text-3xl tracking-tight text-primary">
+      <Text className="font-satoshi-bold text-3xl tracking-tight">
         {monthLabel}
       </Text>
 
@@ -112,9 +112,7 @@ export const HorizontalCalendar = ({selected, onSelect}: HorizontalCalendarProps
                     'font-satoshi-medium',
                     active
                       ? 'text-white dark:text-black'
-                      : isToday
-                        ? 'text-accent dark:text-emerald-400'
-                        : 'text-primary',
+                      : isToday && 'text-accent dark:text-teal-400',
                   )}
                 >
                   {item.getDate()}

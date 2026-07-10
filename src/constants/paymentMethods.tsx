@@ -1,32 +1,78 @@
-import Svg, {Circle} from 'react-native-svg';
-import {IconBrandVisa, IconBuildingBank, IconCash} from '@tabler/icons-react-native';
+import {
+  IconBuildingBank,
+  IconCash,
+  IconCreditCard,
+  IconCreditCardFilled,
+  IconDeviceMobile,
+  IconGift,
+  IconNotes,
+  IconQrcode,
+  type Icon as TablerIcon,
+} from '@tabler/icons-react-native';
 
 type IconProps = {size?: number};
 
-const CashIcon = ({size = 24}: IconProps) => <IconCash size={size} color="#16a34a" />;
-
-const TransferIcon = ({size = 24}: IconProps) => <IconBuildingBank size={size} color="#2563eb" />;
-
-const VisaIcon = ({size = 24}: IconProps) => <IconBrandVisa size={size} color="#1a1f71" />;
-
-const MastercardIcon = ({size = 24}: IconProps) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24">
-    <Circle cx={9} cy={12} r={7} fill="#eb001b" />
-    <Circle cx={15} cy={12} r={7} fill="#f79e1b" fillOpacity={0.9} />
-  </Svg>
-);
+const makeIcon = (Icon: TablerIcon, color: string) => {
+  const MethodIcon = ({size = 24}: IconProps) => <Icon size={size} color={color} />;
+  return MethodIcon;
+};
 
 export type PaymentMethod = {
   id: string;
   label: string;
+  description: string;
   Icon: (props: IconProps) => React.JSX.Element;
 };
 
 export const PAYMENT_METHODS: PaymentMethod[] = [
-  {id: 'cash', label: 'Efectivo', Icon: CashIcon},
-  {id: 'transfer', label: 'Transferencia', Icon: TransferIcon},
-  {id: 'visa', label: 'Visa', Icon: VisaIcon},
-  {id: 'mastercard', label: 'Mastercard', Icon: MastercardIcon},
+  {
+    id: 'cash',
+    label: 'Efectivo',
+    description: 'Pagaste en efectivo',
+    Icon: makeIcon(IconCash, '#16a34a'),
+  },
+  {
+    id: 'debit',
+    label: 'Tarjeta de débito',
+    description: 'Pago con débito',
+    Icon: makeIcon(IconCreditCard, '#2563eb'),
+  },
+  {
+    id: 'credit',
+    label: 'Tarjeta de crédito',
+    description: 'Pago con crédito',
+    Icon: makeIcon(IconCreditCardFilled, '#7c3aed'),
+  },
+  {
+    id: 'transfer',
+    label: 'Transferencia bancaria',
+    description: 'Transferencia entre cuentas',
+    Icon: makeIcon(IconBuildingBank, '#0891b2'),
+  },
+  {
+    id: 'wallet',
+    label: 'Billetera digital',
+    description: 'Nequi, Daviplata, etc.',
+    Icon: makeIcon(IconDeviceMobile, '#db2777'),
+  },
+  {
+    id: 'qr',
+    label: 'QR',
+    description: 'Pago mediante código QR',
+    Icon: makeIcon(IconQrcode, '#ea580c'),
+  },
+  {
+    id: 'voucher',
+    label: 'Bono o vale',
+    description: 'Bonos o tarjetas regalo',
+    Icon: makeIcon(IconGift, '#d97706'),
+  },
+  {
+    id: 'other',
+    label: 'Otro',
+    description: 'Cualquier otro método',
+    Icon: makeIcon(IconNotes, '#737373'),
+  },
 ];
 
 const BY_ID: Record<string, PaymentMethod> = Object.fromEntries(

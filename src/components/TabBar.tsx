@@ -19,7 +19,7 @@ type TabBarProps = {
 const ICONS: Record<string, number> = {
   home: require('@assets/images/tabIcons/home.png'),
   stats: require('@assets/images/tabIcons/statics.png'),
-  wallet: require('@assets/images/tabIcons/wallet.png'),
+  explore: require('@assets/images/tabIcons/explore.png'),
   profile: require('@assets/images/tabIcons/profile.png'),
 };
 
@@ -68,8 +68,8 @@ export const TabBar = ({state, navigation}: TabBarProps) => {
 
       <Pressable
         onPress={() => navigate('newExpense')}
-        className="w-16 h-16 rounded-full items-center justify-center mx-2 bg-accent active:bg-accent-pressed"
-        style={{boxShadow: '0 6px 16px rgba(5, 200, 105, 0.35)'}}
+        className="w-16 h-16 rounded-full items-center justify-center mx-2 btn-primary"
+        style={{boxShadow: '0 6px 16px rgba(0, 150, 137, 0.35)'}}
       >
         <IconPlus size={26} color="#ffffff" />
       </Pressable>

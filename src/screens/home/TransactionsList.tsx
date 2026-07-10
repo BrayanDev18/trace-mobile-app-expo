@@ -24,17 +24,17 @@ const TransactionRow = ({movement}: {movement: Movement}) => {
       className="flex-row items-center gap-3 px-4 py-2 active:bg-neutral-200 dark:active:bg-white/5"
     >
       <View
-        className="h-14 w-14 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-950"
+        className="h-14 w-14 items-center justify-center rounded-xl bg-tertiary"
       >
         <Icon size={25} color={glyph}/>
       </View>
 
       <View className="flex-1 gap-1">
-        <Text numberOfLines={1} className="font-satoshi-medium text-[17px]">
+        <Text numberOfLines={1} className="font-satoshi-medium text-[16px]">
           {movement.reason}
         </Text>
 
-        <Text numberOfLines={1} className="font-satoshi text-sm text-secundary">
+        <Text numberOfLines={1} className="text-sm text-secundary">
           {relativeDate(date)}
           {method ? ` · ${method.label}` : ''}
         </Text>
@@ -44,14 +44,14 @@ const TransactionRow = ({movement}: {movement: Movement}) => {
         <Text
           className={cn(
             'font-satoshi-medium',
-            isIncome ? 'text-accent dark:text-emerald-400' : 'text-primary',
+            isIncome && 'text-accent dark:text-teal-400',
           )}
           style={{fontVariant: ['tabular-nums']}}
         >
           {isIncome ? '+' : '-'}${formatCurrency(movement.amount)}
         </Text>
 
-        <Text className="font-satoshi text-sm text-secundary">{timeLabel(date)}</Text>
+        <Text className="text-sm text-secundary">{timeLabel(date)}</Text>
       </View>
     </Pressable>
   );
@@ -74,16 +74,16 @@ export const TransactionsList = ({onSeeAll}: TransactionsListProps) => {
           </Text>
 
           <Pressable onPress={onSeeAll} hitSlop={8} className="active:opacity-50">
-            <Text className="text-sm text-accent dark:text-emerald-400">Ver todas</Text>
+            <Text className="text-accent dark:text-teal-400">Ver todas</Text>
           </Pressable>
         </View>
 
         {recent.length === 0 ? (
           <View className="items-center gap-1 px-4 pb-8 pt-4">
-            <Text className="font-satoshi-medium text-secundary">
+            <Text className="font-satoshi-medium text-xl">
               Sin movimientos aún
             </Text>
-            <Text className="text-center font-satoshi text-sm text-neutral-400 dark:text-neutral-600">
+            <Text className="text-center text-secundary text-lg">
               Toca + para registrar tu primer gasto.
             </Text>
           </View>

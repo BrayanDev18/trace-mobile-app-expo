@@ -10,7 +10,7 @@ export default function TabsLayout() {
     >
       <Tabs.Screen name="home" />
       <Tabs.Screen name="stats" />
-      <Tabs.Screen name="wallet" />
+      <Tabs.Screen name="explore" />
       <Tabs.Screen name="profile" />
     </Tabs>
   );

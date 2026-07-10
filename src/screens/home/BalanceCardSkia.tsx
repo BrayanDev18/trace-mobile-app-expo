@@ -53,7 +53,7 @@ half4 main(float2 xy) {
 `)!;
 
 export const BALANCE_PALETTES = {
-  esmeralda: ['#0e5a3a', '#3fae7a', '#041e13', '#0c5033'],
+  esmeralda: ['#022f2e', '#00d5be', '#041e13', '#022f2e'],
   aurora: ['#0f6b43', '#149e8e', '#208aef', '#7bd0a8'],
   atardecer: ['#0f6b43', '#3aa06a', '#f4c24e', '#e6d5a8'],
 } as const;
@@ -95,16 +95,11 @@ type OverviewPopoverProps = {
   onClose: () => void;
 };
 
-export const OverviewPopover = ({
-  visible,
-  anchor,
-  overviews,
-  selected,
-  onSelect,
-  onClose,
-}: OverviewPopoverProps) => {
+export const OverviewPopover = (props: OverviewPopoverProps) => {
+  const {visible, anchor, overviews, selected, onSelect, onClose} = props;
+
   const scheme = useColorScheme();
-  const check = scheme === 'dark' ? '#34d399' : '#059669';
+  const check = scheme === 'dark' ? '#00d5be' : '#009689';
 
   return (
     <Modal visible={visible} transparent animationType="fade" statusBarTranslucent onRequestClose={onClose}>
@@ -129,11 +124,11 @@ export const OverviewPopover = ({
               className="flex-row items-center justify-between gap-6 rounded-xl px-3 py-2.5 active:bg-neutral-200 dark:active:bg-white/5"
             >
               <View>
-                <Text className="font-satoshi-medium text-primary">
+                <Text className="font-satoshi-medium">
                   {item.label}
                 </Text>
                 <Text
-                  className="font-satoshi text-xs text-secundary"
+                  className="text-xs text-secundary"
                   numberOfLines={1}
                   style={{fontVariant: ['tabular-nums']}}
                 >
@@ -153,7 +148,7 @@ type StatProps = {icon: Icon; label: string; value: number};
 
 export const Stat = ({icon: Icon, label, value}: StatProps) => (
   <View
-    className="flex-1 flex-row items-center gap-2 overflow-hidden rounded-2xl bg-white/20 px-2.5 py-1.5"
+    className="flex-1 flex-row items-center gap-2 overflow-hidden rounded-2xl bg-teal-700/50 px-2.5 py-1.5"
   >
     <View className="h-7 w-7 items-center justify-center rounded-full bg-white/25">
       <Icon size={16} color="#ffffff" />
@@ -172,12 +167,14 @@ export const Stat = ({icon: Icon, label, value}: StatProps) => (
   </View>
 );
 
-export const BalanceCardSkia = ({
-  overviews = [{label: 'Daily overview', value: 0}],
-  income = 0,
-  expense = 0,
-  palette = 'esmeralda',
-}: BalanceCardSkiaProps) => {
+export const BalanceCardSkia = (props: BalanceCardSkiaProps) => {
+  const {
+    overviews = [{label: 'Daily overview', value: 0}],
+    income = 0,
+    expense = 0,
+    palette = 'esmeralda',
+  } = props;
+
   const [size, setSize] = useState({width: 0, height: 0});
   const [selected, setSelected] = useState(0);
   const [open, setOpen] = useState(false);
@@ -206,7 +203,7 @@ export const BalanceCardSkia = ({
   const uniforms = useDerivedValue(
     () => ({
       u_size: [size.width, size.height],
-      u_time: reduced ? 4 : clock.value / 1000,
+      u_time: reduced ? 4 : (clock.value / 1000) * 2,
       u_c0: colors[0],
       u_c1: colors[1],
       u_c2: colors[2],
@@ -242,7 +239,7 @@ export const BalanceCardSkia = ({
             hitSlop={8}
             accessibilityRole="button"
             accessibilityLabel="Cambiar periodo"
-            className="flex-row items-center gap-1 px-2 py-0.5 justify-center bg-white/20 rounded-full"
+            className="flex-row items-center gap-1 px-2.5 py-0.5 justify-center bg-teal-700/50 rounded-full"
           >
             <Text className="text-white">{current.label}</Text>
             {open ? (
@@ -258,7 +255,7 @@ export const BalanceCardSkia = ({
         <Text
           selectable
           numberOfLines={1}
-          className={`font-satoshi-medium tracking-tight text-white ${balanceSize(current.value)}`}
+          className={`font-satoshi-medium text-white ${balanceSize(current.value)}`}
           style={{fontVariant: ['tabular-nums']}}
         >
           $ {formatCurrency(current.value)}

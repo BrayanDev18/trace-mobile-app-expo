@@ -40,7 +40,7 @@ export const Keypad = ({onKey, onErase, onClear}: KeypadProps) => {
                 onPressIn={() => onKey(key)}
                 className="h-16 flex-1 items-center justify-center rounded-2xl active:bg-neutral-200 dark:active:bg-white/5"
               >
-                <Text className="font-satoshi-medium text-3xl text-primary">
+                <Text className="font-satoshi-medium text-3xl">
                   {key}
                 </Text>
               </Pressable>

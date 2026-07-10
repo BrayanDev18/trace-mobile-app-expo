@@ -31,8 +31,10 @@ export const ScreenRoutes = {
   // Gestión
   categories: '/categories',       // 🚧
   budgets: '/budgets',             // 🚧 presupuestos por categoría
-  goals: '/goals',                 // 🚧 objetivos de ahorro
-  debts: '/debts',                 // 🚧 prestado / pendiente
+  goals: '/goals',                 // ✅ objetivos de ahorro
+  newGoal: '/goals/new',           // ✅ crear meta
+  debts: '/debts',                 // ✅ prestado / pendiente
+  newDebt: '/debts/new',           // ✅ registrar deuda
   subscriptions: '/subscriptions',        // ✅ pagos recurrentes
   newSubscription: '/subscriptions/new',  // ✅ agregar suscripción
   search: '/search',               // 🚧 búsqueda avanzada
@@ -43,6 +45,7 @@ export const ScreenRoutes = {
 export const DynamicRoutes = {
   expense: (id: string) => `/expenses/${id}` as Href,
   subscription: (id: string) => `/subscriptions/${id}` as Href,
+  goal: (id: string) => `/goals/${id}` as Href,
   movement: (id: string) => `/movements/${id}` as Href,
   category: (id: string) => `/categories/${id}` as Href,
   budget: (id: string) => `/budgets/${id}` as Href,

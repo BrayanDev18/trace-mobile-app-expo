@@ -7,7 +7,7 @@ import {Text} from '@/components';
 import {getPaymentMethod} from '@/constants';
 import {formatCurrency} from '@/utils';
 
-export type BrandIcon = ComponentType<{size?: number; color?: string}>;
+export type BrandIcon = ComponentType<{ size?: number; color?: string }>;
 
 export type Subscription = {
   id: string;
@@ -41,30 +41,30 @@ export const SubscriptionCard = ({subscription, onPress}: SubscriptionCardProps)
       onPress={onPress}
       className="flex-row items-center gap-4 rounded-2xl bg-secundary p-3 active:opacity-70"
     >
-      <View className="h-14 w-14 items-center justify-center rounded-xl bg-neutral-200 dark:bg-neutral-950">
+      <View className="h-14 w-14 items-center justify-center rounded-xl">
         {subscription.logoUrl ? (
           <Image
             source={{uri: subscription.logoUrl}}
-            style={{width: 49, height: 49, borderRadius: 9}}
+            style={{width: 48, height: 48, borderRadius: 9}}
             contentFit="contain"
           />
         ) : (
-          <ServiceIcon size={25} color={glyph} />
+          <ServiceIcon size={25} color={glyph}/>
         )}
       </View>
 
       <View className="flex-1 gap-1.5">
-        <Text className="font-satoshi-medium text-[17px]">{subscription.name}</Text>
+        <Text className="font-satoshi-medium text-[16px]">{subscription.name}</Text>
 
         <View className="flex-row items-center gap-2.5">
-          <View className="rounded-lg bg-neutral-200 px-2 py-1 dark:bg-neutral-950">
-            <Text className="text-sm" style={{fontVariant: ['tabular-nums']}}>
+          <View className="rounded-lg px-2 py-1 bg-tertiary">
+            <Text className="text-sm text-secundary" style={{fontVariant: ['tabular-nums']}}>
               {price}
             </Text>
           </View>
 
           <View className="flex-row items-center gap-1">
-            <IconClock size={14} color={muted} />
+            <IconClock size={14} color={muted}/>
             <Text className="text-sm text-secundary">
               {subscription.nextCharge}
             </Text>
@@ -72,7 +72,7 @@ export const SubscriptionCard = ({subscription, onPress}: SubscriptionCardProps)
 
           {method && (
             <View className="shrink flex-row items-center gap-1">
-              <method.Icon size={14} />
+              <method.Icon size={14}/>
               <Text numberOfLines={1} className="text-sm text-secundary">
                 {method.label}
               </Text>
@@ -81,7 +81,7 @@ export const SubscriptionCard = ({subscription, onPress}: SubscriptionCardProps)
         </View>
       </View>
 
-      <IconChevronRight size={18} color={faint} />
+      <IconChevronRight size={18} color={faint}/>
     </Pressable>
   );
 };

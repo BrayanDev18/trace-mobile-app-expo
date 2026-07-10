@@ -32,20 +32,20 @@ const ExpensesScreen = () => {
         <HorizontalCalendar selected={selected} onSelect={setSelected} />
 
         <View className="flex-row items-center justify-between">
-          <Text className="font-satoshi-bold text-base text-primary">
+          <Text className="font-satoshi-bold">
             Gastos · {dayLabel}
           </Text>
-          <Text className="font-satoshi-bold text-base text-red-500">
+          <Text className="font-satoshi-bold text-red-500">
             ${formatCurrency(total)}
           </Text>
         </View>
 
         {expenses.length === 0 ? (
           <View className="items-center gap-2 py-12">
-            <Text className="font-satoshi-medium text-base text-secundary">
+            <Text className="font-satoshi-medium text-secundary">
               Sin gastos este día
             </Text>
-            <Text className="font-satoshi text-sm text-neutral-400 dark:text-neutral-600 text-center">
+            <Text className="text-sm text-secundary text-center">
               Toca + para registrar un gasto.
             </Text>
           </View>
@@ -65,15 +65,15 @@ const ExpensesScreen = () => {
                   </View>
 
                   <View className="flex-1">
-                    <Text className="font-satoshi-medium text-base text-primary">
+                    <Text className="font-satoshi-medium">
                       {e.reason}
                     </Text>
-                    <Text className="font-satoshi text-xs text-secundary">
+                    <Text className="text-xs text-secundary">
                       {category.label}
                     </Text>
                   </View>
 
-                  <Text className="font-satoshi-bold text-base text-primary">
+                  <Text className="font-satoshi-bold">
                     ${formatCurrency(e.amount)}
                   </Text>
                 </View>

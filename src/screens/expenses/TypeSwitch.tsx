@@ -8,7 +8,7 @@ export type MovementType = 'expense' | 'income';
 
 const SEGMENT_WIDTH = 88;
 
-const OPTIONS: {value: MovementType; label: string}[] = [
+const OPTIONS: { value: MovementType; label: string }[] = [
   {value: 'expense', label: 'Gasto'},
   {value: 'income', label: 'Ingreso'},
 ];
@@ -34,10 +34,10 @@ export const TypeSwitch = ({value, onChange}: TypeSwitchProps) => {
   );
 
   return (
-    <View className="flex-row rounded-full bg-neutral-200 p-1 dark:bg-white/10">
+    <View className="flex-row rounded-full p-1 bg-secundary">
       <Animated.View
-        className="absolute bottom-1 left-1 top-1 rounded-full bg-white dark:bg-neutral-700"
-        style={[{width: SEGMENT_WIDTH, boxShadow: '0 1px 4px rgba(0,0,0,0.08)'}, indicator]}
+        className="absolute bottom-1 left-1 top-1 rounded-full bg-tertiary"
+        style={[{width: SEGMENT_WIDTH}, indicator]}
       />
       {OPTIONS.map((option) => {
         const active = value === option.value;
@@ -51,9 +51,9 @@ export const TypeSwitch = ({value, onChange}: TypeSwitchProps) => {
             <Text
               className={cn(
                 'text-sm',
-                !active && 'font-satoshi-medium text-neutral-400 dark:text-neutral-600',
-                active && option.value === 'expense' && 'font-satoshi-bold text-primary',
-                active && option.value === 'income' && 'font-satoshi-bold text-accent dark:text-emerald-400',
+                !active && 'font-satoshi-medium text-secundary',
+                active && option.value === 'expense' && 'font-satoshi-bold',
+                active && option.value === 'income' && 'font-satoshi-bold',
               )}
             >
               {option.label}

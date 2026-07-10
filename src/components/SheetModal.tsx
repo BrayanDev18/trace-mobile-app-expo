@@ -11,7 +11,9 @@ type SheetModalProps = {
   children: ReactNode;
 };
 
-export const SheetModal = ({visible, onClose, title, children}: SheetModalProps) => {
+export const SheetModal = (props: SheetModalProps) => {
+  const {visible, onClose, title, children} = props;
+
   const iconColor = useColorScheme() === 'dark' ? '#ffffff' : '#000000';
 
   return (
@@ -32,7 +34,7 @@ export const SheetModal = ({visible, onClose, title, children}: SheetModalProps)
           className="bg-secundary rounded-t-3xl px-5 pt-4 pb-10 gap-4"
         >
           <View className="flex-row items-center justify-between">
-            <Text className="font-satoshi-bold text-lg tracking-tight text-primary">
+            <Text className="font-satoshi-bold text-lg tracking-tight">
               {title}
             </Text>
             <Pressable

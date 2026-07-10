@@ -1,7 +1,6 @@
-import {ReactNode, useState} from 'react';
-import {Pressable, TextInput, View, useColorScheme} from 'react-native';
-import type {StyleProp, ViewStyle} from 'react-native';
-import {useForm, Controller, useWatch} from 'react-hook-form';
+import {useState} from 'react';
+import {Pressable, StyleSheet, View, useColorScheme} from 'react-native';
+import {useForm, useWatch} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
 import {router} from 'expo-router';
@@ -10,6 +9,8 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Animated, {
+  FadeIn,
+  FadeOut,
   useAnimatedStyle,
   useSharedValue,
   withSequence,
@@ -24,8 +25,8 @@ import {
   IconX,
 } from '@tabler/icons-react-native';
 
-import {Keypad, MonthCalendar, Screen, SheetModal, Text} from '@/components';
-import {CATEGORIES, getCategory, getPaymentMethod, PAYMENT_METHODS} from '@/constants';
+import {Chip, Input, Keypad, MonthCalendar, Screen, SheetModal, Text} from '@/components';
+import {categoriesByKind, getCategory, getPaymentMethod, PAYMENT_METHODS} from '@/constants';
 import {TypeSwitch} from '@/screens/expenses';
 import {useMovementsStore} from '@/store/movements';
 import {appendAmountKey, cn, displayAmount, relativeDate} from '@/utils';
@@ -42,6 +43,11 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
+/** Modo de entrada activo en el panel inferior: el keypad o un picker en su lugar. */
+type Panel = 'keypad' | 'date' | 'category' | 'method';
+
+const PANEL_HEIGHT = 330;
+
 const isIOS = process.env.EXPO_OS === 'ios';
 const tap = () => {
   if (isIOS) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -50,41 +56,20 @@ const select = () => {
   if (isIOS) Haptics.selectionAsync();
 };
 
-const Chip = ({
-  onPress,
-  className,
-  style,
-  children,
-}: {
-  onPress: () => void;
-  className?: string;
-  style?: StyleProp<ViewStyle>;
-  children: ReactNode;
-}) => (
-  <Pressable
-    onPress={onPress}
-    className={cn(
-      'h-10 flex-row items-center gap-1.5 rounded-full bg-neutral-200 px-4 active:opacity-70 dark:bg-white/5',
-      className,
-    )}
-    style={style}
-  >
-    {children}
-  </Pressable>
-);
-
 export default function NewExpenseScreen() {
   const scheme = useColorScheme();
   const insets = useSafeAreaInsets();
   const muted = scheme === 'dark' ? '#a3a3a3' : '#737373';
-  const faint = scheme === 'dark' ? '#525252' : '#a3a3a3';
   const iconColor = scheme === 'dark' ? '#ffffff' : '#000000';
 
-  const [dateOpen, setDateOpen] = useState(false);
-  const [categoryOpen, setCategoryOpen] = useState(false);
-  const [methodOpen, setMethodOpen] = useState(false);
+  const [panel, setPanel] = useState<Panel>('keypad');
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [attempted, setAttempted] = useState(false);
+
+  const togglePanel = (target: Panel) => {
+    select();
+    setPanel((prev) => (prev === target ? 'keypad' : target));
+  };
 
   const addMovement = useMovementsStore((s) => s.add);
 
@@ -183,14 +168,14 @@ export default function NewExpenseScreen() {
   const categoryError = attempted && !!errors.categoryId;
 
   return (
-    <Screen edges={['top']}>
+    <Screen edges={['top']} asBackground={false}>
       <View className="flex-row items-center justify-between px-5 pb-2 pt-3">
         <Pressable
           onPress={() => router.back()}
           hitSlop={8}
           className="h-10 w-10 items-center justify-center rounded-full bg-neutral-200 active:opacity-70 dark:bg-white/5"
         >
-          <IconX size={18} color={iconColor} />
+          <IconX size={18} color={iconColor}/>
         </Pressable>
 
         <TypeSwitch
@@ -198,6 +183,10 @@ export default function NewExpenseScreen() {
           onChange={(t) => {
             select();
             setValue('type', t);
+            const currentCategory = getValues('categoryId');
+            if (currentCategory && getCategory(currentCategory).kind !== t) {
+              setValue('categoryId', '', {shouldValidate: attempted});
+            }
           }}
         />
 
@@ -207,9 +196,9 @@ export default function NewExpenseScreen() {
           className="h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-neutral-200 active:opacity-70 dark:bg-white/5"
         >
           {receiptUri ? (
-            <Image source={{uri: receiptUri}} style={{width: 40, height: 40}} contentFit="cover" />
+            <Image source={{uri: receiptUri}} style={{width: 40, height: 40}} contentFit="cover"/>
           ) : (
-            <IconPaperclip size={18} color={iconColor} />
+            <IconPaperclip size={18} color={iconColor}/>
           )}
         </Pressable>
       </View>
@@ -223,10 +212,10 @@ export default function NewExpenseScreen() {
                 amountError
                   ? 'text-red-400 dark:text-red-400'
                   : !hasAmount
-                    ? 'text-neutral-400 dark:text-neutral-600'
+                    ? 'text-secundary'
                     : type === 'income'
-                      ? 'text-accent dark:text-emerald-400'
-                      : 'text-neutral-400 dark:text-neutral-600',
+                      ? 'text-accent dark:text-teal-400'
+                      : 'text-secundary',
               )}
             >
               $
@@ -238,9 +227,7 @@ export default function NewExpenseScreen() {
                 amountSize,
                 amountError
                   ? 'text-red-400 dark:text-red-400'
-                  : hasAmount
-                    ? 'text-primary'
-                    : 'text-neutral-400 dark:text-neutral-600',
+                  : !hasAmount && 'text-secundary',
               )}
               style={{fontVariant: ['tabular-nums']}}
             >
@@ -249,79 +236,75 @@ export default function NewExpenseScreen() {
           </Animated.View>
         </View>
 
-        <Controller
-          control={control}
-          name="reason"
-          render={({field: {value, onChange, onBlur}}) => (
-            <View
-              className={cn(
-                'flex-row items-center gap-2 h-14 rounded-full border bg-secundary px-5',
-                reasonError ? 'border-red-400' : 'border-neutral-200 dark:border-neutral-800',
-              )}
-            >
-              <IconAlignLeft size={15} color={faint} />
-              <TextInput
-                value={value}
-                onChangeText={onChange}
-                onBlur={onBlur}
-                placeholder={type === 'expense' ? '¿En qué fue?' : '¿De dónde vino?'}
-                placeholderTextColor={faint}
-                returnKeyType="done"
-                className="min-w-36 max-w-52 h-full font-satoshi-medium text-primary"
-              />
-            </View>
-          )}
-        />
+        <View className="w-full px-20">
+          <Input
+            control={control}
+            name="reason"
+            icon={IconAlignLeft}
+            placeholder={type === 'expense' ? '¿En qué fue?' : '¿De dónde vino?'}
+            returnKeyType="done"
+            error={reasonError}
+          />
+        </View>
       </View>
 
       <View
-        className="rounded-t-[28px] bg-secundary px-4 pt-8 gap-8"
+        className="rounded-t-[28px] bg-secundary px-4 pt-7 gap-3"
         style={{
           paddingBottom: insets.bottom + 10,
         }}
       >
         <View className="flex-row flex-wrap justify-center gap-3">
-          <Chip onPress={() => setDateOpen(true)}>
-            <IconCalendarEvent size={15} color={muted} />
-            <Text className="font-satoshi-medium text-sm text-primary">
+          <Chip
+            onPress={() => togglePanel('date')}
+            className={cn(panel === 'date' && 'btn-primary')}
+          >
+            <IconCalendarEvent size={15} color={muted}/>
+            <Text className="font-satoshi-medium">
               {relativeDate(date)}
             </Text>
           </Chip>
 
           <Chip
-            onPress={() => setCategoryOpen(true)}
-            className={cn(categoryError && 'border border-red-400')}
-            style={category ? {backgroundColor: `${category.tint}1f`} : undefined}
+            onPress={() => togglePanel('category')}
+            className={cn(
+              categoryError && 'border border-red-400',
+              panel === 'category' && 'btn-primary'
+            )}
+            style={category ? {backgroundColor: category.tint + 10} : undefined}
           >
             {category && CategoryIcon ? (
               <>
-                <CategoryIcon size={15} color={category.tint} />
-                <Text className="font-satoshi-bold text-sm" style={{color: category.tint}}>
+                <CategoryIcon size={15} color={category.tint}/>
+                <Text className="font-satoshi-bold" style={{color: category.tint}}>
                   {category.label}
                 </Text>
               </>
             ) : (
               <>
-                <IconTag size={15} color={muted} />
-                <Text className="font-satoshi-medium text-sm text-secundary">
+                <IconTag size={15} color={muted}/>
+                <Text className="font-satoshi-medium">
                   Categoría
                 </Text>
               </>
             )}
           </Chip>
 
-          <Chip onPress={() => setMethodOpen(true)}>
+          <Chip
+            onPress={() => togglePanel('method')}
+            className={cn(panel === 'method' && 'btn-primary')}
+          >
             {method ? (
               <>
-                <method.Icon size={16} />
-                <Text className="font-satoshi-medium text-sm text-primary">
+                <method.Icon size={16}/>
+                <Text className="font-satoshi-medium">
                   {method.label}
                 </Text>
               </>
             ) : (
               <>
-                <IconCreditCard size={15} color={muted} />
-                <Text className="font-satoshi-medium text-sm text-secundary">
+                <IconCreditCard size={15} color={muted}/>
+                <Text className="font-satoshi-medium">
                   Método
                 </Text>
               </>
@@ -329,86 +312,116 @@ export default function NewExpenseScreen() {
           </Chip>
         </View>
 
-        <Keypad onKey={appendKey} onErase={erase} onClear={clearAmount} />
+        <View style={{height: PANEL_HEIGHT}}>
+          {panel === 'keypad' && (
+            <Animated.View
+              entering={FadeIn.duration(150)}
+              exiting={FadeOut.duration(120)}
+              style={StyleSheet.absoluteFill}
+              className="justify-center"
+            >
+              <Keypad onKey={appendKey} onErase={erase} onClear={clearAmount}/>
+            </Animated.View>
+          )}
+
+          {panel === 'date' && (
+            <Animated.View
+              entering={FadeIn.duration(150)}
+              exiting={FadeOut.duration(120)}
+              style={StyleSheet.absoluteFill}
+              className="justify-center"
+            >
+              <MonthCalendar
+                selected={date}
+                onSelect={(d) => {
+                  select();
+                  setValue('date', d);
+                  setPanel('keypad');
+                }}
+              />
+            </Animated.View>
+          )}
+
+          {panel === 'category' && (
+            <Animated.View
+              entering={FadeIn.duration(150)}
+              exiting={FadeOut.duration(120)}
+              style={StyleSheet.absoluteFill}
+              className="justify-center"
+            >
+              <View className="flex-row flex-wrap justify-center gap-4">
+                {categoriesByKind(type).map((c) => {
+                  const Icon = c.icon;
+                  const active = categoryId === c.id;
+                  return (
+                    <Pressable
+                      key={c.id}
+                      onPress={() => {
+                        select();
+                        setValue('categoryId', c.id, {shouldValidate: true});
+                        setPanel('keypad');
+                      }}
+                      className={cn(
+                        'flex-row items-center gap-2 rounded-full border px-4 py-2.5 active:opacity-70 bg-neutral-100 dark:bg-neutral-800',
+                        !active ? 'border-neutral-200 bg-secundary dark:border-neutral-800' : 'border-transparent',
+                      )}
+                      style={active ? {backgroundColor: c.tint + 10} : undefined}
+                    >
+                      <Icon size={16} color={c.tint}/>
+                      <Text className="font-satoshi-medium">
+                        {c.label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </Animated.View>
+          )}
+
+          {panel === 'method' && (
+            <Animated.View
+              entering={FadeIn.duration(150)}
+              exiting={FadeOut.duration(120)}
+              style={StyleSheet.absoluteFill}
+              className="justify-center"
+            >
+              <View className="flex-row flex-wrap justify-center gap-4">
+                {PAYMENT_METHODS.map((m) => {
+                  const active = methodId === m.id;
+                  return (
+                    <Pressable
+                      key={m.id}
+                      onPress={() => {
+                        select();
+                        setValue('method', m.id);
+                        setPanel('keypad');
+                      }}
+                      className={cn(
+                        'flex-row items-center gap-2 rounded-full border px-4 py-2.5 active:opacity-70 bg-neutral-100 dark:bg-neutral-800',
+                        !active ? 'border-neutral-200 bg-secundary dark:border-neutral-800' : 'border-transparent',
+                      )}
+                    >
+                      <m.Icon size={18}/>
+                      <Text className="font-satoshi-medium">
+                        {m.label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </Animated.View>
+          )}
+        </View>
 
         <Pressable
           onPress={() => handleSubmit(onSubmit, onInvalid)()}
           className="h-14 items-center justify-center rounded-full bg-accent active:bg-accent-pressed"
         >
-          <Text className="font-satoshi-bold text-base text-white">
+          <Text className="font-satoshi-bold text-white">
             {type === 'income' ? 'Agregar ingreso' : 'Agregar gasto'}
           </Text>
         </Pressable>
       </View>
-
-      <SheetModal visible={dateOpen} onClose={() => setDateOpen(false)} title="Fecha">
-        <MonthCalendar
-          selected={date}
-          onSelect={(d) => {
-            select();
-            setValue('date', d);
-            setDateOpen(false);
-          }}
-        />
-      </SheetModal>
-
-      <SheetModal visible={categoryOpen} onClose={() => setCategoryOpen(false)} title="Categoría">
-        <View className="flex-row flex-wrap gap-2 pb-2">
-          {CATEGORIES.map((c) => {
-            const Icon = c.icon;
-            const selected = categoryId === c.id;
-            return (
-              <Pressable
-                key={c.id}
-                onPress={() => {
-                  select();
-                  setValue('categoryId', c.id, {shouldValidate: true});
-                  setCategoryOpen(false);
-                }}
-                className={cn(
-                  'flex-row items-center gap-2 rounded-full border px-4 py-2.5 active:opacity-70',
-                  !selected && 'border-neutral-200 bg-secundary dark:border-neutral-800',
-                )}
-                style={selected ? {backgroundColor: `${c.tint}1f`, borderColor: `${c.tint}66`} : undefined}
-              >
-                <Icon size={16} color={c.tint} />
-                <Text className="font-satoshi-medium text-sm text-primary">
-                  {c.label}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </View>
-      </SheetModal>
-
-      <SheetModal visible={methodOpen} onClose={() => setMethodOpen(false)} title="Método de pago">
-        <View className="flex-row flex-wrap gap-2 pb-2">
-          {PAYMENT_METHODS.map((m) => {
-            const selected = methodId === m.id;
-            return (
-              <Pressable
-                key={m.id}
-                onPress={() => {
-                  select();
-                  setValue('method', m.id);
-                  setMethodOpen(false);
-                }}
-                className={cn(
-                  'flex-row items-center gap-2 rounded-full border px-4 py-2.5 active:opacity-70',
-                  selected
-                    ? 'border-accent bg-accent/10'
-                    : 'border-neutral-200 bg-secundary dark:border-neutral-800',
-                )}
-              >
-                <m.Icon size={18} />
-                <Text className="font-satoshi-medium text-sm text-primary">
-                  {m.label}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </View>
-      </SheetModal>
 
       <SheetModal visible={receiptOpen} onClose={() => setReceiptOpen(false)} title="Factura">
         {receiptUri ? (
@@ -423,7 +436,7 @@ export default function NewExpenseScreen() {
             onPress={pickReceipt}
             className="flex-1 items-center rounded-2xl border border-neutral-200 py-3.5 active:opacity-70 dark:border-neutral-800"
           >
-            <Text className="font-satoshi-medium text-sm text-primary">Cambiar</Text>
+            <Text className="font-satoshi-medium text-sm">Cambiar</Text>
           </Pressable>
           <Pressable
             onPress={() => {

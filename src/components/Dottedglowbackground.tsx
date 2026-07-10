@@ -47,14 +47,16 @@ type DottedGlowBackgroundProps = {
   opacity?: number;
 };
 
-export const DottedGlowBackground = ({
-  style,
-  gap = 12,
-  radius = 2,
-  color = "rgba(0,0,0,0.7)",
-  darkColor,
-  opacity = 0.1,
-}: DottedGlowBackgroundProps) => {
+export const DottedGlowBackground = (props: DottedGlowBackgroundProps) => {
+  const {
+    style,
+    gap = 12,
+    radius = 2,
+    color = "rgba(0,0,0,0.7)",
+    darkColor,
+    opacity = 0.1,
+  } = props;
+
   const isDark = useColorScheme() === "dark";
   const dotColor = isDark ? darkColor ?? color : color;
 
