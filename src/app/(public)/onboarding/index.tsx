@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import {useState} from "react";
 import {FlatList, Pressable, StyleSheet, View, useColorScheme, useWindowDimensions} from "react-native";
 import {Image} from "expo-image";
 import {LinearGradient} from "expo-linear-gradient";
@@ -36,8 +36,8 @@ const OnboardingScreen = () => {
   const [index, setIndex] = useState(0);
 
   const glow: [string, string] = dark
-    ? ["#11402b", "rgba(10,10,10,0)"]
-    : ["#d1fae5", "rgba(245,245,245,0)"];
+    ? ["#0b4f4a", "rgba(10,10,10,0)"]
+    : ["#cbfbf1", "rgba(245,245,245,0)"];
   const fade: [string, string] = dark
     ? ["rgba(10,10,10,0)", "#0a0a0a"]
     : ["rgba(245,245,245,0)", "#f5f5f5"];
@@ -78,7 +78,7 @@ const OnboardingScreen = () => {
         />
       </View>
 
-      <View style={{ paddingBottom:insets.bottom}} className="gap-8 pt-2">
+      <View style={{ paddingBottom:insets.bottom}} className="gap-12 pt-2">
         <View className="flex-row justify-center gap-1.5">
           {SLIDES.map((slide, i) => (
             <View
@@ -103,11 +103,11 @@ const OnboardingScreen = () => {
           }
           renderItem={({item}) => (
             <View style={{width}} className="items-center gap-4 px-8">
-              <Text className="text-center font-satoshi-bold text-4xl leading-tight tracking-tight text-primary">
+              <Text className="text-center font-satoshi-bold text-4xl leading-tight tracking-tight">
                 {item.title}
               </Text>
 
-              <Text className="text-center font-satoshi text-xl leading-relaxed text-secundary">
+              <Text className="text-center text-xl leading-relaxed text-secundary">
                 {item.subtitle}
               </Text>
             </View>
@@ -119,7 +119,7 @@ const OnboardingScreen = () => {
             onPress={start}
             className="h-16 flex-row items-center justify-between rounded-full bg-accent pl-7 pr-2 active:bg-accent-pressed"
           >
-            <Text className="font-satoshi-bold text-base text-white">Comenzar</Text>
+            <Text className="font-satoshi-bold text-white">Comenzar</Text>
             <View className="h-12 w-12 items-center justify-center rounded-full bg-white/15">
               <IconArrowRight size={22} color="#ffffff" />
             </View>

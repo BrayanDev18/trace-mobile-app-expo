@@ -1,31 +1,26 @@
 import {ReactNode} from 'react';
-import {Alert, Pressable, StyleSheet, View, useColorScheme} from 'react-native';
+import {Alert, Pressable, View} from 'react-native';
 import {router, useLocalSearchParams} from 'expo-router';
 import {Image} from 'expo-image';
-import {LinearGradient} from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
-import {IconApps, IconChevronLeft} from '@tabler/icons-react-native';
+import {IconApps} from '@tabler/icons-react-native';
 
-import {DottedGlowBackground, Group, Screen, Separator, Text} from '@/components';
+import {DottedGlowBackground, Group, Header, Screen, Separator, Text} from '@/components';
 import {getPaymentMethod} from '@/constants';
-import {HERO_GRADIENT} from '@/screens/subscriptions';
 import {useSubscriptionsStore} from '@/store/subscriptions';
 import {formatCurrency} from '@/utils';
 
 const isIOS = process.env.EXPO_OS === 'ios';
 
-const Row = ({label, children}: {label: string; children: ReactNode}) => (
+const Row = ({label, children}: { label: string; children: ReactNode }) => (
   <View className="min-h-14 flex-row items-center justify-between gap-4 px-4 py-3">
-    <Text>{label}</Text>
+    <Text className="font-satoshi-medium">{label}</Text>
     <View className="flex-1 flex-row items-center justify-end gap-2">{children}</View>
   </View>
 );
 
 export default function SubscriptionDetailScreen() {
-  const {id} = useLocalSearchParams<{id: string}>();
-  const scheme = useColorScheme();
-  const dark = scheme === 'dark';
-  const tint = dark ? '#34d399' : '#059669';
+  const {id} = useLocalSearchParams<{ id: string }>();
 
   const subscriptions = useSubscriptionsStore((s) => s.items);
   const remove = useSubscriptionsStore((s) => s.remove);
@@ -55,25 +50,10 @@ export default function SubscriptionDetailScreen() {
 
   return (
     <Screen edges={['top']} scroll>
-      <View className="h-12 flex-row items-center px-3">
-        <Pressable
-          accessibilityLabel="Volver"
-          onPress={() => router.back()}
-          hitSlop={8}
-          className="h-10 w-10 items-center justify-center active:opacity-50"
-        >
-          <IconChevronLeft size={26} color={tint} />
-        </Pressable>
-      </View>
+      <Header />
 
       <View className="gap-8 px-5 pb-10 pt-2">
-        <View className="overflow-hidden rounded-3xl border">
-          <LinearGradient
-            colors={dark ? HERO_GRADIENT.dark : HERO_GRADIENT.light}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 1}}
-            style={StyleSheet.absoluteFill}
-          />
+        <View className="overflow-hidden rounded-3xl">
           <DottedGlowBackground
             color="rgba(24,27,32,0.55)"
             darkColor="rgba(255,255,255,0.6)"
@@ -92,7 +72,7 @@ export default function SubscriptionDetailScreen() {
                     contentFit="contain"
                   />
                 ) : (
-                  <ServiceIcon size={28} color="#171717" />
+                  <ServiceIcon size={28} color="#171717"/>
                 )}
               </View>
               <View className="flex-1">
@@ -100,7 +80,7 @@ export default function SubscriptionDetailScreen() {
                   {subscription.name}
                 </Text>
 
-                <Text numberOfLines={1} className="text-neutral-600 dark:text-white/80">
+                <Text numberOfLines={1}>
                   {subscription.category}
                 </Text>
               </View>
@@ -111,7 +91,7 @@ export default function SubscriptionDetailScreen() {
                 <Text
                   selectable
                   numberOfLines={1}
-                  className="font-satoshi-medium text-5xl tracking-tight text-primary"
+                  className="font-satoshi-medium text-5xl tracking-tight"
                   style={{fontVariant: ['tabular-nums']}}
                 >
                   ${price}
@@ -128,33 +108,33 @@ export default function SubscriptionDetailScreen() {
         </View>
 
         <View className="gap-2">
-          <Text className="px-4 text-xs text-secundary">Detalles</Text>
+          <Text className="px-4 font-satoshi-medium">Detalles</Text>
 
           <Group>
             <Row label="Método de pago">
-              {method && <method.Icon size={18} />}
-              <Text className="font-satoshi-medium">{method?.label ?? '—'}</Text>
+              {method && <method.Icon size={18}/>}
+              <Text className="text-secundary">{method?.label ?? '—'}</Text>
             </Row>
 
-            <Separator />
+            <Separator/>
 
             <Row label="Precio">
-              <Text className="font-satoshi-medium" style={{fontVariant: ['tabular-nums']}}>
+              <Text className="text-secundary" style={{fontVariant: ['tabular-nums']}}>
                 ${price}/{period}
               </Text>
             </Row>
 
-            <Separator />
+            <Separator/>
 
             <Row label="Próximo cobro">
-              <Text className="font-satoshi-medium">{subscription.nextCharge}</Text>
+              <Text className="text-secundary">{subscription.nextCharge}</Text>
             </Row>
 
-            <Separator />
+            <Separator/>
 
             <Row label="Estado">
               <View className="rounded-full bg-accent/10 px-2.5 py-1">
-                <Text className="font-satoshi-medium text-sm text-accent dark:text-emerald-400">
+                <Text className="font-satoshi-medium text-sm text-accent dark:text-teal-400">
                   Activa
                 </Text>
               </View>
@@ -171,7 +151,7 @@ export default function SubscriptionDetailScreen() {
               <Text className="text-red-400 font-satoshi-medium text-lg">Eliminar suscripción</Text>
             </Pressable>
           </Group>
-          <Text className="px-4 text-xs text-neutral-400 dark:text-neutral-600">
+          <Text className="px-4 text-xs text-secundary">
             Dejará de aparecer en tu lista y en el total mensual.
           </Text>
         </View>

@@ -27,7 +27,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     price: 69,
     period: 'yearly',
     nextCharge: '24 jul',
-    methodId: 'visa',
+    methodId: 'credit',
   },
   {
     id: '3',
@@ -37,7 +37,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     price: 24.99,
     period: 'monthly',
     nextCharge: '27 jul',
-    methodId: 'mastercard',
+    methodId: 'debit',
   },
   {
     id: '4',
@@ -47,7 +47,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     price: 11.99,
     period: 'monthly',
     nextCharge: '17 ago',
-    methodId: 'visa',
+    methodId: 'credit',
   },
   {
     id: '5',

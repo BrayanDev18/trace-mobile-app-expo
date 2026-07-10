@@ -6,14 +6,14 @@
  * For className styling prefer the Tailwind tokens (e.g. `bg-accent`).
  */
 export const Colors = {
-  // Trend / status (emerald-400 up, red-400 down) — used across charts, arrows, pills
-  up: '#34d399',
+  // Trend / status (teal-400 up, red-400 down) — used across charts, arrows, pills
+  up: '#00d5be',
   down: '#f87171',
 
-  // Brand accent (mirrors Tailwind `accent` = emerald)
-  accent: '#059669',
-  accentDim: '#047857',
-  accentLight: '#34d399',
+  // Brand accent (mirrors Tailwind `accent` = teal)
+  accent: '#009689',
+  accentDim: '#00786f',
+  accentLight: '#00d5be',
 
   // Surfaces (mirror Tailwind `surface`)
   surface: '#0A0A0A',
@@ -28,12 +28,12 @@ export const Colors = {
 
 /** Translucent fills derived from the trend colors (chart areas, badges). */
 export const trendAlpha = {
-  up: (alpha: number) => `rgba(52, 211, 153, ${alpha})`,
+  up: (alpha: number) => `rgba(0, 213, 190, ${alpha})`,
   down: (alpha: number) => `rgba(248, 113, 113, ${alpha})`,
 } as const;
 
 /** Gradient color pairs for `LinearGradient`. */
 export const Gradients = {
-  accent: ['#34d399', '#059669'] as const,
+  accent: ['#00d5be', '#009689'] as const,
   disabled: ['#262626', '#262626'] as const,
 } as const;

@@ -20,7 +20,7 @@ cubre (`fontVariant`, colores dinámicos por dato, sombras puntuales).
 
 - **Producto:** finanzas personales — registrar y entender el dinero, no moverlo.
 - **Tono:** calma financiera. Fondo neutral, texto de alto contraste, un verde
-  esmeralda como única voz de marca. Nada grita; los números son los protagonistas.
+  teal como única voz de marca. Nada grita; los números son los protagonistas.
 - **Sensación:** app nativa iOS — háptica sutil, springs, sheets desde abajo,
   safe areas respetadas.
 - **Género:** utility warm-minimal. No es una landing page: sin heros
@@ -32,36 +32,42 @@ cubre (`fontVariant`, colores dinámicos por dato, sombras puntuales).
 
 Dos familias, cero decoración: una **rampa neutral** (`neutral-*` de Tailwind)
 que sostiene fondos, superficies y texto en **ambos** temas, y un único **accent
-esmeralda** como voz de marca. El hue no cambia entre light y dark — solo la
+teal** como voz de marca. El hue no cambia entre light y dark — solo la
 lightness. Fuente de verdad: `@theme` en `src/global.css`.
 
 ### Tokens de marca (`src/global.css`)
 
-| Token | Valor | Rol |
-| --- | --- | --- |
-| `accent` | `#059669` (emerald-600) | Voz de marca: CTA primaria, estado activo, ingreso |
-| `accent-pressed` | `#047857` (emerald-700) | Estado pressed del accent |
+| Token | Light | Dark | Rol |
+| --- | --- | --- | --- |
+| `accent` | `#009689` (teal-600) | `#005f5a` (teal-800) | Voz de marca: CTA primaria, estado activo, ingreso |
+| `accent-pressed` | `#00786f` (teal-700) | `#0b4f4a` (teal-900) | Estado pressed del accent |
 
 Son los **únicos** tokens de color propios. El resto es la paleta nativa de
-Tailwind (`neutral-*`, `emerald-*`, `red-*`), disponible sin declarar nada. Se
+Tailwind (`neutral-*`, `teal-*`, `red-*`), disponible sin declarar nada. Se
 retiraron los tokens cálidos (`canvas`, `ink`, `ink-soft`, `ink-faint`,
 `hairline`, `surface-2`, `glow`, `hero`, `brand`, `dot-idle`) a favor de `neutral`.
 
 ### Clases semánticas (`@utility` en `src/global.css`)
 
-Los cuatro roles base viven como utilidades que ya empaquetan su pareja
+Los seis roles base viven como utilidades que ya empaquetan su pareja
 light/dark — se usan **sin** prefijo `dark:`:
 
 | Clase | Rol | Light | Dark |
 | --- | --- | --- | --- |
 | `bg-primary` | Fondo de pantalla (`Screen`) | `neutral-100` | `neutral-950` |
 | `bg-secundary` | Panel / tarjeta / sheet | `white` | `neutral-900` |
-| `text-primary` | Texto primario (default de `<Text>`) | `black` | `white` |
-| `text-secundary` | Texto secundario / metadato | `neutral-400` | `neutral-400` |
+| `bg-tertiary` | Superficie sobre panel (chip, control) | `neutral-100` | `neutral-800` |
+| `text-primary` | Texto primario (default de `<Text>`) | `neutral-800` | `neutral-300` |
+| `text-secundary` | Texto secundario / metadato | `neutral-500` | `neutral-400` |
+| `btn-primary` | Fondo de botón CTA | `accent/60` | `accent` |
 
-`text-primary` es el default de `<Text>`: solo se escribe explícito para
-restaurarlo tras otro color. `text-secundary` usa `neutral-400` en ambos modos;
-su contraste en light es bajo (~2.3:1) → reservarlo a **texto no esencial** (§11).
+`text-primary` es el default de `<Text>` (junto con `font-satoshi` y
+`text-base`) y **nunca se repite** en el `className`: como `cn` usa
+tailwind-merge y el default vive en el componente, en condicionales la rama
+"color normal" se omite (`cond && 'text-accent'`, no `cond ? '...' :
+'text-primary'`) y el default se restaura solo. `text-secundary` usa
+`neutral-500` en light y `neutral-400` en dark; su contraste en light es medio
+(~4.3:1 sobre `bg-primary`) → reservarlo a **texto secundario, no esencial** (§11).
 
 ### Resto de la rampa (light / dark)
 
@@ -72,13 +78,14 @@ Roles sin clase semántica; el hue nunca cambia, solo la lightness:
 | Superficie sutil (chip, track, press fantasma) | `bg-neutral-200` | `dark:bg-white/5` |
 | Borde / hairline (1px) | `border-neutral-200` | `dark:border-neutral-800` |
 | Texto terciario / placeholder | `text-neutral-400` | `dark:text-neutral-600` |
-| Accent (CTA, activo, ingreso) | `bg-accent` / `text-accent` | `dark:text-emerald-400` |
+| Accent (CTA, activo, ingreso) | `bg-accent` / `text-accent` | `dark:text-teal-400` |
 | Accent pressed | `active:bg-accent-pressed` | igual |
 | Error | `text-red-400` / `border-red-400` | igual en ambos modos |
 
-Como **fondo** (`bg-accent`) el accent no cambia entre modos; como **texto/icono**
-sube a `emerald-400` (`#34d399`) en dark para mantener contraste sobre superficie
-oscura.
+Como **fondo** (`bg-accent`) el accent baja de luminancia en dark
+(teal-800, vía override del token en `global.css`) para no deslumbrar sobre
+superficie oscura; como **texto/icono** sube a `teal-400` (`#00d5be`) en dark
+para mantener contraste.
 
 Colores de icono JS-side (prop `color`, sin className) siguen la misma rampa —
 primario `#000` / `#fff` · muted `#737373` / `#a3a3a3` · faint `#a3a3a3` /
@@ -86,7 +93,7 @@ primario `#000` / `#fff` · muted `#737373` / `#a3a3a3` · faint `#a3a3a3` /
 
 ### Semántica de datos
 
-- **Tendencia arriba / ingreso:** `#34d399` (emerald-400, espeja el accent).
+- **Tendencia arriba / ingreso:** `#00d5be` (teal-400, espeja el accent).
   **Abajo / gasto:** `#f87171` (red-400). Nunca como único canal: siempre con
   icono (flecha) o signo.
 - **Tints de categoría:** cada categoría define su `tint` (`src/constants/categories.ts`).
@@ -98,16 +105,17 @@ primario `#000` / `#fff` · muted `#737373` / `#a3a3a3` · faint `#a3a3a3` /
 
 ### Reglas
 
-1. **Un accent.** El esmeralda es la única voz de marca por pantalla. Ocupa poco:
+1. **Un accent.** El teal es la única voz de marca por pantalla. Ocupa poco:
    una FAB, un estado seleccionado, un valor positivo. Máximo **una** acción
    primaria accent por pantalla.
 2. **La superficie es neutral.** Fondos y paneles usan las clases semánticas
    `bg-primary` (pantalla) y `bg-secundary` (panel/tarjeta/sheet) — nunca hex ni
-   `bg-white` sueltos. El texto sí es negro/blanco puro vía `text-primary`.
+   `bg-white` sueltos. El texto vive en la misma rampa vía `text-primary`
+   (`neutral-800` / `neutral-300`), nunca hex ni negro/blanco sueltos.
 3. **El hue no cambia entre modos.** Dark = mismas intenciones, otra lightness.
 4. **Color inline solo cuando es dato** (tint de categoría, color de gráfico,
    gradiente de ilustración). Todo lo demás referencia `accent`/`accent-pressed`,
-   la rampa `neutral`/`emerald` de Tailwind, o `Colors.ts`.
+   la rampa `neutral`/`teal` de Tailwind, o `Colors.ts`.
 5. **Prohibido:** gradientes purple→cyan / orange→pink, gradientes de 3 stops,
    accent como fondo de secciones completas, texto gris sobre fondo de color,
    rojo/verde como único diferenciador, reintroducir tokens de color cálidos.
@@ -187,7 +195,7 @@ Sombras permitidas:
 
 - *Whisper*: `0 1px 6px rgba(0,0,0,0.05)` (pill flotante) y
   `0 -4px 24px rgba(0,0,0,0.04)` (panel inferior).
-- *Glow de FAB*: `0 6px 16px rgba(5,150,105,0.35)` — solo la FAB, solo una vez.
+- *Glow de FAB*: `0 6px 16px rgba(0,150,137,0.35)` — solo la FAB, solo una vez.
 
 Nada de sombras apiladas ni glows sobre fondo claro. En dark, elevación =
 superficie más clara, nunca sombra.
@@ -260,8 +268,13 @@ Antes de crear UI nueva, reusar o extender estos (`src/components`):
   teclado (`scroll`, `keyboard`, `keyboardOffset`), padding (`padded`).
 - **`Text`** — único punto de entrada de texto; default `font-satoshi text-base`.
   Nunca importar `Text` de react-native en pantallas.
-- **`SheetModal`** — todo picker/acción secundaria vive en un sheet inferior
-  (`rounded-t-3xl`, backdrop `rgba(0,0,0,0.5)`, título + botón cerrar).
+- **`SheetModal`** — acciones secundarias fuera de contexto de captura viven en
+  un sheet inferior (`rounded-t-3xl`, backdrop `rgba(0,0,0,0.5)`, título + botón
+  cerrar). **Excepción:** en pantallas de captura con panel inferior anclado
+  (nuevo gasto, nueva suscripción), los pickers (fecha, categoría, método) NO
+  abren sheet: **intercambian el contenido del panel** con el keypad (altura
+  fija + crossfade de §5; el chip activo se marca con `border-accent`; elegir
+  un valor devuelve al keypad).
 - **`TabBar`** — tab bar custom con FAB accent central elevada (`-mt-8`).
 - **Patrón Chip** — pill `h-10 rounded-full` con icono 15–16 + label
   `font-satoshi-medium text-sm`; base de filtros, pickers y metadatos.
@@ -300,10 +313,10 @@ bifurca. Si un tercer sitio copia-pega un patrón, se promueve a componente.
 
 - `accessibilityLabel` en todo control sin texto visible (ya es convención).
 - Contraste mínimo 4.5:1 en texto de cuerpo, 3:1 en texto grande y bordes de
-  controles — vigilar especialmente `text-secundary` (`neutral-400`, ~2.3:1 en
-  light) y `neutral-600` sobre `neutral-950` (usarlos solo en texto no esencial),
-  y el texto blanco de botón sobre `bg-accent` (usar peso `bold`/tamaño grande).
-  Para texto secundario esencial en light, preferir `text-neutral-500`.
+  controles — vigilar especialmente `text-secundary` (`neutral-500`, ~4.3:1
+  sobre `bg-primary` en light) y `neutral-600` sobre `neutral-950` (usarlos solo
+  en texto no esencial), y el texto blanco de botón sobre `bg-accent` (usar peso
+  `bold`/tamaño grande).
 - No bloquear `allowFontScaling`; las cifras protagonistas ya escalan por
   longitud y aceptan truncado con `numberOfLines={1}`.
 - Rojo/verde nunca como único canal (§2 — icono o signo siempre).
@@ -340,12 +353,12 @@ migrar hacia la regla:
 
 1. **`src/constants/Colors.ts` sigue con superficies dark-only heredadas**
    (`surface #0A0A0A`, `surfaceCard`, …) que ya nadie necesita como sistema. Sus
-   tokens de marca (`accent`, `up`/`down`, `accentLight`) ya están en emerald y
+   tokens de marca (`accent`, `up`/`down`, `accentLight`) ya están en teal y
    espejan `@theme`. Pendiente: reducirlo a los tokens de dato vigentes
    (`up`/`down`, alphas, gradientes) y borrar las superficies muertas.
 2. **Colores de icono repetidos inline** (`scheme === 'dark' ? '#a3a3a3' : '#737373'`
    en varias pantallas, ya alineados a la rampa neutral). Pendiente: helper único
    (p. ej. `useIconColors()`) que exponga `primary/muted/faint` según esquema.
 3. **Accent como texto en dark sin token propio:** hoy se escribe
-   `dark:text-emerald-400` inline. Es correcto (paleta Tailwind), pero si se
+   `dark:text-teal-400` inline. Es correcto (paleta Tailwind), pero si se
    repite mucho vale promoverlo a un helper/clase semántica.

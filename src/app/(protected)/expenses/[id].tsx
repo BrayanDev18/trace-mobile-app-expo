@@ -3,9 +3,9 @@ import {Alert, Pressable, View, useColorScheme} from 'react-native';
 import {router, useLocalSearchParams} from 'expo-router';
 import {Image} from 'expo-image';
 import * as Haptics from 'expo-haptics';
-import {IconChevronLeft, IconChevronRight} from '@tabler/icons-react-native';
+import {IconChevronRight, IconPencil} from '@tabler/icons-react-native';
 
-import {Group, Screen, Separator, SheetModal, Text} from '@/components';
+import {Group, Header, Screen, Separator, SheetModal, Text} from '@/components';
 import {getCategory, getPaymentMethod} from '@/constants';
 import {useMovementsStore} from '@/store/movements';
 import {cn, formatCurrency, longDate, relativeDate} from '@/utils';
@@ -14,7 +14,7 @@ const isIOS = process.env.EXPO_OS === 'ios';
 
 const Row = ({label, children}: {label: string; children: ReactNode}) => (
   <View className="min-h-14 flex-row items-center justify-between gap-4 px-4 py-3">
-    <Text className="text-primary">{label}</Text>
+    <Text className="font-satoshi-medium">{label}</Text>
     <View className="flex-1 flex-row items-center justify-end gap-2">{children}</View>
   </View>
 );
@@ -22,7 +22,6 @@ const Row = ({label, children}: {label: string; children: ReactNode}) => (
 export default function ExpenseDetailScreen() {
   const {id} = useLocalSearchParams<{id: string}>();
   const scheme = useColorScheme();
-  const tint = scheme === 'dark' ? '#34d399' : '#059669';
   const faint = scheme === 'dark' ? '#525252' : '#a3a3a3';
 
   const [receiptOpen, setReceiptOpen] = useState(false);
@@ -63,38 +62,17 @@ export default function ExpenseDetailScreen() {
 
   return (
     <Screen edges={['top']} scroll>
-      <View className="h-12 flex-row items-center justify-between px-3">
-        <Pressable
-          accessibilityLabel="Volver"
-          onPress={() => router.back()}
-          hitSlop={8}
-          className="h-10 w-10 items-center justify-center active:opacity-50"
-        >
-          <IconChevronLeft size={26} color={tint} />
-        </Pressable>
-        <Text className="font-satoshi-bold text-base text-primary">
-          {isIncome ? 'Detalle del ingreso' : 'Detalle del gasto'}
-        </Text>
-        <Pressable hitSlop={8} className="h-10 items-center justify-center px-2 active:opacity-50">
-          <Text className="text-base" style={{color: tint}}>
-            Editar
-          </Text>
-        </Pressable>
-      </View>
+      <Header
+        title={isIncome ? 'Detalle del ingreso' : 'Detalle del gasto'}
+        rightIcon={IconPencil}
+      />
 
       <View className="items-center gap-3 px-6 pb-10 pt-8">
-        <View
-          className="h-10 w-10 items-center justify-center rounded-full"
-          style={{backgroundColor: `${category.tint}1f`}}
-        >
-          <CategoryIcon size={20} color={category.tint} />
-        </View>
-
-        <View className="items-center gap-1">
+        <View className="items-center gap-4">
           <Text
             selectable
             numberOfLines={2}
-            className="text-center font-satoshi-medium text-primary"
+            className="text-center font-satoshi-medium"
           >
             {movement.reason}
           </Text>
@@ -104,13 +82,13 @@ export default function ExpenseDetailScreen() {
             className={cn(
               'font-satoshi-bold tracking-tight',
               amountSize,
-              isIncome ? 'text-accent dark:text-emerald-400' : 'text-primary',
+              isIncome && 'text-accent dark:text-teal-400',
             )}
             style={{fontVariant: ['tabular-nums']}}
           >
             {isIncome ? '+' : '-'}${display}
           </Text>
-          <Text className="font-satoshi text-sm text-secundary">
+          <Text className="text-sm text-secundary">
             {relativeDate(date)}
           </Text>
         </View>
@@ -118,7 +96,8 @@ export default function ExpenseDetailScreen() {
 
       <View className="gap-8 px-5 pb-10">
         <View className="gap-2">
-          <Text className="px-4 text-xs text-secundary">Detalles</Text>
+          <Text className="px-4 font-satoshi-medium">Detalles</Text>
+
           <Group>
             <Row label="Categoría">
               <CategoryIcon size={17} color={category.tint} />
@@ -153,7 +132,7 @@ export default function ExpenseDetailScreen() {
               </Pressable>
             ) : (
               <Row label="Factura">
-                <Text className="text-neutral-400 dark:text-neutral-600">Ninguna</Text>
+                <Text className="text-secundary">Ninguna</Text>
               </Row>
             )}
           </Group>
@@ -165,12 +144,12 @@ export default function ExpenseDetailScreen() {
               onPress={confirmDelete}
               className="min-h-14 items-center justify-center px-4 py-3 active:bg-neutral-200 dark:active:bg-white/5"
             >
-              <Text className="text-red-400">
+              <Text className="text-red-400 font-satoshi-medium text-lg">
                 {isIncome ? 'Eliminar ingreso' : 'Eliminar gasto'}
               </Text>
             </Pressable>
           </Group>
-          <Text className="px-4 text-xs text-neutral-400 dark:text-neutral-600">
+          <Text className="px-4 text-xs text-secundary">
             Se eliminará de tu historial. Esta acción no se puede deshacer.
           </Text>
         </View>

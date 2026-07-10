@@ -36,18 +36,17 @@ export const MonthCalendar = ({selected, onSelect}: MonthCalendarProps) => {
     <Calendar
       current={key}
       onDayPress={(day) => onSelect(fromKey(day.dateString))}
-      markedDates={{[key]: {selected: true, selectedColor: '#059669'}}}
+      markedDates={{[key]: {selected: true, selectedColor: '#009689'}}}
       firstDay={1}
       enableSwipeMonths
-      style={{borderRadius: 16, paddingBottom: 8}}
       theme={{
         calendarBackground: 'transparent',
         textSectionTitleColor: dark ? '#a3a3a3' : '#737373',
         monthTextColor: dark ? '#ffffff' : '#000000',
         dayTextColor: dark ? '#ffffff' : '#000000',
         textDisabledColor: dark ? '#404040' : '#d4d4d4',
-        todayTextColor: '#059669',
-        selectedDayBackgroundColor: '#059669',
+        todayTextColor: '#009689',
+        selectedDayBackgroundColor: '#009689',
         selectedDayTextColor: '#ffffff',
         arrowColor: dark ? '#ffffff' : '#000000',
         textDayFontFamily: 'Satoshi-Regular',

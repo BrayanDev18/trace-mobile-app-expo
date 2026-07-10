@@ -5,14 +5,22 @@
 @import "nativewind/theme";
 
 @theme {
-  --color-accent: #059669;
-  --color-accent-pressed: #047857;
+  --color-accent: #009689;
+  --color-accent-pressed: #00786f;
 
   --font-satoshi-light: "Satoshi-Light";
   --font-satoshi: "Satoshi-Regular";
   --font-satoshi-medium: "Satoshi-Medium";
   --font-satoshi-bold: "Satoshi-Bold";
   --font-satoshi-black: "Satoshi-Black";
+}
+
+/* En dark el accent baja de luminancia (teal-800/900) para no deslumbrar */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-accent: #005f5a;
+    --color-accent-pressed: #0b4f4a;
+  }
 }
 
 @utility bg-primary {
@@ -23,9 +31,9 @@
 }
 
 @utility text-primary {
-  color: var(--color-black);
+  color: var(--color-neutral-900);
   @variant dark {
-    color: var(--color-white);
+    color: var(--color-neutral-300);
   }
 }
 
@@ -36,6 +44,23 @@
   }
 }
 
+@utility bg-tertiary {
+  background-color: var(--color-neutral-100);
+  @variant dark {
+    background-color: var(--color-neutral-800);
+  }
+}
+
 @utility text-secundary {
-  color: var(--color-neutral-400);
+  color: var(--color-neutral-500);
+  @variant dark {
+    color: var(--color-neutral-400);
+  }
+}
+
+@utility btn-primary {
+  background-color: color-mix(in oklab, var(--color-accent) 60%, transparent);
+  @variant dark {
+    background-color: var(--color-accent);
+  }
 }

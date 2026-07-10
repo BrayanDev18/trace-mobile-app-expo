@@ -12,8 +12,8 @@ type QuickAction = {
 
 const ACTIONS: QuickAction[] = [
   {label: 'Suscriptions', icon: IconDeviceRemote, onPress: () => navigate('subscriptions')},
-  {label: 'Goals', icon: IconTargetArrow},
-  {label: 'Debts', icon: IconMoneybag},
+  {label: 'Goals', icon: IconTargetArrow, onPress: () => navigate('goals')},
+  {label: 'Debts', icon: IconMoneybag, onPress: () => navigate('debts')},
 ];
 
 export const QuickActions = () => (

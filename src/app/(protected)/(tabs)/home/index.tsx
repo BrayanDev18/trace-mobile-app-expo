@@ -5,7 +5,7 @@ import {BalanceCardSkia, HomeHeader, QuickActions, TransactionsList} from '@/scr
 
 export default function HomeScreen() {
   return (
-    <Screen edges={['top']}>
+    <Screen edges={['top']} asBackground={false}>
       <HomeHeader/>
 
       <ScrollView

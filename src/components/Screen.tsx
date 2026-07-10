@@ -1,11 +1,12 @@
-import React, {ReactNode} from "react";
-import {ScrollView, View, ViewProps} from "react-native";
+import {ReactNode} from "react";
+import {ScrollView, useColorScheme, View, ViewProps} from "react-native";
 import {Edge, SafeAreaView} from "react-native-safe-area-context";
 import {
   KeyboardAvoidingView,
   KeyboardAwareScrollView,
 } from "react-native-keyboard-controller";
 import {cn} from "@/utils";
+import {LinearGradient} from "expo-linear-gradient";
 
 type ScreenProps = ViewProps & {
   children: ReactNode;
@@ -14,7 +15,7 @@ type ScreenProps = ViewProps & {
   keyboardOffset?: number;
   scroll?: boolean;
   padded?: boolean;
-  background?: ReactNode;
+  asBackground?: boolean;
   className?: string;
   contentClassName?: string;
 };
@@ -22,18 +23,27 @@ type ScreenProps = ViewProps & {
 const DEFAULT_BG = "bg-primary";
 const DEFAULT_PADDING = "px-6";
 
-export const Screen = ({
-  children,
-  edges = ["top", "bottom"],
-  keyboard = false,
-  keyboardOffset = 0,
-  scroll = false,
-  padded = false,
-  background,
-  className,
-  contentClassName,
-  ...rest
-}: ScreenProps) => {
+export const Screen = (props: ScreenProps) => {
+  const {
+    children,
+    edges = ["top", "bottom"],
+    keyboard = false,
+    keyboardOffset = 0,
+    scroll = false,
+    padded = false,
+    asBackground = true,
+    className,
+    contentClassName,
+    ...rest
+  } = props
+
+  const scheme = useColorScheme();
+  const dark = scheme === 'dark';
+
+  const glow: [string, string] = dark
+    ? ['#022f2e', 'rgba(10,10,10,0)']
+    : ['#cbfbf1', 'rgba(245,245,245,0)'];
+
   const inner = (
     <View className={cn("h-full w-full", padded && DEFAULT_PADDING, contentClassName)}>
       {children}
@@ -78,7 +88,12 @@ export const Screen = ({
 
   return (
     <View className={cn("flex-1", DEFAULT_BG, className)} {...rest}>
-      {background}
+      {asBackground && (
+        <LinearGradient
+          colors={glow}
+          style={{position: 'absolute', top: 0, left: 0, right: 0, height: 150}}
+        />
+      )}
 
       <SafeAreaView className="flex-1" edges={edges}>
         {body}

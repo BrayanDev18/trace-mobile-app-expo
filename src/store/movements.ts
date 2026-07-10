@@ -9,8 +9,9 @@ import {type MovementType} from '@/screens/expenses';
  * backend. Cuando llegue la API de Go, la lista pasa a TanStack Query y
  * crear/eliminar a mutaciones; este store desaparece.
  *
- * `subscriptionId` marca los movimientos materializados desde una
- * suscripción cuando llega su fecha de cobro.
+ * `subscriptionId` marca los movimientos generados por una suscripción:
+ * el primer cobro se crea al dar de alta la suscripción; los cobros
+ * recurrentes siguientes son un proceso aparte (pendiente).
  */
 export type Movement = {
   id: string;

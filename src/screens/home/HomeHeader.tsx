@@ -15,7 +15,7 @@ export const HomeHeader = ({name = 'Brayan', onPressBell}: HomeHeaderProps) => {
     <View className="flex-row items-center justify-between px-5 pb-2 pt-3">
       <View className="flex-row items-center gap-3">
         <View className="h-11 w-11 items-center justify-center rounded-full border border-accent/20 bg-accent/10">
-          <Text className="font-satoshi-bold text-base text-accent dark:text-emerald-400">
+          <Text className="font-satoshi-bold text-accent dark:text-teal-400">
             {name.charAt(0).toUpperCase()}
           </Text>
         </View>
