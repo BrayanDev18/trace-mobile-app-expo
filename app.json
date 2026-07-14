@@ -36,7 +36,18 @@
         }
       ],
       "expo-image",
-      "expo-font",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/font/Satoshi-Light.otf",
+            "./assets/font/Satoshi-Regular.otf",
+            "./assets/font/Satoshi-Medium.otf",
+            "./assets/font/Satoshi-Bold.otf",
+            "./assets/font/Satoshi-Black.otf"
+          ]
+        }
+      ],
       [
         "expo-image-picker",
         {

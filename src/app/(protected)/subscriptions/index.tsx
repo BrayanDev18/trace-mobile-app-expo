@@ -1,11 +1,14 @@
 import {useMemo} from 'react';
 import {View} from 'react-native';
 import {router} from 'expo-router';
+import {FlashList} from '@shopify/flash-list';
 
 import {Header, Screen, Text} from '@/components';
 import {DynamicRoutes, ScreenRoutes} from '@/constants';
 import {SubscriptionCard, SubscriptionsBanner} from '@/screens/subscriptions';
 import {useSubscriptionsStore} from '@/store/subscriptions';
+
+const Gap = () => <View className="h-3" />;
 
 const SubscriptionScreen = () => {
   const subscriptions = useSubscriptionsStore((s) => s.items);
@@ -20,30 +23,33 @@ const SubscriptionScreen = () => {
   );
 
   return (
-    <Screen scroll>
+    <Screen>
       <Header title="Suscripciones" />
 
-      <View className="gap-6 px-5 py-4">
-        <SubscriptionsBanner
-          monthlyTotal={monthlyTotal}
-          count={subscriptions.length}
-          onAdd={() => router.push(ScreenRoutes.newSubscription)}
-        />
-
-        <View className="gap-3">
-          <Text className="font-satoshi-medium text-lg">Mis suscripciones</Text>
-
-          <View className="gap-3">
-            {subscriptions.map((subscription) => (
-              <SubscriptionCard
-                key={subscription.id}
-                subscription={subscription}
-                onPress={() => router.push(DynamicRoutes.subscription(subscription.id))}
+      <View className="flex-1">
+        <FlashList
+          data={subscriptions}
+          keyExtractor={(item) => item.id}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24}}
+          ItemSeparatorComponent={Gap}
+          ListHeaderComponent={
+            <View className="gap-6 pb-3">
+              <SubscriptionsBanner
+                monthlyTotal={monthlyTotal}
+                count={subscriptions.length}
+                onAdd={() => router.push(ScreenRoutes.newSubscription)}
               />
-            ))}
-          </View>
-        </View>
-
+              <Text className="font-satoshi-medium text-lg">Mis suscripciones</Text>
+            </View>
+          }
+          renderItem={({item}) => (
+            <SubscriptionCard
+              subscription={item}
+              onPress={() => router.push(DynamicRoutes.subscription(item.id))}
+            />
+          )}
+        />
       </View>
     </Screen>
   );

@@ -6,8 +6,6 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {KeyboardProvider} from 'react-native-keyboard-controller';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import '../global.css';
-import {useEffect} from "react";
-import {useFonts} from "expo-font";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,17 +18,6 @@ const queryClient = new QueryClient({
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const [fontsLoaded, error] = useFonts({
-    'Satoshi-Light': require('@assets/font/Satoshi-Light.otf'),
-    'Satoshi-Regular': require('@assets/font/Satoshi-Regular.otf'),
-    'Satoshi-Medium': require('@assets/font/Satoshi-Medium.otf'),
-    'Satoshi-Bold': require('@assets/font/Satoshi-Bold.otf'),
-    'Satoshi-Black': require('@assets/font/Satoshi-Black.otf'),
-  });
-
-  useEffect(() => {
-    if (error) throw error;
-  }, [fontsLoaded, error]);
 
   return (
     <GestureHandlerRootView style={{flex: 1}}>

@@ -7,6 +7,8 @@ import {Text} from '@/components';
 import {getPaymentMethod} from '@/constants';
 import {formatCurrency} from '@/utils';
 
+import {sizedLogo} from './useBrandSearch';
+
 export type BrandIcon = ComponentType<{ size?: number; color?: string }>;
 
 export type Subscription = {
@@ -44,7 +46,8 @@ export const SubscriptionCard = ({subscription, onPress}: SubscriptionCardProps)
       <View className="h-14 w-14 items-center justify-center rounded-xl">
         {subscription.logoUrl ? (
           <Image
-            source={{uri: subscription.logoUrl}}
+            source={{uri: sizedLogo(subscription.logoUrl, 48)}}
+            recyclingKey={subscription.id}
             style={{width: 48, height: 48, borderRadius: 9}}
             contentFit="contain"
           />

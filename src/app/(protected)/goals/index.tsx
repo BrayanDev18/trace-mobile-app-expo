@@ -1,12 +1,15 @@
 import {useMemo} from 'react';
 import {Pressable, useColorScheme, View} from 'react-native';
 import {router} from 'expo-router';
+import {FlashList} from '@shopify/flash-list';
+import {IconPlus} from '@tabler/icons-react-native';
 
 import {Header, Screen, Text} from '@/components';
 import {DynamicRoutes, ScreenRoutes} from '@/constants';
 import {GoalCard, GoalsOverview, getGoalTheme} from '@/screens/goals';
 import {goalSaved, useGoalsStore} from '@/store/goals';
-import {IconPlus} from "@tabler/icons-react-native";
+
+const Gap = () => <View className="h-3" />;
 
 const GoalsScreen = () => {
   const dark = useColorScheme() === 'dark';
@@ -41,51 +44,54 @@ const GoalsScreen = () => {
   }));
 
   return (
-    <Screen scroll>
-      <Header title="Metas"/>
+    <Screen>
+      <Header title="Metas" />
 
-      <View className="gap-6 px-5 py-4">
-        {active.length === 0 ? (
-          <View className="items-center gap-3 py-12 w-full">
-            <Text className="font-satoshi-medium text-xl">Sin metas todavía</Text>
-
-            <Text className="text-center text-lg text-secundary">
-              Aún no tienes fijada ninguna meta
-            </Text>
-
-            <Pressable
-              onPress={() => router.push(ScreenRoutes.newGoal)}
-              className="h-12 flex-row items-center justify-center gap-2 rounded-full btn-primary w-full"
-            >
-              <IconPlus size={18} color={dark ? '#ffffff' : '#171717'}/>
-              <Text className="font-satoshi-bold text-sm">Nueva meta</Text>
-            </Pressable>
-          </View>
-        ) : (
-          <>
-            <GoalsOverview
-              saved={totals.saved}
-              target={totals.target}
-              count={active.length}
-              segments={segments}
-            />
-
-            <View className="gap-3">
-              <Text className="px-4 font-satoshi-medium text-lg">Mis metas</Text>
-
-              <View className="gap-3">
-                {active.map(({goal, saved}) => (
-                  <GoalCard
-                    key={goal.id}
-                    goal={goal}
-                    saved={saved}
-                    onPress={() => router.push(DynamicRoutes.goal(goal.id))}
-                  />
-                ))}
+      <View className="flex-1">
+        <FlashList
+          data={active}
+          keyExtractor={({goal}) => goal.id}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24}}
+          ItemSeparatorComponent={Gap}
+          ListHeaderComponent={
+            active.length > 0 ? (
+              <View className="gap-6 pb-3">
+                <GoalsOverview
+                  saved={totals.saved}
+                  target={totals.target}
+                  count={active.length}
+                  segments={segments}
+                />
+                <Text className="px-4 font-satoshi-medium text-lg">Mis metas</Text>
               </View>
+            ) : null
+          }
+          ListEmptyComponent={
+            <View className="w-full items-center gap-3 py-12">
+              <Text className="font-satoshi-medium text-xl">Sin metas todavía</Text>
+
+              <Text className="text-center text-lg text-secundary">
+                Aún no tienes fijada ninguna meta
+              </Text>
+
+              <Pressable
+                onPress={() => router.push(ScreenRoutes.newGoal)}
+                className="h-12 w-full flex-row items-center justify-center gap-2 rounded-full btn-primary"
+              >
+                <IconPlus size={18} color={dark ? '#ffffff' : '#171717'} />
+                <Text className="font-satoshi-bold text-sm">Nueva meta</Text>
+              </Pressable>
             </View>
-          </>
-        )}
+          }
+          renderItem={({item}) => (
+            <GoalCard
+              goal={item.goal}
+              saved={item.saved}
+              onPress={() => router.push(DynamicRoutes.goal(item.goal.id))}
+            />
+          )}
+        />
       </View>
     </Screen>
   );

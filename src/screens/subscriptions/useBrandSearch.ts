@@ -7,6 +7,10 @@ export type BrandResult = {
   logo_url: string;
 };
 
+/** Pide el logo al tamaño mostrado (2x para retina) en vez del default del CDN. */
+export const sizedLogo = (url: string, displaySize: number) =>
+  `${url}${url.includes('?') ? '&' : '?'}size=${displaySize * 2}`;
+
 const searchBrands = async (query: string): Promise<BrandResult[]> => {
   const response = await fetch(
     `https://api.logo.dev/search?q=${encodeURIComponent(query)}`,

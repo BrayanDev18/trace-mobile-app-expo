@@ -133,7 +133,7 @@ export default function NewSubscriptionScreen() {
   };
 
   return (
-    <Screen edges={['top']} scroll={!brand} keyboard={!brand}>
+    <Screen edges={['top']} scroll={!brand} keyboard={!brand} asBackground={false}>
       <View className="flex-row items-center justify-between px-5 pb-2 pt-3">
         <Pressable
           accessibilityLabel="Cerrar"
@@ -143,7 +143,7 @@ export default function NewSubscriptionScreen() {
         >
           <IconX size={18} color={iconColor}/>
         </Pressable>
-        <Text className="font-satoshi-bold">Nueva meta</Text>
+        <Text className="font-satoshi-bold">Nueva suscripcion</Text>
         <View className="h-10 w-10"/>
       </View>
 

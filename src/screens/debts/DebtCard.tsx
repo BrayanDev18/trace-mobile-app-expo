@@ -20,7 +20,7 @@ export const DebtCard = ({debt, paid, onPress}: DebtCardProps) => {
   return (
     <Pressable
       onPress={onPress}
-      className="flex-row items-center gap-3 rounded-2xl bg-secundary p-4 active:opacity-70"
+      className="flex-row items-center gap-3 rounded-2xl bg-secundary p-3 active:opacity-70"
     >
       <View
         className="h-12 w-12 items-center justify-center rounded-xl"

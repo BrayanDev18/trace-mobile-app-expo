@@ -1,4 +1,5 @@
-import {View, Pressable, Image, useColorScheme} from 'react-native';
+import {View, Pressable, useColorScheme} from 'react-native';
+import {Image} from 'expo-image';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {IconPlus} from '@tabler/icons-react-native';
 
@@ -50,8 +51,9 @@ export const TabBar = ({state, navigation}: TabBarProps) => {
       >
         <Image
           source={ICONS[iconKey]}
-          resizeMode="contain"
-          style={{width: 26, height: 26, tintColor: focused ? active : inactive}}
+          contentFit="contain"
+          tintColor={focused ? active : inactive}
+          style={{width: 26, height: 26}}
         />
       </Pressable>
     );
