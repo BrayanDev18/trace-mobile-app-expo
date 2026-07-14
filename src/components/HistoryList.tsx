@@ -5,7 +5,7 @@ import {Group, Separator} from '@/components/Group';
 import {Text} from '@/components/Text';
 import {formatCurrency, relativeDate} from '@/utils';
 
-export type HistoryItem = {
+export type HistoryItemProps = {
   id: string;
   date: string;
   amount: number;
@@ -13,10 +13,10 @@ export type HistoryItem = {
 
 type HistoryListProps = {
   title: string;
-  items: HistoryItem[];
+  items: HistoryItemProps[];
   emptyLabel: string;
   hint: string;
-  onRemove: (item: HistoryItem) => void;
+  onRemove: (item: HistoryItemProps) => void;
 };
 
 export const HistoryList = (props: HistoryListProps) => {

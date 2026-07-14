@@ -2,26 +2,22 @@ import {create} from 'zustand';
 import {createJSONStorage, persist, type PersistOptions} from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-type ListState<T extends {id: string}> = {
+type ListStateProps<T extends {id: string}> = {
   items: T[];
   add: (data: Omit<T, 'id'>) => T;
   remove: (id: string) => void;
 };
 
-type ListPersist<T extends {id: string}> = Pick<
-  PersistOptions<ListState<T>, {items: T[]}>,
+type ListPersistProps<T extends {id: string}> = Pick<
+  PersistOptions<ListStateProps<T>, {items: T[]}>,
   'version' | 'migrate'
 >;
 
-/**
- * Store persistido de lista con `id` generado dentro del store (las
- * pantallas nunca fabrican ids ni fechas: mantiene los componentes puros).
- */
 export const createPersistedListStore = <T extends {id: string}>(
   storageKey: string,
-  options?: ListPersist<T>,
+  options?: ListPersistProps<T>,
 ) =>
-  create<ListState<T>>()(
+  create<ListStateProps<T>>()(
     persist(
       (set) => ({
         items: [],

@@ -2,17 +2,12 @@ import {useAnimatedStyle, useSharedValue, withSequence, withTiming} from 'react-
 
 import {appendAmountKey, haptic} from '@/utils';
 
-type UseAmountInputOptions = {
+type UseAmountInputOptionsProps = {
   getValue: () => string;
   onChange: (raw: string) => void;
 };
 
-/**
- * Handlers del keypad de montos con las recetas canónicas de design.md §5:
- * pop al teclear, shake de error y háptica. `getValue` en vez de `value`
- * para que el keypad no obligue a observar el monto en la pantalla entera.
- */
-export const useAmountInput = ({getValue, onChange}: UseAmountInputOptions) => {
+export const useAmountInput = ({getValue, onChange}: UseAmountInputOptionsProps) => {
   const scale = useSharedValue(1);
   const shake = useSharedValue(0);
 

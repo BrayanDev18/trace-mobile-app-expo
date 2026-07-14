@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type SessionState = {
+type SessionStateProps = {
   hasOnboarded: boolean;
   isAuthenticated: boolean;
   completeOnboarding: () => void;
@@ -8,8 +8,7 @@ type SessionState = {
   signOut: () => void;
 };
 
-export const useSessionStore = create<SessionState>((set) => ({
-  // Flags quemados hasta tener auth/persistencia reales.
+export const useSessionStore = create<SessionStateProps>((set) => ({
   hasOnboarded: false,
   isAuthenticated: true,
   completeOnboarding: () => set({ hasOnboarded: true }),

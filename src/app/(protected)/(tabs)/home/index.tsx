@@ -2,9 +2,12 @@ import {useMemo} from 'react';
 import {ScrollView} from 'react-native';
 
 import {Screen} from '@/components';
+import {navigate} from '@/constants';
 import {BalanceCardSkia, HomeHeader, QuickActions, TransactionsList} from '@/features/home';
 import {useMovementsStore} from '@/features/expenses';
 import {sameDay} from '@/utils';
+
+const goMovements = () => navigate('movements');
 
 export default function HomeScreen() {
   const movements = useMovementsStore((s) => s.items);
@@ -49,7 +52,7 @@ export default function HomeScreen() {
 
         <QuickActions />
 
-        <TransactionsList/>
+        <TransactionsList onSeeAll={goMovements} />
       </ScrollView>
     </Screen>
   );

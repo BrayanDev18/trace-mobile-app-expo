@@ -5,4 +5,4 @@ export {SubscriptionHeroCard} from './components/SubscriptionHeroCard';
 export {SubscriptionsBanner} from './components/SubscriptionsBanner';
 export {useSubscriptionForm} from './hooks/useSubscriptionForm';
 export {useSubscriptionsStore} from './store';
-export type {Subscription} from './types';
+export type {SubscriptionProps} from './types';

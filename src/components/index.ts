@@ -1,13 +1,13 @@
 export {Chip} from './Chip';
 export {ComingSoon} from './ComingSoon';
 export {DetailBadge, DetailHero} from './DetailHero';
-export {DetailRows, type DetailRow} from './DetailRows';
+export {DetailRows, type DetailRowProps} from './DetailRows';
 export {DottedGlowBackground} from './DottedGlowBackground';
 export {EmptyState} from './EmptyState';
 export {Group, Row, Separator} from './Group';
 export {GroupAction} from './GroupAction';
 export {Header} from './Header';
-export {HistoryList, type HistoryItem} from './HistoryList';
+export {HistoryList, type HistoryItemProps} from './HistoryList';
 export {HorizontalCalendar} from './HorizontalCalendar';
 export {Input} from './Input';
 export {Keypad} from './Keypad';

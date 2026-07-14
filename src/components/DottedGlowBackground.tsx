@@ -2,12 +2,6 @@ import {useMemo} from "react";
 import {StyleProp, StyleSheet, View, ViewStyle, useColorScheme} from "react-native";
 import {Canvas, Fill, Shader, Skia} from "@shopify/react-native-skia";
 
-/**
- * Fondo estático de puntos con brillo levemente distinto por punto.
- * Todo el grid se dibuja en un único RuntimeEffect y una sola pasada:
- * no hay animación ni trabajo por frame.
- */
-
 const shader = Skia.RuntimeEffect.Make(`
 uniform float  u_gap;
 uniform float  u_radius;
@@ -35,15 +29,10 @@ half4 main(float2 xy) {
 
 type DottedGlowBackgroundProps = {
   style?: StyleProp<ViewStyle>;
-  /** distancia entre centros de los puntos, en px */
   gap?: number;
-  /** radio base de cada punto */
   radius?: number;
-  /** color de los puntos (modo claro) */
   color?: string;
-  /** color de los puntos en modo oscuro */
   darkColor?: string;
-  /** opacidad global de la capa */
   opacity?: number;
 };
 

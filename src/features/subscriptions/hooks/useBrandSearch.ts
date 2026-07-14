@@ -1,13 +1,12 @@
 import {useEffect, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 
-import type {BrandResult} from '../types';
+import type {BrandResultProps} from '../types';
 
-/** Pide el logo al tamaño mostrado (2x para retina) en vez del default del CDN. */
 export const sizedLogo = (url: string, displaySize: number) =>
   `${url}${url.includes('?') ? '&' : '?'}size=${displaySize * 2}`;
 
-const searchBrands = async (query: string): Promise<BrandResult[]> => {
+const searchBrands = async (query: string): Promise<BrandResultProps[]> => {
   const response = await fetch(
     `https://api.logo.dev/search?q=${encodeURIComponent(query)}`,
     {headers: {Authorization: `Bearer ${process.env.EXPO_PUBLIC_LOGODEV_KEY}`}},
@@ -16,7 +15,6 @@ const searchBrands = async (query: string): Promise<BrandResult[]> => {
   return response.json();
 };
 
-/** Espera a que el usuario deje de escribir antes de propagar el valor. */
 const useDebounced = (value: string, delay = 300) => {
   const [debounced, setDebounced] = useState(value);
 

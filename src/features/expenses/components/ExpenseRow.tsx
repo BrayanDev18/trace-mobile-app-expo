@@ -3,11 +3,11 @@ import {View} from 'react-native';
 
 import {Text} from '@/components';
 import {getCategory} from '@/constants';
-import type {Movement} from '../types';
+import type {MovementProps} from '../types';
 import {formatCurrency} from '@/utils';
 
 type ExpenseRowProps = {
-  expense: Movement;
+  expense: MovementProps;
 };
 
 export const ExpenseRow = memo(function ExpenseRow({expense}: ExpenseRowProps) {

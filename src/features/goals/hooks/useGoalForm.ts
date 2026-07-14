@@ -6,7 +6,6 @@ import {haptic} from '@/utils';
 import {useGoalsStore} from '../store';
 import {GOAL_THEMES} from '../themes';
 
-/** Validación lazy (design.md §7): errores solo tras el primer intento de envío. */
 export const useGoalForm = () => {
   const addGoal = useGoalsStore((s) => s.addGoal);
 

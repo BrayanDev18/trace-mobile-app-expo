@@ -1,14 +1,9 @@
-import {memo} from 'react';
 import {View, Pressable} from 'react-native';
-import {router} from 'expo-router';
 
 import {Group, Text} from '@/components';
-import {DynamicRoutes, getCategory, getPaymentMethod} from '@/constants';
-import {useIconColors} from '@/hooks/useIconColors';
-import {useMovementsStore, type Movement} from '@/features/expenses';
-import {cn, formatCurrency, relativeDate, timeLabel} from '@/utils';
+import {TransactionRow, useMovementsStore} from '@/features/expenses';
 
-const RECENT_COUNT = 6;
+const RECENT_COUNT = 5;
 
 type TransactionsListProps = {
   onSeeAll?: () => void;
@@ -26,9 +21,11 @@ export const TransactionsList = ({onSeeAll}: TransactionsListProps) => {
             Transacciones recientes
           </Text>
 
-          <Pressable onPress={onSeeAll} hitSlop={8} className="active:opacity-50">
-            <Text className="text-accent dark:text-teal-400">Ver todas</Text>
-          </Pressable>
+          {recent.length > 0 && (
+            <Pressable onPress={onSeeAll} hitSlop={8} className="active:opacity-50">
+              <Text className="text-accent dark:text-teal-400">Ver todas</Text>
+            </Pressable>
+          )}
         </View>
 
         {recent.length === 0 ? (
@@ -51,51 +48,3 @@ export const TransactionsList = ({onSeeAll}: TransactionsListProps) => {
     </View>
   );
 };
-
-const TransactionRow = memo(function TransactionRow({movement}: {movement: Movement}) {
-  const category = getCategory(movement.categoryId);
-  const Icon = category.icon;
-  const isIncome = movement.type === 'income';
-  const glyph = useIconColors().primary;
-
-  const date = new Date(movement.date);
-  const method = movement.methodId ? getPaymentMethod(movement.methodId) : undefined;
-
-  return (
-    <Pressable
-      onPress={() => router.push(DynamicRoutes.expense(movement.id))}
-      className="flex-row items-center gap-3 px-4 py-2 active:bg-neutral-200 dark:active:bg-white/5"
-    >
-      <View
-        className="h-14 w-14 items-center justify-center rounded-xl bg-tertiary"
-      >
-        <Icon size={25} color={glyph}/>
-      </View>
-
-      <View className="flex-1 gap-1">
-        <Text numberOfLines={1} className="font-satoshi-medium text-[16px]">
-          {movement.reason}
-        </Text>
-
-        <Text numberOfLines={1} className="text-sm text-secundary">
-          {relativeDate(date)}
-          {method ? ` · ${method.label}` : ''}
-        </Text>
-      </View>
-
-      <View className="gap-1 items-end">
-        <Text
-          className={cn(
-            'font-satoshi-medium',
-            isIncome && 'text-accent dark:text-teal-400',
-          )}
-          style={{fontVariant: ['tabular-nums']}}
-        >
-          {isIncome ? '+' : '-'}${formatCurrency(movement.amount)}
-        </Text>
-
-        <Text className="text-sm text-secundary">{timeLabel(date)}</Text>
-      </View>
-    </Pressable>
-  );
-});

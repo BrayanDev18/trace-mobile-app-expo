@@ -1,9 +1,4 @@
-/**
- * El progreso nunca se guarda como contador mutable: se deriva sumando los
- * aportes (`contributions`) de cada meta. Las metas terminadas se archivan
- * con `archivedAt` en vez de borrarse, para conservar su historial.
- */
-export type Goal = {
+export type GoalProps = {
   id: string;
   name: string;
   themeId: string;
@@ -13,7 +8,7 @@ export type Goal = {
   archivedAt?: string;
 };
 
-export type GoalContribution = {
+export type GoalContributionProps = {
   id: string;
   goalId: string;
   amount: number;

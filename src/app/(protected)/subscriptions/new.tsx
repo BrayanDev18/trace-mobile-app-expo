@@ -8,12 +8,12 @@ import {AmountDisplay,CapturePanel,DatePanel,FormSheetHeader,PickerChip,PillPick
 import {useAmountInput} from '@/hooks/useAmountInput';
 import {PAYMENT_METHODS, getPaymentMethod} from '@/constants';
 import {BrandSearch,BrandSummary,useSubscriptionForm} from '@/features/subscriptions';
-import {type Subscription} from '@/features/subscriptions';
+import {type SubscriptionProps} from '@/features/subscriptions';
 import {haptic, shortDate} from '@/utils';
 
-type Panel = 'keypad' | 'date' | 'method';
+type PanelProps = 'keypad' | 'date' | 'method';
 
-const PERIODS: {value: Subscription['period']; label: string}[] = [
+const PERIODS: {value: SubscriptionProps['period']; label: string}[] = [
   {value: 'monthly', label: 'Mensual'},
   {value: 'yearly', label: 'Anual'},
 ];
@@ -21,7 +21,7 @@ const PERIODS: {value: Subscription['period']; label: string}[] = [
 const METHOD_OPTIONS = PAYMENT_METHODS.map((m) => ({id: m.id, label: m.label, icon: m.Icon}));
 
 export default function NewSubscriptionScreen() {
-  const [panel, setPanel] = useState<Panel>('keypad');
+  const [panel, setPanel] = useState<PanelProps>('keypad');
   const form = useSubscriptionForm();
 
   const {animatedStyle, onKey, erase, clear, shakeError} = useAmountInput({
@@ -31,7 +31,7 @@ export default function NewSubscriptionScreen() {
 
   const method = form.methodId ? getPaymentMethod(form.methodId) : undefined;
 
-  const togglePanel = (target: Panel) => {
+  const togglePanel = (target: PanelProps) => {
     haptic.select();
     setPanel((prev) => (prev === target ? 'keypad' : target));
   };

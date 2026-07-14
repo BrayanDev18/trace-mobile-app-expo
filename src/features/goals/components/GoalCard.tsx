@@ -2,7 +2,7 @@ import {memo} from 'react';
 import {Pressable, View} from 'react-native';
 
 import {Text} from '@/components';
-import type {Goal} from '../types';
+import type {GoalProps} from '../types';
 import {formatCurrency} from '@/utils';
 
 import {monthsUntil} from '../utils';
@@ -10,7 +10,7 @@ import {getGoalTheme} from '../themes';
 import {ProgressBar} from './ProgressBar';
 
 type GoalCardProps = {
-  goal: Goal;
+  goal: GoalProps;
   saved: number;
   onPress?: () => void;
 };

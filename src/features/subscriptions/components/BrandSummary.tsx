@@ -3,10 +3,10 @@ import {Image} from 'expo-image';
 
 import {Text} from '@/components/Text';
 
-import type {BrandResult} from '../types';
+import type {BrandResultProps} from '../types';
 
 type BrandSummaryProps = {
-  brand: BrandResult;
+  brand: BrandResultProps;
   onChange: () => void;
 };
 

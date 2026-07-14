@@ -5,11 +5,11 @@ import {FlashList, type ListRenderItem} from '@shopify/flash-list';
 
 import {Header, Screen,EmptyState,ListGap,SectionTitle} from '@/components';
 import {DynamicRoutes, ScreenRoutes} from '@/constants';
-import {SubscriptionCard, SubscriptionsBanner, type Subscription} from '@/features/subscriptions';
+import {SubscriptionCard, SubscriptionsBanner, type SubscriptionProps} from '@/features/subscriptions';
 import {useSubscriptionsStore} from '@/features/subscriptions';
 
 const LIST_CONTENT = {paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24};
-const keyExtractor = (item: Subscription) => item.id;
+const keyExtractor = (item: SubscriptionProps) => item.id;
 const goNewSubscription = () => router.push(ScreenRoutes.newSubscription);
 
 const SubscriptionsScreen = () => {
@@ -24,7 +24,7 @@ const SubscriptionsScreen = () => {
     [subscriptions],
   );
 
-  const renderItem = useCallback<ListRenderItem<Subscription>>(
+  const renderItem = useCallback<ListRenderItem<SubscriptionProps>>(
     ({item}) => (
       <SubscriptionCard
         subscription={item}

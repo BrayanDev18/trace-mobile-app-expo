@@ -6,12 +6,12 @@ import {IconCalendarEvent, IconUser} from '@tabler/icons-react-native';
 import {Input, Keypad, Screen} from '@/components';
 import {AmountDisplay,CapturePanel,DatePanel,FormSheetHeader,PickerChip,SegmentChips} from '@/components/capture';
 import {useAmountInput} from '@/hooks/useAmountInput';
-import {useDebtsStore, type DebtDirection} from '@/features/debts';
+import {useDebtsStore, type DebtDirectionProps} from '@/features/debts';
 import {haptic, shortDate} from '@/utils';
 
-type Panel = 'keypad' | 'date';
+type PanelProps = 'keypad' | 'date';
 
-const DIRECTIONS: {value: DebtDirection; label: string}[] = [
+const DIRECTIONS: {value: DebtDirectionProps; label: string}[] = [
   {value: 'lent', label: 'Me deben'},
   {value: 'owed', label: 'Yo debo'},
 ];
@@ -21,9 +21,9 @@ export default function NewDebtScreen() {
 
   const [person, setPerson] = useState('');
   const [amount, setAmount] = useState('');
-  const [direction, setDirection] = useState<DebtDirection>('lent');
+  const [direction, setDirection] = useState<DebtDirectionProps>('lent');
   const [dueDate, setDueDate] = useState<Date | null>(null);
-  const [panel, setPanel] = useState<Panel>('keypad');
+  const [panel, setPanel] = useState<PanelProps>('keypad');
   const [attempted, setAttempted] = useState(false);
 
   const {animatedStyle, onKey, erase, clear, shakeError} = useAmountInput({
@@ -34,7 +34,7 @@ export default function NewDebtScreen() {
   const amountValid = Number(amount) > 0;
   const personValid = person.trim().length > 0;
 
-  const togglePanel = (target: Panel) => {
+  const togglePanel = (target: PanelProps) => {
     haptic.select();
     setPanel((prev) => (prev === target ? 'keypad' : target));
   };

@@ -6,15 +6,15 @@ import {FlashList, type ListRenderItem} from '@shopify/flash-list';
 import {Header, Screen,EmptyState,ListGap,SectionTitle} from '@/components';
 import {DynamicRoutes, ScreenRoutes} from '@/constants';
 import {DebtCard, DebtsOverview} from '@/features/debts';
-import {debtPaid, useDebtsStore, type Debt} from '@/features/debts';
+import {debtPaid, useDebtsStore, type DebtProps} from '@/features/debts';
 
-type Row =
+type RowProps =
   | {type: 'section'; title: string}
-  | {type: 'debt'; debt: Debt; paid: number};
+  | {type: 'debt'; debt: DebtProps; paid: number};
 
 const LIST_CONTENT = {paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24};
-const getItemType = (item: Row) => item.type;
-const keyExtractor = (item: Row) => (item.type === 'section' ? item.title : item.debt.id);
+const getItemType = (item: RowProps) => item.type;
+const keyExtractor = (item: RowProps) => (item.type === 'section' ? item.title : item.debt.id);
 const goNewDebt = () => router.push(ScreenRoutes.newDebt);
 
 const DebtsScreen = () => {
@@ -47,7 +47,7 @@ const DebtsScreen = () => {
     const lent = active.filter(({debt}) => debt.direction === 'lent');
     const owed = active.filter(({debt}) => debt.direction === 'owed');
 
-    const result: Row[] = [];
+    const result: RowProps[] = [];
     if (lent.length > 0) {
       result.push({type: 'section', title: 'Me deben'});
       lent.forEach(({debt, paid}) => result.push({type: 'debt', debt, paid}));
@@ -59,7 +59,7 @@ const DebtsScreen = () => {
     return result;
   }, [active]);
 
-  const renderItem = useCallback<ListRenderItem<Row>>(
+  const renderItem = useCallback<ListRenderItem<RowProps>>(
     ({item}) =>
       item.type === 'section' ? (
         <SectionTitle className="pt-3">{item.title}</SectionTitle>

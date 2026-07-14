@@ -1,13 +1,8 @@
-export type MovementType = 'expense' | 'income';
+export type MovementTypeProps = 'expense' | 'income';
 
-/**
- * `subscriptionId` marca los movimientos generados por una suscripción:
- * el primer cobro se crea al dar de alta la suscripción; los cobros
- * recurrentes siguientes son un proceso aparte (pendiente).
- */
-export type Movement = {
+export type MovementProps = {
   id: string;
-  type: MovementType;
+  type: MovementTypeProps;
   reason: string;
   amount: number;
   date: string;

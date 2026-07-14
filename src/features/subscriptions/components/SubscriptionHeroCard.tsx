@@ -6,9 +6,9 @@ import {DottedGlowBackground, Text} from '@/components';
 import {useIconColors} from '@/hooks/useIconColors';
 import {formatCurrency} from '@/utils';
 
-import type {Subscription} from '../types';
+import type {SubscriptionProps} from '../types';
 
-export const SubscriptionHeroCard = ({subscription}: {subscription: Subscription}) => {
+export const SubscriptionHeroCard = ({subscription}: {subscription: SubscriptionProps}) => {
   const {primary} = useIconColors();
 
   const ServiceIcon = subscription.icon ?? IconApps;

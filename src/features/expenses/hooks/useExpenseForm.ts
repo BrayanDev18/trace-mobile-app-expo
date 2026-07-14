@@ -19,14 +19,13 @@ const schema = z.object({
   receiptUri: z.string().optional(),
 });
 
-export type ExpenseFormValues = z.infer<typeof schema>;
+export type ExpenseFormValuesProps = z.infer<typeof schema>;
 
-/** Validación lazy (design.md §7): errores solo tras el primer intento de envío. */
 export const useExpenseForm = () => {
   const [attempted, setAttempted] = useState(false);
   const addMovement = useMovementsStore((s) => s.add);
 
-  const form = useForm<ExpenseFormValues>({
+  const form = useForm<ExpenseFormValuesProps>({
     resolver: zodResolver(schema),
     defaultValues: {
       type: 'expense',
@@ -39,7 +38,7 @@ export const useExpenseForm = () => {
     },
   });
 
-  const pickType = (t: ExpenseFormValues['type']) => {
+  const pickType = (t: ExpenseFormValuesProps['type']) => {
     haptic.select();
     form.setValue('type', t);
     const currentCategory = form.getValues('categoryId');

@@ -17,7 +17,6 @@ half4 main(float2 xy) {
   float2 p2 = float2(0.26 + 0.12 * cos(t * 0.37), 0.82 + 0.10 * sin(t * 0.49));
   float2 p3 = float2(0.80 + 0.13 * sin(t * 0.41), 0.86 + 0.11 * cos(t * 0.45));
 
-  // peso por distancia inversa: cada punto tiñe su zona y sangra hacia los demás
   float w0 = 1.0 / (dot(uv - p0, uv - p0) + 0.03);
   float w1 = 1.0 / (dot(uv - p1, uv - p1) + 0.03);
   float w2 = 1.0 / (dot(uv - p2, uv - p2) + 0.03);
@@ -27,7 +26,6 @@ half4 main(float2 xy) {
   float4 col = (u_c0 * w0 + u_c1 * w1 + u_c2 * w2 + u_c3 * w3) / sum;
   col.rgb += 0.05 * sin((uv.x + uv.y) * 6.2831 + t * 0.8);
 
-  // bordes más oscuros: viñeta que atenúa hacia las orillas
   float vig = smoothstep(0.80, 0.30, length(uv - 0.5));
   col.rgb *= mix(0.5, 1.0, vig);
 
@@ -46,7 +44,7 @@ export const BALANCE_PALETTES = {
   atardecer: ['#0f6b43', '#3aa06a', '#f4c24e', '#e6d5a8'],
 } as const;
 
-export type PaletteName = keyof typeof BALANCE_PALETTES;
+export type PaletteNameProps = keyof typeof BALANCE_PALETTES;
 
 export const hex01 = (hex: string) => {
   const h = hex.replace('#', '');

@@ -4,18 +4,18 @@ import Animated, {useAnimatedStyle, withSpring} from 'react-native-reanimated';
 import {Text} from '@/components';
 import {cn} from '@/utils';
 
-export type MovementType = 'expense' | 'income';
+import {type MovementTypeProps} from '../types';
 
 const SEGMENT_WIDTH = 88;
 
-const OPTIONS: { value: MovementType; label: string }[] = [
+const OPTIONS: { value: MovementTypeProps; label: string }[] = [
   {value: 'expense', label: 'Gasto'},
   {value: 'income', label: 'Ingreso'},
 ];
 
 type TypeSwitchProps = {
-  value: MovementType;
-  onChange: (value: MovementType) => void;
+  value: MovementTypeProps;
+  onChange: (value: MovementTypeProps) => void;
 };
 
 export const TypeSwitch = ({value, onChange}: TypeSwitchProps) => {

@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import {router, useLocalSearchParams} from 'expo-router';
 
 import {Header, Screen,DetailBadge, DetailHero,GroupAction} from '@/components';
-import {DetailRows, type DetailRow,HistoryList, type HistoryItem} from '@/components';
+import {DetailRows, type DetailRowProps,HistoryList, type HistoryItemProps} from '@/components';
 import {AmountEntryToggle} from '@/components/capture';
 import {ProgressBar, getGoalTheme, goalProgress,useGoalsStore} from '@/features/goals';
 import {formatCurrency, longDate,confirmDestructive} from '@/utils';
@@ -29,7 +29,7 @@ export default function GoalDetailScreen() {
   const ThemeIcon = theme.icon;
   const {saved, progress, percent, monthly} = goalProgress(goal, contributions);
 
-  const rows: DetailRow[] = [
+  const rows: DetailRowProps[] = [
     {label: 'Objetivo', value: `$ ${formatCurrency(goal.targetAmount)}`, tabular: true},
     {
       label: 'Fecha límite',
@@ -43,7 +43,7 @@ export default function GoalDetailScreen() {
   const confirmContribution = (value: number) =>
     addContribution({goalId: goal.id, amount: value});
 
-  const removeConfirm = (contribution: HistoryItem) =>
+  const removeConfirm = (contribution: HistoryItemProps) =>
     confirmDestructive({
       title: '¿Eliminar aporte?',
       message: `Se restarán $${formatCurrency(contribution.amount)} del progreso.`,

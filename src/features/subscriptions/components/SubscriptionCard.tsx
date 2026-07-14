@@ -9,10 +9,10 @@ import {useIconColors} from '@/hooks/useIconColors';
 import {formatCurrency} from '@/utils';
 
 import {sizedLogo} from '../hooks/useBrandSearch';
-import type {Subscription} from '../types';
+import type {SubscriptionProps} from '../types';
 
 type SubscriptionCardProps = {
-  subscription: Subscription;
+  subscription: SubscriptionProps;
   onPress?: () => void;
 };
 

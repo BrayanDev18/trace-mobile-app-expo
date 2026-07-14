@@ -4,12 +4,12 @@ import {IconCheck} from '@tabler/icons-react-native';
 import {Text} from '@/components';
 import {formatCurrency} from '@/utils';
 
-export type Overview = {label: string; value: number};
+export type OverviewProps = {label: string; value: number};
 
 type OverviewPopoverProps = {
   visible: boolean;
   anchor: {x: number; y: number; width: number; height: number};
-  overviews: Overview[];
+  overviews: OverviewProps[];
   selected: number;
   onSelect: (index: number) => void;
   onClose: () => void;

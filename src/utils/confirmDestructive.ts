@@ -2,7 +2,7 @@ import {Alert} from 'react-native';
 
 import {haptic} from './haptics';
 
-type ConfirmDestructiveOptions = {
+type ConfirmDestructiveOptionsProps = {
   title: string;
   message: string;
   actionLabel: string;
@@ -10,7 +10,7 @@ type ConfirmDestructiveOptions = {
   destructive?: boolean;
 };
 
-export const confirmDestructive = (options: ConfirmDestructiveOptions) => {
+export const confirmDestructive = (options: ConfirmDestructiveOptionsProps) => {
   const {title, message, actionLabel, onConfirm, destructive = true} = options;
 
   Alert.alert(title, message, [

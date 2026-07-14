@@ -9,13 +9,13 @@ import {CapturePanel,DatePanel,FormSheetHeader,PillPicker} from '@/components/ca
 import {useAmountInput} from '@/hooks/useAmountInput';
 import {categoriesByKind, getCategory, getPaymentMethod, PAYMENT_METHODS} from '@/constants';
 import {AmountSection,ReceiptControl,TypeSwitch,useExpenseForm} from '@/features/expenses';
-import {ExpenseChips, type ExpensePanel} from '@/features/expenses';
+import {ExpenseChips, type ExpensePanelProps} from '@/features/expenses';
 import {haptic} from '@/utils';
 
 const METHOD_OPTIONS = PAYMENT_METHODS.map((m) => ({id: m.id, label: m.label, icon: m.Icon}));
 
 export default function NewExpenseScreen() {
-  const [panel, setPanel] = useState<ExpensePanel>('keypad');
+  const [panel, setPanel] = useState<ExpensePanelProps>('keypad');
   const {control, getValues, setValue, formState: {errors}, attempted, pickType, submit} = useExpenseForm();
 
   const {animatedStyle, onKey, erase, clear, shakeError} = useAmountInput({
@@ -31,7 +31,7 @@ export default function NewExpenseScreen() {
   const category = categoryId ? getCategory(categoryId) : null;
   const method = methodId ? getPaymentMethod(methodId) : undefined;
 
-  const togglePanel = (target: ExpensePanel) => {
+  const togglePanel = (target: ExpensePanelProps) => {
     haptic.select();
     setPanel((prev) => (prev === target ? 'keypad' : target));
   };

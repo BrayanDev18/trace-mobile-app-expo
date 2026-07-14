@@ -1,5 +1,5 @@
 import {goalSaved} from './store';
-import type {Goal, GoalContribution} from './types';
+import type {GoalProps, GoalContributionProps} from './types';
 
 export const monthsUntil = (deadline: string, from = new Date()) => {
   const target = new Date(deadline);
@@ -8,7 +8,7 @@ export const monthsUntil = (deadline: string, from = new Date()) => {
   return Math.max(0, months);
 };
 
-export const goalProgress = (goal: Goal, contributions: GoalContribution[]) => {
+export const goalProgress = (goal: GoalProps, contributions: GoalContributionProps[]) => {
   const saved = goalSaved(contributions, goal.id);
   const progress = goal.targetAmount > 0 ? saved / goal.targetAmount : 0;
   const percent = Math.min(100, Math.round(progress * 100));

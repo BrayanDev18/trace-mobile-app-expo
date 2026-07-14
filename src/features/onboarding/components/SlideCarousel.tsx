@@ -2,14 +2,13 @@ import {FlatList, View, useWindowDimensions} from 'react-native';
 
 import {Text} from '@/components';
 
-import {type Slide} from '../slides';
+import {type SlideProps} from '../slides';
 
 type SlideCarouselProps = {
-  slides: Slide[];
+  slides: SlideProps[];
   onIndexChange: (index: number) => void;
 };
 
-/** El índice se emite durante el gesto (onScroll), no al terminar el momentum. */
 export const SlideCarousel = ({slides, onIndexChange}: SlideCarouselProps) => {
   const {width} = useWindowDimensions();
 

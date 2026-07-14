@@ -5,16 +5,15 @@ import {useMovementsStore} from '@/features/expenses';
 import {haptic, shortDate} from '@/utils';
 
 import {useSubscriptionsStore} from '../store';
-import type {BrandResult, Subscription} from '../types';
+import type {BrandResultProps, SubscriptionProps} from '../types';
 
-/** Validación lazy (design.md §7): errores solo tras el primer intento de envío. */
 export const useSubscriptionForm = () => {
   const add = useSubscriptionsStore((s) => s.add);
   const addFirstCharge = useMovementsStore((s) => s.add);
 
-  const [brand, setBrand] = useState<BrandResult | null>(null);
+  const [brand, setBrand] = useState<BrandResultProps | null>(null);
   const [price, setPrice] = useState('');
-  const [period, setPeriod] = useState<Subscription['period']>('monthly');
+  const [period, setPeriod] = useState<SubscriptionProps['period']>('monthly');
   const [date, setDate] = useState(() => new Date());
   const [methodId, setMethodId] = useState<string | undefined>(undefined);
   const [attempted, setAttempted] = useState(false);

@@ -1,14 +1,8 @@
-/**
- * `direction` distingue quién debe: 'lent' = me deben, 'owed' = yo debo.
- * El saldo pendiente nunca se guarda: se deriva restando los abonos
- * (`payments`) del monto original. Las deudas pagadas se saldan con
- * `settledAt` en vez de borrarse, para conservar su historial.
- */
-export type DebtDirection = 'lent' | 'owed';
+export type DebtDirectionProps = 'lent' | 'owed';
 
-export type Debt = {
+export type DebtProps = {
   id: string;
-  direction: DebtDirection;
+  direction: DebtDirectionProps;
   person: string;
   amount: number;
   dueDate?: string;
@@ -16,7 +10,7 @@ export type Debt = {
   settledAt?: string;
 };
 
-export type DebtPayment = {
+export type DebtPaymentProps = {
   id: string;
   debtId: string;
   amount: number;

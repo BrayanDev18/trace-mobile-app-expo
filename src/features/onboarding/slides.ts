@@ -1,6 +1,6 @@
-export type Slide = {title: string; subtitle: string};
+export type SlideProps = {title: string; subtitle: string};
 
-export const SLIDES: Slide[] = [
+export const SLIDES: SlideProps[] = [
   {
     title: 'Sigue el rastro\nde tu dinero',
     subtitle: 'Registra ingresos y gastos en segundos, sin hojas de cálculo.',

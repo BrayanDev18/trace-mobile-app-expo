@@ -2,11 +2,6 @@ import {useCallback, useEffect, useState} from 'react';
 import {useFocusEffect} from 'expo-router';
 import {useFrameCallback, useSharedValue, type SharedValue} from 'react-native-reanimated';
 
-/**
- * Reloj para animaciones Skia continuas. A diferencia de useClock, avanza
- * como máximo a `fps` (menos redibujados = menos GPU/batería) y se detiene
- * cuando la pantalla pierde el foco o `enabled` es false.
- */
 export const useAnimationClock = (fps = 30, enabled = true): SharedValue<number> => {
   const clock = useSharedValue(0);
   const acc = useSharedValue(0);

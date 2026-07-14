@@ -4,7 +4,7 @@ import {View} from 'react-native';
 import {Group, Row, Separator} from '@/components/Group';
 import {Text} from '@/components/Text';
 
-export type DetailRow = {
+export type DetailRowProps = {
   label: string;
   value: string;
   tabular?: boolean;
@@ -12,7 +12,7 @@ export type DetailRow = {
 
 type DetailRowsProps = {
   title: string;
-  rows: DetailRow[];
+  rows: DetailRowProps[];
 };
 
 export const DetailRows = ({title, rows}: DetailRowsProps) => (

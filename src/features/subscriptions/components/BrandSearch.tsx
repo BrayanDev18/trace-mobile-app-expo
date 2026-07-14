@@ -8,17 +8,17 @@ import {Text} from '@/components/Text';
 import {haptic} from '@/utils';
 
 import {useBrandSearch} from '../hooks/useBrandSearch';
-import type {BrandResult} from '../types';
+import type {BrandResultProps} from '../types';
 
 type BrandSearchProps = {
-  onPick: (brand: BrandResult) => void;
+  onPick: (brand: BrandResultProps) => void;
 };
 
 export const BrandSearch = ({onPick}: BrandSearchProps) => {
   const [query, setQuery] = useState('');
   const {data, isFetching, error} = useBrandSearch(query);
 
-  const pick = (result: BrandResult) => {
+  const pick = (result: BrandResultProps) => {
     haptic.select();
     onPick(result);
   };

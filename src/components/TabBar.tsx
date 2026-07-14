@@ -6,10 +6,10 @@ import {IconPlus} from '@tabler/icons-react-native';
 import {navigate} from '@/constants';
 import {useIconColors} from '@/hooks/useIconColors';
 
-type Route = {key: string; name: string};
+type RouteProps = {key: string; name: string};
 
 type TabBarProps = {
-  state: {index: number; routes: Route[]};
+  state: {index: number; routes: RouteProps[]};
   navigation: {
     emit: (event: {type: 'tabPress'; target: string; canPreventDefault: true}) => {
       defaultPrevented: boolean;
@@ -36,7 +36,7 @@ export const TabBar = ({state, navigation}: TabBarProps) => {
   const {bottom} = useSafeAreaInsets();
   const {primary: active, faint: inactive} = useIconColors();
 
-  const renderTab = (route: Route, index: number) => {
+  const renderTab = (route: RouteProps, index: number) => {
     const focused = state.index === index;
     const iconKey = route.name.split('/')[0];
 

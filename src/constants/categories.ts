@@ -18,17 +18,17 @@ import {
   type Icon,
 } from '@tabler/icons-react-native';
 
-export type CategoryKind = 'expense' | 'income';
+export type CategoryKindProps = 'expense' | 'income';
 
-export type Category = {
+export type CategoryProps = {
   id: string;
   label: string;
   icon: Icon;
   tint: string;
-  kind: CategoryKind;
+  kind: CategoryKindProps;
 };
 
-const CATEGORIES: Category[] = [
+const CATEGORIES: CategoryProps[] = [
   {id: 'food', label: 'Comida', icon: IconToolsKitchen2, tint: '#f4c24e', kind: 'expense'},
   {id: 'transport', label: 'Transporte', icon: IconCar, tint: '#208aef', kind: 'expense'},
   {id: 'subscriptions', label: 'Suscripciones', icon: IconRepeat, tint: '#0f6b43', kind: 'expense'},
@@ -48,14 +48,14 @@ const CATEGORIES: Category[] = [
   {id: 'other-income', label: 'Otros', icon: IconDots, tint: '#5c636d', kind: 'income'},
 ];
 
-export const categoriesByKind = (kind: CategoryKind): Category[] =>
+export const categoriesByKind = (kind: CategoryKindProps): CategoryProps[] =>
   CATEGORIES.filter((c) => c.kind === kind);
 
-const CATEGORIES_BY_ID: Record<string, Category> = Object.fromEntries(
+const CATEGORIES_BY_ID: Record<string, CategoryProps> = Object.fromEntries(
   CATEGORIES.map((c) => [c.id, c]),
 );
 
 const OTHER_CATEGORY = CATEGORIES_BY_ID.other;
 
-export const getCategory = (id: string): Category =>
+export const getCategory = (id: string): CategoryProps =>
   CATEGORIES_BY_ID[id] ?? OTHER_CATEGORY;

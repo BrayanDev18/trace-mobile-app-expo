@@ -72,6 +72,15 @@ Capas: componentes presentacionales (props in, callbacks out, no importan
 stores) · hooks (lógica, consumen stores) · stores zustand (solo estado global)
 · utils (funciones puras).
 
+## Naming y comentarios
+
+- **Todo `type` declarado en el proyecto termina en `Props`** — no solo los de
+  componentes: `MovementProps`, `SubscriptionProps`, `PanelProps`. Se renombra
+  al declarar, no al usar.
+- **Cero comentarios en el código**: ni bloques `/** */` ni `//`. El código se
+  explica con nombres; lo que necesite contexto de producto va en AGENTS.md o
+  en el doc correspondiente, no inline.
+
 ## Barrel files
 
 Barrel = **contrato de un módulo**, no atajo de imports. En RN salen caros:

@@ -5,7 +5,7 @@ import {Text} from '@/components/Text';
 import {useIconColors} from '@/hooks/useIconColors';
 import {cn, haptic} from '@/utils';
 
-export type PillOption = {
+export type PillOptionProps = {
   id: string;
   label: string;
   icon?: ComponentType<{size?: number; color?: string}>;
@@ -13,7 +13,7 @@ export type PillOption = {
 };
 
 type PillPickerProps = {
-  options: PillOption[];
+  options: PillOptionProps[];
   selectedId?: string;
   onSelect: (id: string) => void;
 };

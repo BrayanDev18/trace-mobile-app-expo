@@ -6,10 +6,10 @@ import {FlashList, type ListRenderItem} from '@shopify/flash-list';
 import {Header, HorizontalCalendar, Screen, Text,EmptyState,ListGap} from '@/components';
 import {ScreenRoutes} from '@/constants';
 import {ExpenseRow} from '@/features/expenses';
-import {useMovementsStore, type Movement} from '@/features/expenses';
+import {useMovementsStore, type MovementProps} from '@/features/expenses';
 import {dayMonthLabel, formatCurrency, sameDay} from '@/utils';
 
-const keyExtractor = (item: Movement) => item.id;
+const keyExtractor = (item: MovementProps) => item.id;
 const goNewExpense = () => router.push(ScreenRoutes.newExpense);
 
 const ExpensesScreen = () => {
@@ -66,7 +66,7 @@ const ExpensesScreen = () => {
   );
 };
 
-const renderItem: ListRenderItem<Movement> = ({item}) => <ExpenseRow expense={item} />;
+const renderItem: ListRenderItem<MovementProps> = ({item}) => <ExpenseRow expense={item} />;
 const Separator = () => <ListGap size={2} />;
 
 export default ExpensesScreen;

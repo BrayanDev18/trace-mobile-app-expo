@@ -3,16 +3,14 @@ import type {StyleProp, ViewStyle} from 'react-native';
 import type {AnimatedStyle} from 'react-native-reanimated';
 
 import {AmountDisplay} from '@/components/capture';
-
-import {type ExpenseFormValues} from '../hooks/useExpenseForm';
+import {ExpenseFormValuesProps} from "@/features/expenses";
 
 type AmountSectionProps = {
-  control: Control<ExpenseFormValues>;
+  control: Control<ExpenseFormValuesProps>;
   animatedStyle: StyleProp<AnimatedStyle<ViewStyle>>;
   error: boolean;
 };
 
-/** Observa solo `amount`/`type`: el pop de cada tecla no re-renderiza la pantalla. */
 export const AmountSection = ({control, animatedStyle, error}: AmountSectionProps) => {
   const [amount, type] = useWatch({control, name: ['amount', 'type']});
 

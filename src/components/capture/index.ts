@@ -5,5 +5,5 @@ export {CapturePanel} from './CapturePanel';
 export {DatePanel} from './DatePanel';
 export {FormSheetHeader} from './FormSheetHeader';
 export {PickerChip} from './PickerChip';
-export {PillPicker, type PillOption} from './PillPicker';
+export {PillPicker, type PillOptionProps} from './PillPicker';
 export {SegmentChips} from './SegmentChips';

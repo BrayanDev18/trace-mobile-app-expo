@@ -5,10 +5,6 @@ import {useGoalsStore} from '@/features/goals';
 import {useMovementsStore} from '@/features/expenses';
 import {useSubscriptionsStore} from '@/features/subscriptions';
 
-/**
- * True cuando los stores persistidos terminaron de rehidratar desde
- * AsyncStorage; evita pintar un frame de "sin datos" en cold start.
- */
 const stores = [useMovementsStore, useSubscriptionsStore, useDebtsStore, useGoalsStore];
 
 const allHydrated = () => stores.every((store) => store.persist.hasHydrated());

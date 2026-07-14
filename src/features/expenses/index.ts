@@ -1,8 +1,9 @@
 export {AmountSection} from './components/AmountSection';
-export {ExpenseChips, type ExpensePanel} from './components/ExpenseChips';
+export {ExpenseChips, type ExpensePanelProps} from './components/ExpenseChips';
 export {ExpenseRow} from './components/ExpenseRow';
 export {ReceiptControl} from './components/ReceiptControl';
+export {TransactionRow} from './components/TransactionRow';
 export {TypeSwitch} from './components/TypeSwitch';
-export {useExpenseForm, type ExpenseFormValues} from './hooks/useExpenseForm';
+export {useExpenseForm, type ExpenseFormValuesProps} from './hooks/useExpenseForm';
 export {useMovementsStore} from './store';
-export type {Movement, MovementType} from './types';
+export type {MovementProps, MovementTypeProps} from './types';

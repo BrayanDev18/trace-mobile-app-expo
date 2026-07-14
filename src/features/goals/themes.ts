@@ -10,14 +10,14 @@ import {
   type Icon,
 } from '@tabler/icons-react-native';
 
-export type GoalTheme = {
+export type GoalThemeProps = {
   id: string;
   label: string;
   icon: Icon;
   tint: string;
 };
 
-export const GOAL_THEMES: GoalTheme[] = [
+export const GOAL_THEMES: GoalThemeProps[] = [
   {id: 'travel', label: 'Viaje', icon: IconPlane, tint: '#0ea5e9'},
   {id: 'home', label: 'Hogar', icon: IconHome, tint: '#8b5cf6'},
   {id: 'vehicle', label: 'Vehículo', icon: IconCar, tint: '#208aef'},
@@ -30,5 +30,5 @@ export const GOAL_THEMES: GoalTheme[] = [
 
 const OTHER_THEME = GOAL_THEMES[GOAL_THEMES.length - 1];
 
-export const getGoalTheme = (id: string): GoalTheme =>
+export const getGoalTheme = (id: string): GoalThemeProps =>
   GOAL_THEMES.find((t) => t.id === id) ?? OTHER_THEME;

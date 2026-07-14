@@ -5,13 +5,13 @@ import {Text} from '@/components';
 import {navigate} from '@/constants';
 import {useIconColors} from '@/hooks/useIconColors';
 
-type QuickAction = {
+type QuickActionProps = {
   label: string;
   icon: Icon;
   onPress?: () => void;
 };
 
-const ACTIONS: QuickAction[] = [
+const ACTIONS: QuickActionProps[] = [
   {label: 'Suscripciones', icon: IconDeviceRemote, onPress: () => navigate('subscriptions')},
   {label: 'Metas', icon: IconTargetArrow, onPress: () => navigate('goals')},
   {label: 'Deudas', icon: IconMoneybag, onPress: () => navigate('debts')},

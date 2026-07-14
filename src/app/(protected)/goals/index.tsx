@@ -6,12 +6,12 @@ import {FlashList, type ListRenderItem} from '@shopify/flash-list';
 import {Header, Screen,EmptyState,ListGap,SectionTitle} from '@/components';
 import {DynamicRoutes, ScreenRoutes} from '@/constants';
 import {GoalCard, GoalsOverview} from '@/features/goals';
-import {goalSaved, useGoalsStore, type Goal} from '@/features/goals';
+import {goalSaved, useGoalsStore, type GoalProps} from '@/features/goals';
 
-type Row = {goal: Goal; saved: number};
+type RowProps = {goal: GoalProps; saved: number};
 
 const LIST_CONTENT = {paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24};
-const keyExtractor = ({goal}: Row) => goal.id;
+const keyExtractor = ({goal}: RowProps) => goal.id;
 const goNewGoal = () => router.push(ScreenRoutes.newGoal);
 
 const GoalsScreen = () => {
@@ -38,7 +38,7 @@ const GoalsScreen = () => {
     [active],
   );
 
-  const renderItem = useCallback<ListRenderItem<Row>>(
+  const renderItem = useCallback<ListRenderItem<RowProps>>(
     ({item}) => (
       <GoalCard
         goal={item.goal}

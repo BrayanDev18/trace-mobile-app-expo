@@ -17,14 +17,14 @@ const makeIcon = (Icon: TablerIcon, color: string) => {
   return MethodIcon;
 };
 
-export type PaymentMethod = {
+export type PaymentMethodProps = {
   id: string;
   label: string;
   description: string;
   Icon: (props: IconProps) => React.JSX.Element;
 };
 
-export const PAYMENT_METHODS: PaymentMethod[] = [
+export const PAYMENT_METHODS: PaymentMethodProps[] = [
   {
     id: 'cash',
     label: 'Efectivo',
@@ -75,8 +75,8 @@ export const PAYMENT_METHODS: PaymentMethod[] = [
   },
 ];
 
-const BY_ID: Record<string, PaymentMethod> = Object.fromEntries(
+const BY_ID: Record<string, PaymentMethodProps> = Object.fromEntries(
   PAYMENT_METHODS.map((m) => [m.id, m]),
 );
 
-export const getPaymentMethod = (id: string): PaymentMethod | undefined => BY_ID[id];
+export const getPaymentMethod = (id: string): PaymentMethodProps | undefined => BY_ID[id];

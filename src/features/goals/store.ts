@@ -4,24 +4,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {sumByKey} from '@/utils';
 
-import type {Goal, GoalContribution} from './types';
+import type {GoalProps, GoalContributionProps} from './types';
 
-type GoalsState = {
-  goals: Goal[];
-  contributions: GoalContribution[];
-  addGoal: (data: Omit<Goal, 'id' | 'createdAt'>) => void;
+type GoalsStateProps = {
+  goals: GoalProps[];
+  contributions: GoalContributionProps[];
+  addGoal: (data: Omit<GoalProps, 'id' | 'createdAt'>) => void;
   archiveGoal: (id: string) => void;
-  addContribution: (data: Omit<GoalContribution, 'id' | 'date'>) => void;
+  addContribution: (data: Omit<GoalContributionProps, 'id' | 'date'>) => void;
   removeContribution: (id: string) => void;
 };
 
-/**
- * Fuente temporal de metas de ahorro mientras no existe el backend. Cuando
- * llegue la API de Go, la lista pasa a TanStack Query y las escrituras a
- * mutaciones; este store desaparece. Ids y fechas se generan aquí, nunca
- * en las pantallas.
- */
-export const useGoalsStore = create<GoalsState>()(
+export const useGoalsStore = create<GoalsStateProps>()(
   persist(
     (set) => ({
       goals: [],
@@ -57,5 +51,5 @@ export const useGoalsStore = create<GoalsState>()(
   ),
 );
 
-export const goalSaved = (contributions: GoalContribution[], goalId: string) =>
+export const goalSaved = (contributions: GoalContributionProps[], goalId: string) =>
   sumByKey(contributions, 'goalId', goalId);

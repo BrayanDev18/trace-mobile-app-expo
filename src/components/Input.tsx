@@ -6,11 +6,6 @@ import type {Icon} from '@tabler/icons-react-native';
 import {cn} from '@/utils';
 import {useIconColors} from '@/hooks/useIconColors';
 
-/**
- * Input no controlado por diseño: no acepta `value` para evitar el
- * round-trip nativo↔JS que hace parpadear las letras al escribir.
- * Solo: `defaultValue` + `onChangeText`, o `control` + `name` (RHF).
- */
 type BaseInputProps = Omit<TextInputProps, 'value'> & {
   icon?: Icon;
   error?: boolean;

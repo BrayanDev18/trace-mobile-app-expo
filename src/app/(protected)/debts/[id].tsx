@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import {router, useLocalSearchParams} from 'expo-router';
 
 import {Header, Screen, Text,DetailBadge, DetailHero,DetailRows,GroupAction} from '@/components';
-import {HistoryList, type HistoryItem} from '@/components';
+import {HistoryList, type HistoryItemProps} from '@/components';
 import {AmountEntryToggle} from '@/components/capture';
 import {Colors} from '@/constants';
 import {debtPaid, useDebtsStore} from '@/features/debts';
@@ -31,7 +31,7 @@ export default function DebtDetailScreen() {
   const confirmPayment = (value: number) =>
     addPayment({debtId: debt.id, amount: value});
 
-  const removeConfirm = (payment: HistoryItem) =>
+  const removeConfirm = (payment: HistoryItemProps) =>
     confirmDestructive({
       title: '¿Eliminar abono?',
       message: `Se sumarán $${formatCurrency(payment.amount)} de vuelta al saldo pendiente.`,

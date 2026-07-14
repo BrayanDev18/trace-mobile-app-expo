@@ -15,14 +15,14 @@ import {Text} from '@/components';
 import {useAnimationClock} from '@/hooks/useAnimationClock';
 import {amountSizeClass, formatCurrency, haptic} from '@/utils';
 
-import {BALANCE_PALETTES, balanceShader, hex01, type PaletteName} from './balanceShader';
-import {OverviewPopover, type Overview} from './OverviewPopover';
+import {BALANCE_PALETTES, balanceShader, hex01, type PaletteNameProps} from './balanceShader';
+import {OverviewPopover, type OverviewProps} from './OverviewPopover';
 
 type BalanceCardSkiaProps = {
-  overviews?: Overview[];
+  overviews?: OverviewProps[];
   income?: number;
   expense?: number;
-  palette?: PaletteName;
+  palette?: PaletteNameProps;
 };
 
 export const BalanceCardSkia = (props: BalanceCardSkiaProps) => {

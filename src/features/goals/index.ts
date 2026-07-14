@@ -5,4 +5,4 @@ export {useGoalForm} from './hooks/useGoalForm';
 export {goalSaved, useGoalsStore} from './store';
 export {GOAL_THEMES, getGoalTheme} from './themes';
 export {goalProgress} from './utils';
-export type {Goal} from './types';
+export type {GoalProps} from './types';

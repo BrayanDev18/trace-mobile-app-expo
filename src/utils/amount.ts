@@ -1,7 +1,3 @@
-/**
- * Reglas de captura de montos con keypad: 2 decimales y un solo punto.
- * Devuelve el mismo string si la tecla no aplica.
- */
 export const appendAmountKey = (current: string, key: string): string => {
   if (key === '.') {
     if (current.includes('.')) return current;
@@ -21,10 +17,6 @@ export const displayAmount = (raw: string): string => {
   return dec === undefined ? grouped : `${grouped}.${dec}`;
 };
 
-/**
- * Escala tipográfica por dígitos (design.md §3): ≤6 → grande, 7-9 → media,
- * >9 → chica. `hero` para cifras protagonistas, `card` para banners/cards.
- */
 export const amountSizeClass = (value: number, scale: 'hero' | 'card' = 'hero') => {
   const digits = Math.floor(Math.abs(value)).toString().length;
   const sizes =

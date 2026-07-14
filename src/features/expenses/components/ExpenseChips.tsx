@@ -2,17 +2,17 @@ import {IconCalendarEvent, IconCreditCard, IconTag} from '@tabler/icons-react-na
 
 import {PickerChip} from '@/components/capture';
 import {relativeDate} from '@/utils';
-import type {Category, PaymentMethod} from '@/constants';
+import type {CategoryProps, PaymentMethodProps} from '@/constants';
 
-export type ExpensePanel = 'keypad' | 'date' | 'category' | 'method';
+export type ExpensePanelProps = 'keypad' | 'date' | 'category' | 'method';
 
 type ExpenseChipsProps = {
-  panel: ExpensePanel;
+  panel: ExpensePanelProps;
   date: Date;
-  category: Category | null;
-  method?: PaymentMethod;
+  category: CategoryProps | null;
+  method?: PaymentMethodProps;
   categoryError: boolean;
-  onToggle: (panel: ExpensePanel) => void;
+  onToggle: (panel: ExpensePanelProps) => void;
 };
 
 export const ExpenseChips = (props: ExpenseChipsProps) => {

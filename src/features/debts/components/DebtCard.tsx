@@ -3,11 +3,11 @@ import {Pressable, View} from 'react-native';
 
 import {Text} from '@/components';
 import {Colors} from '@/constants';
-import type {Debt} from '../types';
+import type {DebtProps} from '../types';
 import {formatCurrency, shortDate} from '@/utils';
 
 type DebtCardProps = {
-  debt: Debt;
+  debt: DebtProps;
   paid: number;
   onPress?: () => void;
 };

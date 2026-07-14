@@ -9,12 +9,12 @@ import {useAmountInput} from '@/hooks/useAmountInput';
 import {GOAL_THEMES, getGoalTheme,useGoalForm} from '@/features/goals';
 import {haptic, shortDate} from '@/utils';
 
-type Panel = 'keypad' | 'date' | 'theme';
+type PanelProps = 'keypad' | 'date' | 'theme';
 
 const THEME_OPTIONS = GOAL_THEMES.map((t) => ({id: t.id, label: t.label, icon: t.icon, tint: t.tint}));
 
 export default function NewGoalScreen() {
-  const [panel, setPanel] = useState<Panel>('keypad');
+  const [panel, setPanel] = useState<PanelProps>('keypad');
   const form = useGoalForm();
 
   const {animatedStyle, onKey, erase, clear, shakeError} = useAmountInput({
@@ -24,7 +24,7 @@ export default function NewGoalScreen() {
 
   const theme = getGoalTheme(form.themeId);
 
-  const togglePanel = (target: Panel) => {
+  const togglePanel = (target: PanelProps) => {
     haptic.select();
     setPanel((prev) => (prev === target ? 'keypad' : target));
   };

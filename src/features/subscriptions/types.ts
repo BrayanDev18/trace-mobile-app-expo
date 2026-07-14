@@ -1,16 +1,12 @@
 import type {ComponentType} from 'react';
 
-export type BrandIcon = ComponentType<{size?: number; color?: string}>;
+export type BrandIconProps = ComponentType<{size?: number; color?: string}>;
 
-/**
- * Solo datos serializables: los iconos se guardan como referencias
- * (`methodId`, `logoUrl`) y se resuelven al renderizar.
- */
-export type Subscription = {
+export type SubscriptionProps = {
   id: string;
   name: string;
   domain: string;
-  icon?: BrandIcon;
+  icon?: BrandIconProps;
   logoUrl?: string;
   price: number;
   period: 'monthly' | 'yearly';
@@ -18,7 +14,7 @@ export type Subscription = {
   methodId?: string;
 };
 
-export type BrandResult = {
+export type BrandResultProps = {
   name: string;
   domain: string;
   logo_url: string;
