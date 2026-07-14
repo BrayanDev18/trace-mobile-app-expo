@@ -20,8 +20,9 @@ export const ScreenRoutes = {
   // Tabs protegidas
   home: '/home',               // ✅ dashboard
   movements: '/movements',     // 🚧 historial de movimientos
-  stats: '/stats',             // 🚧 estadísticas y gráficos
-  profile: '/profile',         // 🚧
+  stats: '/stats',             // ✅ placeholder (estadísticas y gráficos)
+  explore: '/explore',         // ✅ placeholder
+  profile: '/profile',         // ✅ placeholder
 
   // Flujos de movimientos
   expenses: '/expenses',           // ✅ gastos por día (calendario horizontal)

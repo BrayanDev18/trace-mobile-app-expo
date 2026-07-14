@@ -1,14 +1,8 @@
-import {useCallback, useMemo, useRef, useState} from 'react';
-import {FlatList, Pressable, View, type ViewToken} from 'react-native';
+import {memo, useCallback, useMemo, useState} from 'react';
+import {FlatList, Pressable, View, type ListRenderItem, type ViewToken} from 'react-native';
 
 import {Text} from '@/components/Text';
-import {cn} from '@/utils';
-
-const WEEKDAYS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-const MONTHS = [
-  'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
-];
+import {MONTHS_LONG, WEEKDAYS_SHORT, capitalize, cn} from '@/utils';
 
 const DAY_WIDTH = 52;
 const RANGE = 365;
@@ -31,8 +25,6 @@ type HorizontalCalendarProps = {
 };
 
 export const HorizontalCalendar = ({selected, onSelect}: HorizontalCalendarProps) => {
-  const listRef = useRef<FlatList<Date>>(null);
-
   const {days, today} = useMemo(() => {
     const base = startOfDay(new Date());
     const list: Date[] = [];
@@ -60,7 +52,19 @@ export const HorizontalCalendar = ({selected, onSelect}: HorizontalCalendarProps
     );
   }, []);
 
-  const monthLabel = `${MONTHS[visible.month]}${
+  const renderItem = useCallback<ListRenderItem<Date>>(
+    ({item}) => (
+      <DayCell
+        date={item}
+        active={isSameDay(item, selected)}
+        isToday={isSameDay(item, today)}
+        onSelect={onSelect}
+      />
+    ),
+    [selected, today, onSelect],
+  );
+
+  const monthLabel = `${capitalize(MONTHS_LONG[visible.month])}${
     visible.year !== today.getFullYear() ? ` ${visible.year}` : ''
   }`;
 
@@ -71,7 +75,6 @@ export const HorizontalCalendar = ({selected, onSelect}: HorizontalCalendarProps
       </Text>
 
       <FlatList
-        ref={listRef}
         data={days}
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -87,41 +90,49 @@ export const HorizontalCalendar = ({selected, onSelect}: HorizontalCalendarProps
         windowSize={5}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={VIEWABILITY_CONFIG}
-        renderItem={({item}) => {
-          const active = isSameDay(item, selected);
-          const isToday = isSameDay(item, today);
-
-          return (
-            <Pressable
-              onPress={() => onSelect(item)}
-              style={{width: DAY_WIDTH}}
-              className="items-center gap-2 py-1"
-            >
-              <Text className="font-semibold text-sm text-secundary">
-                {WEEKDAYS[item.getDay()]}
-              </Text>
-
-              <View
-                className={cn(
-                  'w-10 h-10 rounded-full items-center justify-center',
-                  active && 'bg-black dark:bg-white',
-                )}
-              >
-                <Text
-                  className={cn(
-                    'font-satoshi-medium',
-                    active
-                      ? 'text-white dark:text-black'
-                      : isToday && 'text-accent dark:text-teal-400',
-                  )}
-                >
-                  {item.getDate()}
-                </Text>
-              </View>
-            </Pressable>
-          );
-        }}
+        renderItem={renderItem}
       />
     </View>
   );
 };
+
+type DayCellProps = {
+  date: Date;
+  active: boolean;
+  isToday: boolean;
+  onSelect: (date: Date) => void;
+};
+
+const DayCell = memo(function DayCell(props: DayCellProps) {
+  const {date, active, isToday, onSelect} = props;
+
+  return (
+    <Pressable
+      onPress={() => onSelect(date)}
+      style={{width: DAY_WIDTH}}
+      className="items-center gap-2 py-1"
+    >
+      <Text className="font-satoshi-medium text-sm text-secundary">
+        {capitalize(WEEKDAYS_SHORT[date.getDay()])}
+      </Text>
+
+      <View
+        className={cn(
+          'w-10 h-10 rounded-full items-center justify-center',
+          active && 'bg-neutral-900 dark:bg-white',
+        )}
+      >
+        <Text
+          className={cn(
+            'font-satoshi-medium',
+            active
+              ? 'text-white dark:text-neutral-900'
+              : isToday && 'text-accent dark:text-teal-400',
+          )}
+        >
+          {date.getDate()}
+        </Text>
+      </View>
+    </Pressable>
+  );
+});

@@ -1,16 +1,18 @@
-import {useMemo} from 'react';
+import {useCallback, useMemo} from 'react';
 import {View} from 'react-native';
 import {router} from 'expo-router';
-import {FlashList} from '@shopify/flash-list';
+import {FlashList, type ListRenderItem} from '@shopify/flash-list';
 
-import {Header, Screen, Text} from '@/components';
+import {Header, Screen,EmptyState,ListGap,SectionTitle} from '@/components';
 import {DynamicRoutes, ScreenRoutes} from '@/constants';
-import {SubscriptionCard, SubscriptionsBanner} from '@/screens/subscriptions';
-import {useSubscriptionsStore} from '@/store/subscriptions';
+import {SubscriptionCard, SubscriptionsBanner, type Subscription} from '@/features/subscriptions';
+import {useSubscriptionsStore} from '@/features/subscriptions';
 
-const Gap = () => <View className="h-3" />;
+const LIST_CONTENT = {paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24};
+const keyExtractor = (item: Subscription) => item.id;
+const goNewSubscription = () => router.push(ScreenRoutes.newSubscription);
 
-const SubscriptionScreen = () => {
+const SubscriptionsScreen = () => {
   const subscriptions = useSubscriptionsStore((s) => s.items);
 
   const monthlyTotal = useMemo(
@@ -22,6 +24,16 @@ const SubscriptionScreen = () => {
     [subscriptions],
   );
 
+  const renderItem = useCallback<ListRenderItem<Subscription>>(
+    ({item}) => (
+      <SubscriptionCard
+        subscription={item}
+        onPress={() => router.push(DynamicRoutes.subscription(item.id))}
+      />
+    ),
+    [],
+  );
+
   return (
     <Screen>
       <Header title="Suscripciones" />
@@ -29,30 +41,35 @@ const SubscriptionScreen = () => {
       <View className="flex-1">
         <FlashList
           data={subscriptions}
-          keyExtractor={(item) => item.id}
+          keyExtractor={keyExtractor}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24}}
-          ItemSeparatorComponent={Gap}
+          contentContainerStyle={LIST_CONTENT}
+          ItemSeparatorComponent={ListGap}
           ListHeaderComponent={
-            <View className="gap-6 pb-3">
-              <SubscriptionsBanner
-                monthlyTotal={monthlyTotal}
-                count={subscriptions.length}
-                onAdd={() => router.push(ScreenRoutes.newSubscription)}
-              />
-              <Text className="font-satoshi-medium text-lg">Mis suscripciones</Text>
-            </View>
+            subscriptions.length > 0 ? (
+              <View className="gap-6 pb-3">
+                <SubscriptionsBanner
+                  monthlyTotal={monthlyTotal}
+                  count={subscriptions.length}
+                  onAdd={goNewSubscription}
+                />
+                <SectionTitle>Mis suscripciones</SectionTitle>
+              </View>
+            ) : null
           }
-          renderItem={({item}) => (
-            <SubscriptionCard
-              subscription={item}
-              onPress={() => router.push(DynamicRoutes.subscription(item.id))}
+          ListEmptyComponent={
+            <EmptyState
+              title="Sin suscripciones"
+              subtitle="Registra tus pagos recurrentes para ver el gasto mensual"
+              actionLabel="Agregar suscripción"
+              onAction={goNewSubscription}
             />
-          )}
+          }
+          renderItem={renderItem}
         />
       </View>
     </Screen>
   );
 };
 
-export default SubscriptionScreen;
+export default SubscriptionsScreen;

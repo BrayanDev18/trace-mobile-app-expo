@@ -12,28 +12,21 @@ type ScreenProps = ViewProps & {
   children: ReactNode;
   edges?: Edge[];
   keyboard?: boolean;
-  keyboardOffset?: number;
   scroll?: boolean;
-  padded?: boolean;
   asBackground?: boolean;
   className?: string;
-  contentClassName?: string;
 };
 
 const DEFAULT_BG = "bg-primary";
-const DEFAULT_PADDING = "px-6";
 
 export const Screen = (props: ScreenProps) => {
   const {
     children,
     edges = ["top", "bottom"],
     keyboard = false,
-    keyboardOffset = 0,
     scroll = false,
-    padded = false,
     asBackground = true,
     className,
-    contentClassName,
     ...rest
   } = props
 
@@ -45,7 +38,7 @@ export const Screen = (props: ScreenProps) => {
     : ['#cbfbf1', 'rgba(245,245,245,0)'];
 
   const inner = (
-    <View className={cn("h-full w-full", padded && DEFAULT_PADDING, contentClassName)}>
+    <View className="h-full w-full">
       {children}
     </View>
   );
@@ -57,7 +50,6 @@ export const Screen = (props: ScreenProps) => {
         contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
-        bottomOffset={keyboardOffset}
       >
         {inner}
       </KeyboardAwareScrollView>
@@ -74,11 +66,7 @@ export const Screen = (props: ScreenProps) => {
     );
   } else if (keyboard) {
     body = (
-      <KeyboardAvoidingView
-        style={{flex: 1}}
-        behavior="padding"
-        keyboardVerticalOffset={keyboardOffset}
-      >
+      <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
         {inner}
       </KeyboardAvoidingView>
     );

@@ -1,7 +1,8 @@
-import {Pressable, View, useColorScheme} from 'react-native';
+import {Pressable, View} from 'react-native';
 import {IconBackspace} from '@tabler/icons-react-native';
 
 import {Text} from '@/components/Text';
+import {useIconColors} from '@/hooks/useIconColors';
 
 const ROWS = [
   ['1', '2', '3'],
@@ -17,7 +18,7 @@ type KeypadProps = {
 };
 
 export const Keypad = ({onKey, onErase, onClear}: KeypadProps) => {
-  const iconColor = useColorScheme() === 'dark' ? '#ffffff' : '#000000';
+  const iconColor = useIconColors().primary;
 
   return (
     <View className="gap-1">

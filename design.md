@@ -124,9 +124,9 @@ primario `#000` / `#fff` · muted `#737373` / `#a3a3a3` · faint `#a3a3a3` /
 
 ## 3. Tipografía
 
-Una sola familia: **Satoshi** (`.otf` locales en `assets/font/`, cargada en
-`_layout.tsx` con `useFonts` de `expo-font`), todos los pesos como tokens
-`font-satoshi-*`. La jerarquía se construye con **peso y tamaño**, nunca con
+Una sola familia: **Satoshi** (`.otf` locales en `assets/font/`, embebida en
+build time vía el config plugin de `expo-font` en `app.json`), todos los pesos
+como tokens `font-satoshi-*`. La jerarquía se construye con **peso y tamaño**, nunca con
 itálicas ni decoración.
 
 Pesos disponibles: Light (300) · Regular (400) · Medium (500) · Bold (700) ·
@@ -250,7 +250,7 @@ en móvil; el press es el lenguaje):
 | --- | --- |
 | Default | superficie según §2 |
 | Pressed | `active:opacity-70` (chips/filas) o `active:bg-accent-pressed` (accent) o `active:bg-neutral-200 dark:active:bg-white/5` (targets fantasma) |
-| Disabled | `Gradients.disabled` / opacidad reducida + sin háptica |
+| Disabled | `opacity-40` + sin háptica |
 | Loading | spinner o skeleton en el lugar del contenido, mismo tamaño (sin saltos de layout) |
 | Error | `border-red-400` + shake + háptica Error; el mensaje dice qué hacer |
 | Success | **silencioso**: háptica Success + navegar/cerrar. Sin toasts de celebración |
@@ -264,8 +264,8 @@ La validación es *lazy*: no marcar errores hasta el primer intento de envío
 
 Antes de crear UI nueva, reusar o extender estos (`src/components`):
 
-- **`Screen`** — raíz de toda pantalla: fondo, safe areas (`edges`), scroll y
-  teclado (`scroll`, `keyboard`, `keyboardOffset`), padding (`padded`).
+- **`Screen`** — raíz de toda pantalla: fondo (`asBackground`), safe areas
+  (`edges`), scroll y teclado (`scroll`, `keyboard`).
 - **`Text`** — único punto de entrada de texto; default `font-satoshi text-base`.
   Nunca importar `Text` de react-native en pantallas.
 - **`SheetModal`** — acciones secundarias fuera de contexto de captura viven en
@@ -275,7 +275,7 @@ Antes de crear UI nueva, reusar o extender estos (`src/components`):
   abren sheet: **intercambian el contenido del panel** con el keypad (altura
   fija + crossfade de §5; el chip activo se marca con `border-accent`; elegir
   un valor devuelve al keypad).
-- **`TabBar`** — tab bar custom con FAB accent central elevada (`-mt-8`).
+- **`TabBar`** — tab bar custom con FAB accent central (`h-16 w-16`, glow §4).
 - **Patrón Chip** — pill `h-10 rounded-full` con icono 15–16 + label
   `font-satoshi-medium text-sm`; base de filtros, pickers y metadatos.
 - **Calendarios** — `MonthCalendar` / `HorizontalCalendar` para toda selección de fecha.
@@ -351,14 +351,11 @@ Antes de dar por terminada una pantalla, todas las respuestas deben ser **sí**:
 Inconsistencias detectadas al escribir este documento; al tocar código cercano,
 migrar hacia la regla:
 
-1. **`src/constants/Colors.ts` sigue con superficies dark-only heredadas**
-   (`surface #0A0A0A`, `surfaceCard`, …) que ya nadie necesita como sistema. Sus
-   tokens de marca (`accent`, `up`/`down`, `accentLight`) ya están en teal y
-   espejan `@theme`. Pendiente: reducirlo a los tokens de dato vigentes
-   (`up`/`down`, alphas, gradientes) y borrar las superficies muertas.
-2. **Colores de icono repetidos inline** (`scheme === 'dark' ? '#a3a3a3' : '#737373'`
-   en varias pantallas, ya alineados a la rampa neutral). Pendiente: helper único
-   (p. ej. `useIconColors()`) que exponga `primary/muted/faint` según esquema.
+1. ~~`src/constants/Colors.ts` con superficies dark-only heredadas~~ —
+   **resuelto** (auditoría 2026-07-14): reducido a los tokens de dato `up`/`down`.
+2. ~~Colores de icono repetidos inline~~ — **resuelto** (auditoría 2026-07-14):
+   `useIconColors()` en `src/hooks` expone `primary/muted/faint/onAccent`; los
+   colores de icono JS-side salen SIEMPRE de ahí, nunca inline.
 3. **Accent como texto en dark sin token propio:** hoy se escribe
    `dark:text-teal-400` inline. Es correcto (paleta Tailwind), pero si se
    repite mucho vale promoverlo a un helper/clase semántica.

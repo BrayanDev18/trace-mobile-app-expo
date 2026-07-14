@@ -1,23 +1,23 @@
-import {useMemo} from 'react';
-import {Pressable, View, useColorScheme} from 'react-native';
+import {useCallback, useMemo} from 'react';
+import {View} from 'react-native';
 import {router} from 'expo-router';
-import {FlashList} from '@shopify/flash-list';
-import {IconPlus} from '@tabler/icons-react-native';
+import {FlashList, type ListRenderItem} from '@shopify/flash-list';
 
-import {Header, Screen, Text} from '@/components';
+import {Header, Screen,EmptyState,ListGap,SectionTitle} from '@/components';
 import {DynamicRoutes, ScreenRoutes} from '@/constants';
-import {DebtCard, DebtsOverview} from '@/screens/debts';
-import {debtPaid, useDebtsStore, type Debt} from '@/store/debts';
+import {DebtCard, DebtsOverview} from '@/features/debts';
+import {debtPaid, useDebtsStore, type Debt} from '@/features/debts';
 
 type Row =
   | {type: 'section'; title: string}
   | {type: 'debt'; debt: Debt; paid: number};
 
-const Gap = () => <View className="h-3" />;
+const LIST_CONTENT = {paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24};
+const getItemType = (item: Row) => item.type;
+const keyExtractor = (item: Row) => (item.type === 'section' ? item.title : item.debt.id);
+const goNewDebt = () => router.push(ScreenRoutes.newDebt);
 
 const DebtsScreen = () => {
-  const dark = useColorScheme() === 'dark';
-
   const debts = useDebtsStore((s) => s.debts);
   const payments = useDebtsStore((s) => s.payments);
 
@@ -59,6 +59,20 @@ const DebtsScreen = () => {
     return result;
   }, [active]);
 
+  const renderItem = useCallback<ListRenderItem<Row>>(
+    ({item}) =>
+      item.type === 'section' ? (
+        <SectionTitle className="pt-3">{item.title}</SectionTitle>
+      ) : (
+        <DebtCard
+          debt={item.debt}
+          paid={item.paid}
+          onPress={() => router.push(DynamicRoutes.debt(item.debt.id))}
+        />
+      ),
+    [],
+  );
+
   return (
     <Screen>
       <Header title="Deudas" />
@@ -66,11 +80,11 @@ const DebtsScreen = () => {
       <View className="flex-1">
         <FlashList
           data={rows}
-          getItemType={(item) => item.type}
-          keyExtractor={(item) => (item.type === 'section' ? item.title : item.debt.id)}
+          getItemType={getItemType}
+          keyExtractor={keyExtractor}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24}}
-          ItemSeparatorComponent={Gap}
+          contentContainerStyle={LIST_CONTENT}
+          ItemSeparatorComponent={ListGap}
           ListHeaderComponent={
             rows.length > 0 ? (
               <View className="pb-3">
@@ -78,39 +92,20 @@ const DebtsScreen = () => {
                   lent={totals.lent}
                   owed={totals.owed}
                   count={active.length}
-                  onAdd={() => router.push(ScreenRoutes.newDebt)}
+                  onAdd={goNewDebt}
                 />
               </View>
             ) : null
           }
           ListEmptyComponent={
-            <View className="w-full items-center gap-3 py-12">
-              <Text className="font-satoshi-medium text-xl">Sin deudas activas</Text>
-
-              <Text className="text-center text-lg text-secundary">
-                Registra lo que te deben o lo que debes
-              </Text>
-
-              <Pressable
-                onPress={() => router.push(ScreenRoutes.newDebt)}
-                className="h-12 w-full flex-row items-center justify-center gap-2 rounded-full btn-primary"
-              >
-                <IconPlus size={18} color={dark ? '#ffffff' : '#171717'} />
-                <Text className="font-satoshi-bold text-sm">Nueva deuda</Text>
-              </Pressable>
-            </View>
+            <EmptyState
+              title="Sin deudas activas"
+              subtitle="Registra lo que te deben o lo que debes"
+              actionLabel="Nueva deuda"
+              onAction={goNewDebt}
+            />
           }
-          renderItem={({item}) =>
-            item.type === 'section' ? (
-              <Text className="px-4 pt-3 font-satoshi-medium text-lg">{item.title}</Text>
-            ) : (
-              <DebtCard
-                debt={item.debt}
-                paid={item.paid}
-                onPress={() => router.push(DynamicRoutes.debt(item.debt.id))}
-              />
-            )
-          }
+          renderItem={renderItem}
         />
       </View>
     </Screen>

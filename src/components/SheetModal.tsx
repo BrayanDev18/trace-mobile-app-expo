@@ -1,8 +1,9 @@
 import {ReactNode} from 'react';
-import {Modal, Pressable, View, useColorScheme} from 'react-native';
+import {Modal, Pressable, View} from 'react-native';
 import {IconX} from '@tabler/icons-react-native';
 
 import {Text} from '@/components/Text';
+import {useIconColors} from '@/hooks/useIconColors';
 
 type SheetModalProps = {
   visible: boolean;
@@ -14,7 +15,7 @@ type SheetModalProps = {
 export const SheetModal = (props: SheetModalProps) => {
   const {visible, onClose, title, children} = props;
 
-  const iconColor = useColorScheme() === 'dark' ? '#ffffff' : '#000000';
+  const iconColor = useIconColors().primary;
 
   return (
     <Modal
@@ -34,9 +35,11 @@ export const SheetModal = (props: SheetModalProps) => {
           className="bg-secundary rounded-t-3xl px-5 pt-4 pb-10 gap-4"
         >
           <View className="flex-row items-center justify-between">
-            <Text className="font-satoshi-bold text-lg tracking-tight">
-              {title}
-            </Text>
+            {title ? (
+              <Text className="font-satoshi-bold text-lg tracking-tight">{title}</Text>
+            ) : (
+              <View />
+            )}
             <Pressable
               onPress={onClose}
               hitSlop={8}

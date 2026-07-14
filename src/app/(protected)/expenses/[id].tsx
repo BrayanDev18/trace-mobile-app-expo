@@ -1,28 +1,18 @@
-import {ReactNode, useState} from 'react';
-import {Alert, Pressable, View, useColorScheme} from 'react-native';
+import {useState} from 'react';
+import {Pressable, View} from 'react-native';
 import {router, useLocalSearchParams} from 'expo-router';
 import {Image} from 'expo-image';
-import * as Haptics from 'expo-haptics';
-import {IconChevronRight, IconPencil} from '@tabler/icons-react-native';
+import {IconChevronRight} from '@tabler/icons-react-native';
 
-import {Group, Header, Screen, Separator, SheetModal, Text} from '@/components';
+import {Group, Header, Row, Screen, Separator, SheetModal, Text,DetailHero,GroupAction} from '@/components';
 import {getCategory, getPaymentMethod} from '@/constants';
-import {useMovementsStore} from '@/store/movements';
-import {cn, formatCurrency, longDate, relativeDate} from '@/utils';
-
-const isIOS = process.env.EXPO_OS === 'ios';
-
-const Row = ({label, children}: {label: string; children: ReactNode}) => (
-  <View className="min-h-14 flex-row items-center justify-between gap-4 px-4 py-3">
-    <Text className="font-satoshi-medium">{label}</Text>
-    <View className="flex-1 flex-row items-center justify-end gap-2">{children}</View>
-  </View>
-);
+import {useIconColors} from '@/hooks/useIconColors';
+import {useMovementsStore} from '@/features/expenses';
+import {longDate, relativeDate,confirmDestructive} from '@/utils';
 
 export default function ExpenseDetailScreen() {
   const {id} = useLocalSearchParams<{id: string}>();
-  const scheme = useColorScheme();
-  const faint = scheme === 'dark' ? '#525252' : '#a3a3a3';
+  const {faint} = useIconColors();
 
   const [receiptOpen, setReceiptOpen] = useState(false);
 
@@ -38,65 +28,32 @@ export default function ExpenseDetailScreen() {
   const method = movement.methodId ? getPaymentMethod(movement.methodId) : undefined;
   const CategoryIcon = category.icon;
 
-  const display = formatCurrency(movement.amount);
-  const amountSize = display.length > 9 ? 'text-4xl' : display.length > 6 ? 'text-5xl' : 'text-6xl';
-
-  const confirmDelete = () => {
-    Alert.alert(
-      isIncome ? '¿Eliminar ingreso?' : '¿Eliminar gasto?',
-      'Se eliminará de tu historial. Esta acción no se puede deshacer.',
-      [
-        {text: 'Cancelar', style: 'cancel'},
-        {
-          text: 'Eliminar',
-          style: 'destructive',
-          onPress: () => {
-            if (isIOS) Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            remove(movement.id);
-            router.back();
-          },
-        },
-      ],
-    );
-  };
+  const deleteConfirm = () =>
+    confirmDestructive({
+      title: isIncome ? '¿Eliminar ingreso?' : '¿Eliminar gasto?',
+      message: 'Se eliminará de tu historial. Esta acción no se puede deshacer.',
+      actionLabel: 'Eliminar',
+      onConfirm: () => {
+        remove(movement.id);
+        router.back();
+      },
+    });
 
   return (
     <Screen edges={['top']} scroll>
-      <Header
-        title={isIncome ? 'Detalle del ingreso' : 'Detalle del gasto'}
-        rightIcon={IconPencil}
-      />
+      <Header title={isIncome ? 'Detalle del ingreso' : 'Detalle del gasto'} />
 
-      <View className="items-center gap-3 px-6 pb-10 pt-8">
-        <View className="items-center gap-4">
-          <Text
-            selectable
-            numberOfLines={2}
-            className="text-center font-satoshi-medium"
-          >
-            {movement.reason}
-          </Text>
-          <Text
-            selectable
-            numberOfLines={1}
-            className={cn(
-              'font-satoshi-bold tracking-tight',
-              amountSize,
-              isIncome && 'text-accent dark:text-teal-400',
-            )}
-            style={{fontVariant: ['tabular-nums']}}
-          >
-            {isIncome ? '+' : '-'}${display}
-          </Text>
-          <Text className="text-sm text-secundary">
-            {relativeDate(date)}
-          </Text>
-        </View>
-      </View>
+      <DetailHero
+        title={movement.reason}
+        amount={movement.amount}
+        prefix={isIncome ? '+' : '-'}
+        accent={isIncome}
+        meta={relativeDate(date)}
+      />
 
       <View className="gap-8 px-5 pb-10">
         <View className="gap-2">
-          <Text className="px-4 font-satoshi-medium">Detalles</Text>
+          <Text className="px-4 font-satoshi-medium text-lg">Detalles</Text>
 
           <Group>
             <Row label="Categoría">
@@ -138,21 +95,12 @@ export default function ExpenseDetailScreen() {
           </Group>
         </View>
 
-        <View className="gap-2">
-          <Group>
-            <Pressable
-              onPress={confirmDelete}
-              className="min-h-14 items-center justify-center px-4 py-3 active:bg-neutral-200 dark:active:bg-white/5"
-            >
-              <Text className="text-red-400 font-satoshi-medium text-lg">
-                {isIncome ? 'Eliminar ingreso' : 'Eliminar gasto'}
-              </Text>
-            </Pressable>
-          </Group>
-          <Text className="px-4 text-xs text-secundary">
-            Se eliminará de tu historial. Esta acción no se puede deshacer.
-          </Text>
-        </View>
+        <GroupAction
+          destructive
+          label={isIncome ? 'Eliminar ingreso' : 'Eliminar gasto'}
+          caption="Se eliminará de tu historial. Esta acción no se puede deshacer."
+          onPress={deleteConfirm}
+        />
       </View>
 
       <SheetModal visible={receiptOpen} onClose={() => setReceiptOpen(false)} title="Factura">

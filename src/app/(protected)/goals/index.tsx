@@ -1,19 +1,20 @@
-import {useMemo} from 'react';
-import {Pressable, useColorScheme, View} from 'react-native';
+import {useCallback, useMemo} from 'react';
+import {View} from 'react-native';
 import {router} from 'expo-router';
-import {FlashList} from '@shopify/flash-list';
-import {IconPlus} from '@tabler/icons-react-native';
+import {FlashList, type ListRenderItem} from '@shopify/flash-list';
 
-import {Header, Screen, Text} from '@/components';
+import {Header, Screen,EmptyState,ListGap,SectionTitle} from '@/components';
 import {DynamicRoutes, ScreenRoutes} from '@/constants';
-import {GoalCard, GoalsOverview, getGoalTheme} from '@/screens/goals';
-import {goalSaved, useGoalsStore} from '@/store/goals';
+import {GoalCard, GoalsOverview} from '@/features/goals';
+import {goalSaved, useGoalsStore, type Goal} from '@/features/goals';
 
-const Gap = () => <View className="h-3" />;
+type Row = {goal: Goal; saved: number};
+
+const LIST_CONTENT = {paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24};
+const keyExtractor = ({goal}: Row) => goal.id;
+const goNewGoal = () => router.push(ScreenRoutes.newGoal);
 
 const GoalsScreen = () => {
-  const dark = useColorScheme() === 'dark';
-
   const goals = useGoalsStore((s) => s.goals);
   const contributions = useGoalsStore((s) => s.contributions);
 
@@ -37,11 +38,16 @@ const GoalsScreen = () => {
     [active],
   );
 
-  const segments = active.map(({goal, saved}) => ({
-    id: goal.id,
-    tint: getGoalTheme(goal.themeId).tint,
-    saved,
-  }));
+  const renderItem = useCallback<ListRenderItem<Row>>(
+    ({item}) => (
+      <GoalCard
+        goal={item.goal}
+        saved={item.saved}
+        onPress={() => router.push(DynamicRoutes.goal(item.goal.id))}
+      />
+    ),
+    [],
+  );
 
   return (
     <Screen>
@@ -50,10 +56,10 @@ const GoalsScreen = () => {
       <View className="flex-1">
         <FlashList
           data={active}
-          keyExtractor={({goal}) => goal.id}
+          keyExtractor={keyExtractor}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24}}
-          ItemSeparatorComponent={Gap}
+          contentContainerStyle={LIST_CONTENT}
+          ItemSeparatorComponent={ListGap}
           ListHeaderComponent={
             active.length > 0 ? (
               <View className="gap-6 pb-3">
@@ -61,36 +67,21 @@ const GoalsScreen = () => {
                   saved={totals.saved}
                   target={totals.target}
                   count={active.length}
-                  segments={segments}
+                  onAdd={goNewGoal}
                 />
-                <Text className="px-4 font-satoshi-medium text-lg">Mis metas</Text>
+                <SectionTitle>Mis metas</SectionTitle>
               </View>
             ) : null
           }
           ListEmptyComponent={
-            <View className="w-full items-center gap-3 py-12">
-              <Text className="font-satoshi-medium text-xl">Sin metas todavía</Text>
-
-              <Text className="text-center text-lg text-secundary">
-                Aún no tienes fijada ninguna meta
-              </Text>
-
-              <Pressable
-                onPress={() => router.push(ScreenRoutes.newGoal)}
-                className="h-12 w-full flex-row items-center justify-center gap-2 rounded-full btn-primary"
-              >
-                <IconPlus size={18} color={dark ? '#ffffff' : '#171717'} />
-                <Text className="font-satoshi-bold text-sm">Nueva meta</Text>
-              </Pressable>
-            </View>
-          }
-          renderItem={({item}) => (
-            <GoalCard
-              goal={item.goal}
-              saved={item.saved}
-              onPress={() => router.push(DynamicRoutes.goal(item.goal.id))}
+            <EmptyState
+              title="Sin metas todavía"
+              subtitle="Aún no tienes fijada ninguna meta"
+              actionLabel="Nueva meta"
+              onAction={goNewGoal}
             />
-          )}
+          }
+          renderItem={renderItem}
         />
       </View>
     </Screen>

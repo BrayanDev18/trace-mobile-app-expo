@@ -28,7 +28,7 @@ export type Category = {
   kind: CategoryKind;
 };
 
-export const CATEGORIES: Category[] = [
+const CATEGORIES: Category[] = [
   {id: 'food', label: 'Comida', icon: IconToolsKitchen2, tint: '#f4c24e', kind: 'expense'},
   {id: 'transport', label: 'Transporte', icon: IconCar, tint: '#208aef', kind: 'expense'},
   {id: 'subscriptions', label: 'Suscripciones', icon: IconRepeat, tint: '#0f6b43', kind: 'expense'},
@@ -55,7 +55,7 @@ const CATEGORIES_BY_ID: Record<string, Category> = Object.fromEntries(
   CATEGORIES.map((c) => [c.id, c]),
 );
 
-export const OTHER_CATEGORY = CATEGORIES_BY_ID.other;
+const OTHER_CATEGORY = CATEGORIES_BY_ID.other;
 
 export const getCategory = (id: string): Category =>
   CATEGORIES_BY_ID[id] ?? OTHER_CATEGORY;

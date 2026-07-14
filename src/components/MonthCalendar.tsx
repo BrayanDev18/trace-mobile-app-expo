@@ -1,17 +1,14 @@
 import {useColorScheme} from 'react-native';
 import {Calendar, LocaleConfig} from 'react-native-calendars';
 
+import {useIconColors} from '@/hooks/useIconColors';
+import {MONTHS_LONG, MONTHS_SHORT, WEEKDAYS_LONG, WEEKDAYS_SHORT, capitalize} from '@/utils';
+
 LocaleConfig.locales['es'] = {
-  monthNames: [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
-  ],
-  monthNamesShort: [
-    'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
-    'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic',
-  ],
-  dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-  dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+  monthNames: MONTHS_LONG.map(capitalize),
+  monthNamesShort: MONTHS_SHORT.map(capitalize),
+  dayNames: WEEKDAYS_LONG.map(capitalize),
+  dayNamesShort: WEEKDAYS_SHORT.map(capitalize),
   today: 'Hoy',
 };
 LocaleConfig.defaultLocale = 'es';
@@ -30,25 +27,28 @@ type MonthCalendarProps = {
 
 export const MonthCalendar = ({selected, onSelect}: MonthCalendarProps) => {
   const dark = useColorScheme() === 'dark';
+  const {primary, muted} = useIconColors();
+  const accentBg = dark ? '#005f5a' : '#009689';
+  const accentText = dark ? '#00d5be' : '#009689';
   const key = toKey(selected);
 
   return (
     <Calendar
       current={key}
       onDayPress={(day) => onSelect(fromKey(day.dateString))}
-      markedDates={{[key]: {selected: true, selectedColor: '#009689'}}}
+      markedDates={{[key]: {selected: true, selectedColor: accentBg}}}
       firstDay={1}
       enableSwipeMonths
       theme={{
         calendarBackground: 'transparent',
-        textSectionTitleColor: dark ? '#a3a3a3' : '#737373',
-        monthTextColor: dark ? '#ffffff' : '#000000',
-        dayTextColor: dark ? '#ffffff' : '#000000',
+        textSectionTitleColor: muted,
+        monthTextColor: primary,
+        dayTextColor: primary,
         textDisabledColor: dark ? '#404040' : '#d4d4d4',
-        todayTextColor: '#009689',
-        selectedDayBackgroundColor: '#009689',
+        todayTextColor: accentText,
+        selectedDayBackgroundColor: accentBg,
         selectedDayTextColor: '#ffffff',
-        arrowColor: dark ? '#ffffff' : '#000000',
+        arrowColor: primary,
         textDayFontFamily: 'Satoshi-Regular',
         textMonthFontFamily: 'Satoshi-Bold',
         textDayHeaderFontFamily: 'Satoshi-Medium',

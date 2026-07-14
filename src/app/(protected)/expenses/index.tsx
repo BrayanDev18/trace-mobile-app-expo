@@ -1,43 +1,16 @@
 import {useMemo, useState} from 'react';
 import {View} from 'react-native';
-import {FlashList} from '@shopify/flash-list';
+import {router} from 'expo-router';
+import {FlashList, type ListRenderItem} from '@shopify/flash-list';
 
-import {HorizontalCalendar, Screen, Text} from '@/components';
-import {getCategory} from '@/constants';
-import {useMovementsStore, type Movement} from '@/store/movements';
-import {formatCurrency, sameDay} from '@/utils';
+import {Header, HorizontalCalendar, Screen, Text,EmptyState,ListGap} from '@/components';
+import {ScreenRoutes} from '@/constants';
+import {ExpenseRow} from '@/features/expenses';
+import {useMovementsStore, type Movement} from '@/features/expenses';
+import {dayMonthLabel, formatCurrency, sameDay} from '@/utils';
 
-const MONTHS = [
-  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
-  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
-];
-
-const Gap = () => <View className="h-2" />;
-
-const ExpenseRow = ({expense}: {expense: Movement}) => {
-  const category = getCategory(expense.categoryId);
-  const Icon = category.icon;
-
-  return (
-    <View className="flex-row items-center gap-3 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/60 dark:bg-white/5 px-4 py-3">
-      <View
-        className="h-9 w-9 items-center justify-center rounded-full"
-        style={{backgroundColor: `${category.tint}22`}}
-      >
-        <Icon size={18} color={category.tint} />
-      </View>
-
-      <View className="flex-1">
-        <Text className="font-satoshi-medium">{expense.reason}</Text>
-        <Text className="text-xs text-secundary">{category.label}</Text>
-      </View>
-
-      <Text className="font-satoshi-bold" style={{fontVariant: ['tabular-nums']}}>
-        ${formatCurrency(expense.amount)}
-      </Text>
-    </View>
-  );
-};
+const keyExtractor = (item: Movement) => item.id;
+const goNewExpense = () => router.push(ScreenRoutes.newExpense);
 
 const ExpensesScreen = () => {
   const [selected, setSelected] = useState(() => new Date());
@@ -52,25 +25,25 @@ const ExpensesScreen = () => {
   );
   const total = useMemo(() => expenses.reduce((sum, e) => sum + e.amount, 0), [expenses]);
 
-  const dayLabel = `${selected.getDate()} de ${MONTHS[selected.getMonth()]}`;
-
   return (
     <Screen>
+      <Header title="Gastos" />
+
       <View className="flex-1">
         <FlashList
           data={expenses}
-          keyExtractor={(item) => item.id}
+          keyExtractor={keyExtractor}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingVertical: 16}}
-          ItemSeparatorComponent={Gap}
+          ItemSeparatorComponent={Separator}
           ListHeaderComponent={
             <View className="gap-6 pb-6">
               <HorizontalCalendar selected={selected} onSelect={setSelected} />
 
               <View className="flex-row items-center justify-between">
-                <Text className="font-satoshi-bold">Gastos · {dayLabel}</Text>
+                <Text className="font-satoshi-bold">Gastos · {dayMonthLabel(selected)}</Text>
                 <Text
-                  className="font-satoshi-bold text-red-500"
+                  className="font-satoshi-bold text-red-400"
                   style={{fontVariant: ['tabular-nums']}}
                 >
                   ${formatCurrency(total)}
@@ -79,18 +52,21 @@ const ExpensesScreen = () => {
             </View>
           }
           ListEmptyComponent={
-            <View className="items-center gap-2 py-12">
-              <Text className="font-satoshi-medium text-secundary">Sin gastos este día</Text>
-              <Text className="text-center text-sm text-secundary">
-                Toca + para registrar un gasto.
-              </Text>
-            </View>
+            <EmptyState
+              title="Sin gastos este día"
+              subtitle="Registra un gasto para verlo aquí"
+              actionLabel="Nuevo gasto"
+              onAction={goNewExpense}
+            />
           }
-          renderItem={({item}) => <ExpenseRow expense={item} />}
+          renderItem={renderItem}
         />
       </View>
     </Screen>
   );
 };
+
+const renderItem: ListRenderItem<Movement> = ({item}) => <ExpenseRow expense={item} />;
+const Separator = () => <ListGap size={2} />;
 
 export default ExpensesScreen;
