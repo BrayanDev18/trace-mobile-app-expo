@@ -1,6 +1,7 @@
 import {useMemo, useState} from 'react';
 import {View} from 'react-native';
 import {router} from 'expo-router';
+import {useTranslation} from 'react-i18next';
 import {FlashList, type ListRenderItem} from '@shopify/flash-list';
 
 import {Header, HorizontalCalendar, Screen, Text,EmptyState,ListGap} from '@/components';
@@ -13,6 +14,7 @@ const keyExtractor = (item: MovementProps) => item.id;
 const goNewExpense = () => router.push(ScreenRoutes.newExpense);
 
 const ExpensesScreen = () => {
+  const {t} = useTranslation();
   const [selected, setSelected] = useState(() => new Date());
   const movements = useMovementsStore((s) => s.items);
 
@@ -27,7 +29,7 @@ const ExpensesScreen = () => {
 
   return (
     <Screen>
-      <Header title="Gastos" />
+      <Header title={t('expenses:title')} />
 
       <View className="flex-1">
         <FlashList
@@ -41,7 +43,9 @@ const ExpensesScreen = () => {
               <HorizontalCalendar selected={selected} onSelect={setSelected} />
 
               <View className="flex-row items-center justify-between">
-                <Text className="font-satoshi-bold">Gastos · {dayMonthLabel(selected)}</Text>
+                <Text className="font-satoshi-bold">
+                  {t('expenses:listHeading', {date: dayMonthLabel(selected)})}
+                </Text>
                 <Text
                   className="font-satoshi-bold text-red-400"
                   style={{fontVariant: ['tabular-nums']}}
@@ -53,9 +57,9 @@ const ExpensesScreen = () => {
           }
           ListEmptyComponent={
             <EmptyState
-              title="Sin gastos este día"
-              subtitle="Registra un gasto para verlo aquí"
-              actionLabel="Nuevo gasto"
+              title={t('expenses:empty.title')}
+              subtitle={t('expenses:empty.subtitle')}
+              actionLabel={t('expenses:empty.action')}
               onAction={goNewExpense}
             />
           }

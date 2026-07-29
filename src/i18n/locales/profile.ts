@@ -1,0 +1,68 @@
+export const profile = {
+  es: {
+    title: 'Perfil',
+    pro: {
+      title: 'Actualiza a Pro',
+      badge: 'Pro',
+      description: 'Reportes avanzados, exportación y objetivos ilimitados para sacarle más a tu dinero.',
+      action: 'Obtener Pro',
+      owner: {
+        title: 'Pro para siempre',
+        description: 'Tienes acceso completo de por vida. Gracias por estar desde el día uno.',
+        status: 'De por vida',
+      },
+    },
+    account: 'Cuenta',
+    editProfile: 'Editar perfil',
+    notifications: 'Notificaciones',
+    currency: 'Moneda',
+    appearance: 'Apariencia',
+    language: 'Idioma',
+    preferences: 'Preferencias',
+    reset: {
+      action: 'Restablecer datos',
+      caption: 'Borra todos tus movimientos, suscripciones, ahorros y deudas. Tu sesión no se cierra.',
+      confirmTitle: '¿Restablecer datos?',
+      confirmBody: 'Se eliminarán todos tus datos registrados. Esta acción no se puede deshacer.',
+    },
+    logout: {
+      action: 'Cerrar sesión',
+      caption: 'Cierra tu sesión en este dispositivo.',
+      confirmTitle: '¿Cerrar sesión?',
+      confirmBody: 'Tendrás que iniciar sesión de nuevo para ver tus datos.',
+    },
+  },
+  en: {
+    title: 'Profile',
+    pro: {
+      title: 'Upgrade to Pro',
+      badge: 'Pro',
+      description: 'Advanced reports, exports and unlimited goals to get more from your money.',
+      action: 'Get Pro',
+      owner: {
+        title: 'Pro forever',
+        description: "You've got full access for life. Thanks for being here since day one.",
+        status: 'Lifetime',
+      },
+    },
+    account: 'Account',
+    editProfile: 'Edit profile',
+    notifications: 'Notifications',
+    currency: 'Currency',
+    appearance: 'Appearance',
+    language: 'Language',
+    preferences: 'Preferences',
+    reset: {
+      action: 'Reset data',
+      caption: 'Deletes all your movements, subscriptions, savings and debts. Your session stays.',
+      confirmTitle: 'Reset data?',
+      confirmBody: 'All your registered data will be deleted. This cannot be undone.',
+    },
+    logout: {
+      action: 'Log out',
+      caption: 'Sign out on this device.',
+      confirmTitle: 'Log out?',
+      confirmBody: "You'll need to sign in again to see your data.",
+    },
+  },
+};

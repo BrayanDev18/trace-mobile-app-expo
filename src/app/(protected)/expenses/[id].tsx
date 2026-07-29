@@ -1,6 +1,7 @@
 import {useState} from 'react';
-import {Pressable, View} from 'react-native';
+import {Pressable, ScrollView, View} from 'react-native';
 import {router, useLocalSearchParams} from 'expo-router';
+import {useTranslation} from 'react-i18next';
 import {Image} from 'expo-image';
 import {IconChevronRight} from '@tabler/icons-react-native';
 
@@ -11,6 +12,7 @@ import {useMovementsStore} from '@/features/expenses';
 import {longDate, relativeDate,confirmDestructive} from '@/utils';
 
 export default function ExpenseDetailScreen() {
+  const {t} = useTranslation();
   const {id} = useLocalSearchParams<{id: string}>();
   const {faint} = useIconColors();
 
@@ -27,12 +29,13 @@ export default function ExpenseDetailScreen() {
   const category = getCategory(movement.categoryId);
   const method = movement.methodId ? getPaymentMethod(movement.methodId) : undefined;
   const CategoryIcon = category.icon;
+  const receipts = movement.receiptUris ?? [];
 
   const deleteConfirm = () =>
     confirmDestructive({
-      title: isIncome ? '¿Eliminar ingreso?' : '¿Eliminar gasto?',
-      message: 'Se eliminará de tu historial. Esta acción no se puede deshacer.',
-      actionLabel: 'Eliminar',
+      title: isIncome ? t('expenses:delete.confirmTitleIncome') : t('expenses:delete.confirmTitleExpense'),
+      message: t('expenses:delete.confirmBody'),
+      actionLabel: t('common:actions.delete'),
       onConfirm: () => {
         remove(movement.id);
         router.back();
@@ -41,10 +44,10 @@ export default function ExpenseDetailScreen() {
 
   return (
     <Screen edges={['top']} scroll>
-      <Header title={isIncome ? 'Detalle del ingreso' : 'Detalle del gasto'} />
+      <Header title={isIncome ? t('expenses:detail.titleIncome') : t('expenses:detail.titleExpense')} />
 
       <DetailHero
-        title={movement.reason}
+        title={movement.reason || t(category.labelKey)}
         amount={movement.amount}
         prefix={isIncome ? '+' : '-'}
         accent={isIncome}
@@ -53,43 +56,46 @@ export default function ExpenseDetailScreen() {
 
       <View className="gap-8 px-5 pb-10">
         <View className="gap-2">
-          <Text className="px-4 font-satoshi-medium text-lg">Detalles</Text>
+          <Text className="px-4 font-satoshi-medium text-lg">{t('common:states.details')}</Text>
 
           <Group>
-            <Row label="Categoría">
+            <Row label={t('expenses:detail.category')}>
               <CategoryIcon size={17} color={category.tint} />
-              <Text className="text-secundary">{category.label}</Text>
+              <Text className="text-secundary">{t(category.labelKey)}</Text>
             </Row>
             <Separator />
-            <Row label="Método de pago">
+            <Row label={t('expenses:detail.method')}>
               {method ? <method.Icon size={17} /> : null}
-              <Text className="text-secundary">{method?.label ?? '—'}</Text>
+              <Text className="text-secundary">{method ? t(method.labelKey) : '—'}</Text>
             </Row>
             <Separator />
-            <Row label="Fecha">
+            <Row label={t('expenses:detail.date')}>
               <Text selectable className="text-secundary">
                 {longDate(date)}
               </Text>
             </Row>
             <Separator />
-            {movement.receiptUri ? (
+            {receipts.length ? (
               <Pressable
-                accessibilityLabel="Ver factura"
+                accessibilityLabel={t('expenses:detail.viewReceipt')}
                 onPress={() => setReceiptOpen(true)}
                 className="active:bg-neutral-200 dark:active:bg-white/5"
               >
-                <Row label="Factura">
+                <Row label={t('expenses:detail.receipt')}>
                   <Image
-                    source={{uri: movement.receiptUri}}
+                    source={{uri: receipts[0]}}
                     style={{width: 28, height: 28, borderRadius: 6}}
                     contentFit="cover"
                   />
+                  {receipts.length > 1 ? (
+                    <Text className="text-secundary">{t('expenses:detail.receiptCount', {count: receipts.length})}</Text>
+                  ) : null}
                   <IconChevronRight size={16} color={faint} />
                 </Row>
               </Pressable>
             ) : (
-              <Row label="Factura">
-                <Text className="text-secundary">Ninguna</Text>
+              <Row label={t('expenses:detail.receipt')}>
+                <Text className="text-secundary">{t('common:states.none')}</Text>
               </Row>
             )}
           </Group>
@@ -97,20 +103,27 @@ export default function ExpenseDetailScreen() {
 
         <GroupAction
           destructive
-          label={isIncome ? 'Eliminar ingreso' : 'Eliminar gasto'}
-          caption="Se eliminará de tu historial. Esta acción no se puede deshacer."
+          label={isIncome ? t('expenses:delete.actionIncome') : t('expenses:delete.actionExpense')}
+          caption={t('expenses:delete.confirmBody')}
           onPress={deleteConfirm}
         />
       </View>
 
-      <SheetModal visible={receiptOpen} onClose={() => setReceiptOpen(false)} title="Factura">
-        {movement.receiptUri ? (
-          <Image
-            source={{uri: movement.receiptUri}}
-            style={{width: '100%', height: 420, borderRadius: 20}}
-            contentFit="cover"
-          />
-        ) : null}
+      <SheetModal visible={receiptOpen} onClose={() => setReceiptOpen(false)} title={t('expenses:detail.receipt')}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{maxHeight: 440}}
+          contentContainerStyle={{gap: 12}}
+        >
+          {receipts.map((uri) => (
+            <Image
+              key={uri}
+              source={{uri}}
+              style={{width: '100%', height: 300, borderRadius: 20}}
+              contentFit="cover"
+            />
+          ))}
+        </ScrollView>
       </SheetModal>
     </Screen>
   );

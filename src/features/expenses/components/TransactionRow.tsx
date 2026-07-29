@@ -1,11 +1,13 @@
 import {memo} from 'react';
 import {Pressable, View} from 'react-native';
+import {Image} from 'expo-image';
 import {router} from 'expo-router';
+import {useTranslation} from 'react-i18next';
 
 import {Text} from '@/components';
 import {DynamicRoutes, getCategory, getPaymentMethod} from '@/constants';
 import {useIconColors} from '@/hooks/useIconColors';
-import {cn, formatCurrency, relativeDate, timeLabel} from '@/utils';
+import {cn, formatCurrency, relativeDate, sizedLogo, timeLabel} from '@/utils';
 
 import {type MovementProps} from '../types';
 
@@ -16,15 +18,22 @@ type TransactionRowProps = {
 
 export const TransactionRow = memo(function TransactionRow(props: TransactionRowProps) {
   const {movement, showDate = true} = props;
+  const {t} = useTranslation();
 
+  const platform = movement.platform;
   const category = getCategory(movement.categoryId);
   const Icon = category.icon;
   const isIncome = movement.type === 'income';
   const glyph = useIconColors().primary;
+  const title = platform?.name ?? (movement.reason || t(category.labelKey));
 
   const date = new Date(movement.date);
   const method = movement.methodId ? getPaymentMethod(movement.methodId) : undefined;
-  const meta = [showDate ? relativeDate(date) : null, method?.label]
+  const meta = [
+    showDate ? relativeDate(date) : null,
+    movement.subscriptionId ? t('expenses:subscription') : null,
+    method ? t(method.labelKey) : null,
+  ]
     .filter(Boolean)
     .join(' · ');
 
@@ -33,13 +42,22 @@ export const TransactionRow = memo(function TransactionRow(props: TransactionRow
       onPress={() => router.push(DynamicRoutes.expense(movement.id))}
       className="flex-row items-center gap-3 px-4 py-2 active:bg-neutral-200 dark:active:bg-white/5"
     >
-      <View className="h-14 w-14 items-center justify-center rounded-xl bg-tertiary">
-        <Icon size={25} color={glyph}/>
+      <View className={cn('h-14 w-14 items-center justify-center rounded-xl', !platform && 'bg-tertiary')}>
+        {platform ? (
+          <Image
+            source={{uri: sizedLogo(platform.logo, 48)}}
+            recyclingKey={movement.id}
+            style={{width: 48, height: 48, borderRadius: 9}}
+            contentFit="contain"
+          />
+        ) : (
+          <Icon size={25} color={glyph}/>
+        )}
       </View>
 
       <View className="flex-1 gap-1">
         <Text numberOfLines={1} className="font-satoshi-medium text-[16px]">
-          {movement.reason}
+          {title}
         </Text>
 
         {meta ? (
@@ -53,7 +71,7 @@ export const TransactionRow = memo(function TransactionRow(props: TransactionRow
         <Text
           className={cn(
             'font-satoshi-medium',
-            isIncome && 'text-accent dark:text-teal-400',
+            !isIncome && 'text-red-400',
           )}
           style={{fontVariant: ['tabular-nums']}}
         >

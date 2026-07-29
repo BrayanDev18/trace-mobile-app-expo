@@ -1,3 +1,5 @@
+import {useTranslation} from 'react-i18next';
+
 import {OverviewBanner} from '@/components/OverviewBanner';
 import {formatCurrency} from '@/utils';
 
@@ -10,13 +12,18 @@ type DebtsOverviewProps = {
 
 export const DebtsOverview = (props: DebtsOverviewProps) => {
   const {lent, owed, count, onAdd} = props;
+  const {t} = useTranslation();
 
   return (
     <OverviewBanner
-      title="Balance de deudas"
+      title={t('debts:overview.title')}
       amount={lent - owed}
-      meta={`Te deben $ ${formatCurrency(lent)} · Debes $ ${formatCurrency(owed)} · ${count} ${count === 1 ? 'activa' : 'activas'}`}
-      actionLabel="Nueva deuda"
+      meta={t('debts:overview.meta', {
+        count,
+        lent: formatCurrency(lent),
+        owed: formatCurrency(owed),
+      })}
+      actionLabel={t('debts:newDebt')}
       onAction={onAdd}
     />
   );

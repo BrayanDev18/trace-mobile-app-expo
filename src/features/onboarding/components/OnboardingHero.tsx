@@ -1,4 +1,5 @@
-import {StyleSheet, View, useColorScheme} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {useColorScheme} from '@/hooks/useColorScheme';
 import {Image} from 'expo-image';
 import {LinearGradient} from 'expo-linear-gradient';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';

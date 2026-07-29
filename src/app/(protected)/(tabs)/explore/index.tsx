@@ -1,5 +1,9 @@
+import {useTranslation} from 'react-i18next';
+
 import {ComingSoon} from '@/components';
 
 export default function ExploreScreen() {
-  return <ComingSoon title="Explorar" />;
+  const {t} = useTranslation();
+
+  return <ComingSoon title={t('common:nav.explore')} />;
 }

@@ -1,4 +1,5 @@
 import {Pressable, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 import {IconBackspace} from '@tabler/icons-react-native';
 
 import {Text} from '@/components/Text';
@@ -18,6 +19,7 @@ type KeypadProps = {
 };
 
 export const Keypad = ({onKey, onErase, onClear}: KeypadProps) => {
+  const {t} = useTranslation();
   const iconColor = useIconColors().primary;
 
   return (
@@ -28,10 +30,10 @@ export const Keypad = ({onKey, onErase, onClear}: KeypadProps) => {
             key === 'erase' ? (
               <Pressable
                 key={key}
-                accessibilityLabel="Borrar"
+                accessibilityLabel={t('common:ui.erase')}
                 onPressIn={onErase}
                 onLongPress={onClear}
-                className="h-16 flex-1 items-center justify-center rounded-2xl active:bg-neutral-200 dark:active:bg-white/5"
+                className="h-16 flex-1 items-center justify-center rounded-2xl bg-secundary"
               >
                 <IconBackspace size={26} color={iconColor} />
               </Pressable>
@@ -41,7 +43,7 @@ export const Keypad = ({onKey, onErase, onClear}: KeypadProps) => {
                 onPressIn={() => onKey(key)}
                 className="h-16 flex-1 items-center justify-center rounded-2xl active:bg-neutral-200 dark:active:bg-white/5"
               >
-                <Text className="font-satoshi-medium text-3xl">
+                <Text className="font-satoshi-bold text-2xl">
                   {key}
                 </Text>
               </Pressable>

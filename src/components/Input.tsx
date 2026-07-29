@@ -1,4 +1,6 @@
-import {TextInput, View, useColorScheme} from 'react-native';
+import type {ReactNode} from 'react';
+import {TextInput, View} from 'react-native';
+import {useColorScheme} from '@/hooks/useColorScheme';
 import type {TextInputProps} from 'react-native';
 import {Controller, type Control, type FieldValues, type Path} from 'react-hook-form';
 import type {Icon} from '@tabler/icons-react-native';
@@ -8,10 +10,11 @@ import {useIconColors} from '@/hooks/useIconColors';
 
 type BaseInputProps = Omit<TextInputProps, 'value'> & {
   icon?: Icon;
+  trailing?: ReactNode;
   error?: boolean;
 };
 
-type InputProps<T extends FieldValues> = BaseInputProps & {
+export type InputProps<T extends FieldValues> = BaseInputProps & {
   control?: Control<T>;
   name?: Path<T>;
 };
@@ -42,7 +45,7 @@ export const Input = <T extends FieldValues = FieldValues>({
 };
 
 const BaseInput = (props: BaseInputProps) => {
-  const {icon: LeadingIcon, error, className, ...rest} = props;
+  const {icon: LeadingIcon, trailing, error, className, ...rest} = props;
 
   const dark = useColorScheme() === 'dark';
   const {faint} = useIconColors();
@@ -61,6 +64,7 @@ const BaseInput = (props: BaseInputProps) => {
         className={cn('h-full flex-1 font-satoshi-medium text-primary', className)}
         {...rest}
       />
+      {trailing}
     </View>
   );
 };

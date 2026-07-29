@@ -6,6 +6,7 @@ type ListStateProps<T extends {id: string}> = {
   items: T[];
   add: (data: Omit<T, 'id'>) => T;
   remove: (id: string) => void;
+  clear: () => void;
 };
 
 type ListPersistProps<T extends {id: string}> = Pick<
@@ -27,6 +28,7 @@ export const createPersistedListStore = <T extends {id: string}>(
           return item;
         },
         remove: (id) => set((state) => ({items: state.items.filter((item) => item.id !== id)})),
+        clear: () => set({items: []}),
       }),
       {
         name: storageKey,

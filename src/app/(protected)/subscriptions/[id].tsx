@@ -1,5 +1,6 @@
 import {View} from 'react-native';
 import {router, useLocalSearchParams} from 'expo-router';
+import {useTranslation} from 'react-i18next';
 
 import {Group, Header, Row, Screen, Separator, Text,GroupAction} from '@/components';
 import {getPaymentMethod} from '@/constants';
@@ -7,6 +8,7 @@ import {SubscriptionHeroCard,useSubscriptionsStore} from '@/features/subscriptio
 import {formatCurrency,confirmDestructive} from '@/utils';
 
 export default function SubscriptionDetailScreen() {
+  const {t} = useTranslation();
   const {id} = useLocalSearchParams<{id: string}>();
 
   const subscriptions = useSubscriptionsStore((s) => s.items);
@@ -16,13 +18,13 @@ export default function SubscriptionDetailScreen() {
   if (!subscription) return null;
 
   const method = subscription.methodId ? getPaymentMethod(subscription.methodId) : undefined;
-  const period = subscription.period === 'yearly' ? 'año' : 'mes';
+  const period = t(subscription.period === 'yearly' ? 'subscriptions:period.year' : 'subscriptions:period.month');
 
   const deleteConfirm = () =>
     confirmDestructive({
-      title: '¿Eliminar suscripción?',
-      message: 'Dejará de aparecer en tu lista y en el total mensual.',
-      actionLabel: 'Eliminar',
+      title: t('subscriptions:delete.confirmTitle'),
+      message: t('subscriptions:delete.confirmBody'),
+      actionLabel: t('common:actions.delete'),
       onConfirm: () => {
         remove(subscription.id);
         router.back();
@@ -37,17 +39,17 @@ export default function SubscriptionDetailScreen() {
         <SubscriptionHeroCard subscription={subscription} />
 
         <View className="gap-2">
-          <Text className="px-4 font-satoshi-medium text-lg">Detalles</Text>
+          <Text className="px-4 font-satoshi-medium text-lg">{t('common:states.details')}</Text>
 
           <Group>
-            <Row label="Método de pago">
+            <Row label={t('subscriptions:detail.paymentMethod')}>
               {method && <method.Icon size={18} />}
-              <Text className="text-secundary">{method?.label ?? '—'}</Text>
+              <Text className="text-secundary">{method ? t(method.labelKey) : '—'}</Text>
             </Row>
 
             <Separator />
 
-            <Row label="Precio">
+            <Row label={t('subscriptions:detail.price')}>
               <Text className="text-secundary" style={{fontVariant: ['tabular-nums']}}>
                 ${formatCurrency(subscription.price)}/{period}
               </Text>
@@ -55,16 +57,16 @@ export default function SubscriptionDetailScreen() {
 
             <Separator />
 
-            <Row label="Próximo cobro">
+            <Row label={t('subscriptions:detail.nextCharge')}>
               <Text className="text-secundary">{subscription.nextCharge}</Text>
             </Row>
 
             <Separator />
 
-            <Row label="Estado">
+            <Row label={t('subscriptions:detail.status')}>
               <View className="rounded-full bg-accent/10 px-2.5 py-1">
                 <Text className="font-satoshi-medium text-sm text-accent dark:text-teal-400">
-                  Activa
+                  {t('subscriptions:status.active')}
                 </Text>
               </View>
             </Row>
@@ -73,8 +75,8 @@ export default function SubscriptionDetailScreen() {
 
         <GroupAction
           destructive
-          label="Eliminar suscripción"
-          caption="Dejará de aparecer en tu lista y en el total mensual."
+          label={t('subscriptions:delete.action')}
+          caption={t('subscriptions:delete.confirmBody')}
           onPress={deleteConfirm}
         />
       </View>

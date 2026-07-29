@@ -1,8 +1,9 @@
 import {memo, useCallback, useMemo, useState} from 'react';
 import {FlatList, Pressable, View, type ListRenderItem, type ViewToken} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import {Text} from '@/components/Text';
-import {MONTHS_LONG, WEEKDAYS_SHORT, capitalize, cn} from '@/utils';
+import {capitalize, cn, monthsLong, weekdaysShort} from '@/utils';
 
 const DAY_WIDTH = 52;
 const RANGE = 365;
@@ -25,6 +26,8 @@ type HorizontalCalendarProps = {
 };
 
 export const HorizontalCalendar = ({selected, onSelect}: HorizontalCalendarProps) => {
+  const {i18n} = useTranslation();
+
   const {days, today} = useMemo(() => {
     const base = startOfDay(new Date());
     const list: Date[] = [];
@@ -56,6 +59,7 @@ export const HorizontalCalendar = ({selected, onSelect}: HorizontalCalendarProps
     ({item}) => (
       <DayCell
         date={item}
+        weekday={capitalize(weekdaysShort()[item.getDay()])}
         active={isSameDay(item, selected)}
         isToday={isSameDay(item, today)}
         onSelect={onSelect}
@@ -64,7 +68,7 @@ export const HorizontalCalendar = ({selected, onSelect}: HorizontalCalendarProps
     [selected, today, onSelect],
   );
 
-  const monthLabel = `${capitalize(MONTHS_LONG[visible.month])}${
+  const monthLabel = `${capitalize(monthsLong()[visible.month])}${
     visible.year !== today.getFullYear() ? ` ${visible.year}` : ''
   }`;
 
@@ -85,6 +89,7 @@ export const HorizontalCalendar = ({selected, onSelect}: HorizontalCalendarProps
           index,
         })}
         initialScrollIndex={Math.max(selectedIndex - 3, 0)}
+        extraData={i18n.language}
         initialNumToRender={15}
         maxToRenderPerBatch={15}
         windowSize={5}
@@ -98,13 +103,14 @@ export const HorizontalCalendar = ({selected, onSelect}: HorizontalCalendarProps
 
 type DayCellProps = {
   date: Date;
+  weekday: string;
   active: boolean;
   isToday: boolean;
   onSelect: (date: Date) => void;
 };
 
 const DayCell = memo(function DayCell(props: DayCellProps) {
-  const {date, active, isToday, onSelect} = props;
+  const {date, weekday, active, isToday, onSelect} = props;
 
   return (
     <Pressable
@@ -113,7 +119,7 @@ const DayCell = memo(function DayCell(props: DayCellProps) {
       className="items-center gap-2 py-1"
     >
       <Text className="font-satoshi-medium text-sm text-secundary">
-        {capitalize(WEEKDAYS_SHORT[date.getDay()])}
+        {weekday}
       </Text>
 
       <View

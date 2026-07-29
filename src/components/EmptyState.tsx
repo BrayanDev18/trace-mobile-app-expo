@@ -1,6 +1,6 @@
 import {View} from 'react-native';
 
-import {PrimaryButton} from '@/components/PrimaryButton';
+import {Button} from '@/components/Button';
 import {Text} from '@/components/Text';
 
 type EmptyStateProps = {
@@ -20,7 +20,7 @@ export const EmptyState = (props: EmptyStateProps) => {
       <Text className="text-center text-lg text-secundary">{subtitle}</Text>
 
       {actionLabel ? (
-        <PrimaryButton label={actionLabel} onPress={onAction} className="w-full" />
+        <Button label={actionLabel} onPress={onAction} className="w-full" />
       ) : null}
     </View>
   );

@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {Pressable, View} from 'react-native';
 import {router} from 'expo-router';
+import {useTranslation} from 'react-i18next';
 import {IconArrowRight} from '@tabler/icons-react-native';
 
 import {Screen, Text} from '@/components';
@@ -10,17 +11,18 @@ import {useSessionStore} from '@/store/session';
 import {haptic} from '@/utils';
 
 const OnboardingScreen = () => {
+  const {t} = useTranslation();
   const completeOnboarding = useSessionStore((s) => s.completeOnboarding);
   const [index, setIndex] = useState(0);
 
   const start = () => {
-    haptic.success();
+    haptic.tap();
     completeOnboarding();
-    router.replace(ScreenRoutes.home);
+    router.push(ScreenRoutes.signUp);
   };
 
   return (
-    <Screen edges={['bottom']}>
+    <Screen edges={['bottom']} canGoBack={false}>
       <OnboardingHero />
 
       <View className="gap-12 pt-2">
@@ -33,7 +35,7 @@ const OnboardingScreen = () => {
             onPress={start}
             className="h-16 flex-row items-center justify-between rounded-full btn-primary pl-7 pr-2 active:bg-accent-pressed"
           >
-            <Text className="font-satoshi-bold text-white">Comenzar</Text>
+            <Text className="font-satoshi-bold text-white">{t('onboarding:start')}</Text>
             <View className="h-12 w-12 items-center justify-center rounded-full bg-white/15">
               <IconArrowRight size={22} color="#ffffff" />
             </View>

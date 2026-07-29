@@ -1,25 +1,25 @@
 {
   "expo": {
-    "name": "trace-mobile-app-expo",
+    "name": "Trace Finance",
     "slug": "trace-mobile-app-expo",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/trace-icon.png",
     "scheme": "tracemobileappexpo",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon",
       "bundleIdentifier": "com.brayan200318.trace-mobile-app-expo"
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundColor": "#009689",
+        "foregroundImage": "./assets/trace-icon.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.brayan200318.tracemobileappexpo"
+      "package": "com.brayan200318.tracemobileappexpo",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "output": "static",
@@ -30,9 +30,9 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "backgroundColor": "#009689",
+          "image": "./assets/trace-splash.png",
+          "imageWidth": 180
         }
       ],
       "expo-image",
@@ -53,11 +53,19 @@
         {
           "photosPermission": "Trace usa tus fotos para adjuntar facturas y recibos a tus gastos."
         }
-      ]
+      ],
+      "expo-localization",
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "8c1859b6-6e89-4321-b63a-83ee8e83084c"
+      }
     }
   }
 }

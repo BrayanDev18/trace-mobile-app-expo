@@ -1,5 +1,11 @@
 export type MovementTypeProps = 'expense' | 'income';
 
+export type PlatformProps = {
+  name: string;
+  logo: string;
+  domain: string;
+};
+
 export type MovementProps = {
   id: string;
   type: MovementTypeProps;
@@ -8,6 +14,7 @@ export type MovementProps = {
   date: string;
   categoryId: string;
   methodId?: string;
-  receiptUri?: string;
+  receiptUris?: string[];
   subscriptionId?: string;
+  platform?: PlatformProps;
 };

@@ -1,11 +1,22 @@
 import {useSyncExternalStore} from 'react';
 
 import {useDebtsStore} from '@/features/debts';
-import {useGoalsStore} from '@/features/goals';
 import {useMovementsStore} from '@/features/expenses';
+import {useSavingsStore} from '@/features/savings';
 import {useSubscriptionsStore} from '@/features/subscriptions';
+import {useLocaleStore} from '@/store/locale';
+import {useSessionStore} from '@/store/session';
+import {useThemeStore} from '@/store/theme';
 
-const stores = [useMovementsStore, useSubscriptionsStore, useDebtsStore, useGoalsStore];
+const stores = [
+  useMovementsStore,
+  useSubscriptionsStore,
+  useDebtsStore,
+  useSavingsStore,
+  useSessionStore,
+  useThemeStore,
+  useLocaleStore,
+];
 
 const allHydrated = () => stores.every((store) => store.persist.hasHydrated());
 

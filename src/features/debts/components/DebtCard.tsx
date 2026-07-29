@@ -1,5 +1,6 @@
 import {memo} from 'react';
 import {Pressable, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import {Text} from '@/components';
 import {Colors} from '@/constants';
@@ -13,6 +14,7 @@ type DebtCardProps = {
 };
 
 export const DebtCard = memo(function DebtCard({debt, paid, onPress}: DebtCardProps) {
+  const {t} = useTranslation();
   const isLent = debt.direction === 'lent';
   const tint = isLent ? Colors.up : Colors.down;
   const remaining = Math.max(0, debt.amount - paid);
@@ -37,8 +39,8 @@ export const DebtCard = memo(function DebtCard({debt, paid, onPress}: DebtCardPr
           {debt.person}
         </Text>
         <Text numberOfLines={1} className="text-sm text-secundary">
-          {isLent ? 'Te debe' : 'Le debes'}
-          {debt.dueDate ? ` · vence ${shortDate(new Date(debt.dueDate))}` : ''}
+          {isLent ? t('debts:card.lent') : t('debts:card.owed')}
+          {debt.dueDate ? t('debts:card.due', {date: shortDate(new Date(debt.dueDate))}) : ''}
         </Text>
       </View>
 
@@ -51,7 +53,7 @@ export const DebtCard = memo(function DebtCard({debt, paid, onPress}: DebtCardPr
         </Text>
         {paid > 0 && (
           <Text className="text-xs text-secundary" style={{fontVariant: ['tabular-nums']}}>
-            de ${formatCurrency(debt.amount)}
+            {t('debts:card.ofAmount', {amount: formatCurrency(debt.amount)})}
           </Text>
         )}
       </View>

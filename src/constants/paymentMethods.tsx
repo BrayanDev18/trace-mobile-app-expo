@@ -19,7 +19,7 @@ const makeIcon = (Icon: TablerIcon, color: string) => {
 
 export type PaymentMethodProps = {
   id: string;
-  label: string;
+  labelKey: string;
   description: string;
   Icon: (props: IconProps) => React.JSX.Element;
 };
@@ -27,49 +27,49 @@ export type PaymentMethodProps = {
 export const PAYMENT_METHODS: PaymentMethodProps[] = [
   {
     id: 'cash',
-    label: 'Efectivo',
+    labelKey: 'payments:cash',
     description: 'Pagaste en efectivo',
     Icon: makeIcon(IconCash, '#16a34a'),
   },
   {
     id: 'debit',
-    label: 'Tarjeta de débito',
+    labelKey: 'payments:debit',
     description: 'Pago con débito',
     Icon: makeIcon(IconCreditCard, '#2563eb'),
   },
   {
     id: 'credit',
-    label: 'Tarjeta de crédito',
+    labelKey: 'payments:credit',
     description: 'Pago con crédito',
     Icon: makeIcon(IconCreditCardFilled, '#7c3aed'),
   },
   {
     id: 'transfer',
-    label: 'Transferencia bancaria',
+    labelKey: 'payments:transfer',
     description: 'Transferencia entre cuentas',
     Icon: makeIcon(IconBuildingBank, '#0891b2'),
   },
   {
     id: 'wallet',
-    label: 'Billetera digital',
+    labelKey: 'payments:wallet',
     description: 'Nequi, Daviplata, etc.',
     Icon: makeIcon(IconDeviceMobile, '#db2777'),
   },
   {
     id: 'qr',
-    label: 'QR',
+    labelKey: 'payments:qr',
     description: 'Pago mediante código QR',
     Icon: makeIcon(IconQrcode, '#ea580c'),
   },
   {
     id: 'voucher',
-    label: 'Bono o vale',
+    labelKey: 'payments:voucher',
     description: 'Bonos o tarjetas regalo',
     Icon: makeIcon(IconGift, '#d97706'),
   },
   {
     id: 'other',
-    label: 'Otro',
+    labelKey: 'payments:other',
     description: 'Cualquier otro método',
     Icon: makeIcon(IconNotes, '#737373'),
   },

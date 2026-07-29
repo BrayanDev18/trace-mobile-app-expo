@@ -38,7 +38,7 @@ export const AmountDisplay = (props: AmountDisplayProps) => {
         <Text
           numberOfLines={1}
           className={cn(
-            'font-satoshi-bold tracking-tight',
+            'font-satoshi-medium tracking-tight',
             sizeClass,
             error ? 'text-red-400' : !hasAmount && 'text-secundary',
           )}

@@ -52,7 +52,7 @@ export const AmountEntryToggle = (props: AmountEntryToggleProps) => {
         disabled && 'opacity-40',
       )}
     >
-      <Text className="font-satoshi-bold text-white">{ctaLabel}</Text>
+      <Text className="font-satoshi-bold text-white ">{ctaLabel}</Text>
     </Pressable>
   );
 };

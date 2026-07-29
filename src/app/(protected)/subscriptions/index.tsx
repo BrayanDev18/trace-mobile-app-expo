@@ -1,6 +1,7 @@
 import {useCallback, useMemo} from 'react';
 import {View} from 'react-native';
 import {router} from 'expo-router';
+import {useTranslation} from 'react-i18next';
 import {FlashList, type ListRenderItem} from '@shopify/flash-list';
 
 import {Header, Screen,EmptyState,ListGap,SectionTitle} from '@/components';
@@ -13,6 +14,7 @@ const keyExtractor = (item: SubscriptionProps) => item.id;
 const goNewSubscription = () => router.push(ScreenRoutes.newSubscription);
 
 const SubscriptionsScreen = () => {
+  const {t} = useTranslation();
   const subscriptions = useSubscriptionsStore((s) => s.items);
 
   const monthlyTotal = useMemo(
@@ -36,7 +38,7 @@ const SubscriptionsScreen = () => {
 
   return (
     <Screen>
-      <Header title="Suscripciones" />
+      <Header title={t('subscriptions:title')} />
 
       <View className="flex-1">
         <FlashList
@@ -47,21 +49,21 @@ const SubscriptionsScreen = () => {
           ItemSeparatorComponent={ListGap}
           ListHeaderComponent={
             subscriptions.length > 0 ? (
-              <View className="gap-6 pb-3">
+              <View className="gap-6 py-3">
                 <SubscriptionsBanner
                   monthlyTotal={monthlyTotal}
                   count={subscriptions.length}
                   onAdd={goNewSubscription}
                 />
-                <SectionTitle>Mis suscripciones</SectionTitle>
+                <SectionTitle>{t('subscriptions:list.sectionTitle')}</SectionTitle>
               </View>
             ) : null
           }
           ListEmptyComponent={
             <EmptyState
-              title="Sin suscripciones"
-              subtitle="Registra tus pagos recurrentes para ver el gasto mensual"
-              actionLabel="Agregar suscripción"
+              title={t('subscriptions:empty.title')}
+              subtitle={t('subscriptions:empty.subtitle')}
+              actionLabel={t('subscriptions:actions.add')}
               onAction={goNewSubscription}
             />
           }

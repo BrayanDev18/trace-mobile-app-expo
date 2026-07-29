@@ -1,5 +1,6 @@
 import {memo} from 'react';
 import {View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import {Text} from '@/components';
 import {getCategory} from '@/constants';
@@ -11,6 +12,7 @@ type ExpenseRowProps = {
 };
 
 export const ExpenseRow = memo(function ExpenseRow({expense}: ExpenseRowProps) {
+  const {t} = useTranslation();
   const category = getCategory(expense.categoryId);
   const Icon = category.icon;
 
@@ -25,7 +27,7 @@ export const ExpenseRow = memo(function ExpenseRow({expense}: ExpenseRowProps) {
 
       <View className="flex-1">
         <Text className="font-satoshi-medium">{expense.reason}</Text>
-        <Text className="text-xs text-secundary">{category.label}</Text>
+        <Text className="text-xs text-secundary">{t(category.labelKey)}</Text>
       </View>
 
       <Text className="font-satoshi-bold" style={{fontVariant: ['tabular-nums']}}>

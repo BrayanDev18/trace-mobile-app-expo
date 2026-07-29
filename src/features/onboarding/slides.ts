@@ -1,16 +1,16 @@
-export type SlideProps = {title: string; subtitle: string};
+export type SlideProps = {titleKey: string; subtitleKey: string};
 
 export const SLIDES: SlideProps[] = [
   {
-    title: 'Sigue el rastro\nde tu dinero',
-    subtitle: 'Registra ingresos y gastos en segundos, sin hojas de cálculo.',
+    titleKey: 'onboarding:slides.0.title',
+    subtitleKey: 'onboarding:slides.0.subtitle',
   },
   {
-    title: 'Descubre en qué\nse te va la plata',
-    subtitle: 'Categorías, estadísticas y presupuestos que te lo muestran claro.',
+    titleKey: 'onboarding:slides.1.title',
+    subtitleKey: 'onboarding:slides.1.subtitle',
   },
   {
-    title: 'Todo tu dinero\nen un solo lugar',
-    subtitle: 'Deudas, suscripciones y recibos organizados y a la mano.',
+    titleKey: 'onboarding:slides.2.title',
+    subtitleKey: 'onboarding:slides.2.subtitle',
   },
 ];

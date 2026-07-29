@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {View} from 'react-native';
 import {router} from 'expo-router';
+import {useTranslation} from 'react-i18next';
 import {IconCalendarEvent, IconCreditCard} from '@tabler/icons-react-native';
 
 import {Keypad, Screen} from '@/components';
@@ -13,16 +14,16 @@ import {haptic, shortDate} from '@/utils';
 
 type PanelProps = 'keypad' | 'date' | 'method';
 
-const PERIODS: {value: SubscriptionProps['period']; label: string}[] = [
-  {value: 'monthly', label: 'Mensual'},
-  {value: 'yearly', label: 'Anual'},
-];
-
-const METHOD_OPTIONS = PAYMENT_METHODS.map((m) => ({id: m.id, label: m.label, icon: m.Icon}));
-
 export default function NewSubscriptionScreen() {
+  const {t} = useTranslation();
   const [panel, setPanel] = useState<PanelProps>('keypad');
   const form = useSubscriptionForm();
+  const methodOptions = PAYMENT_METHODS.map((m) => ({id: m.id, label: t(m.labelKey), icon: m.Icon}));
+
+  const periods: {value: SubscriptionProps['period']; label: string}[] = [
+    {value: 'monthly', label: t('subscriptions:period.monthly')},
+    {value: 'yearly', label: t('subscriptions:period.yearly')},
+  ];
 
   const {animatedStyle, onKey, erase, clear, shakeError} = useAmountInput({
     getValue: () => form.price,
@@ -37,8 +38,8 @@ export default function NewSubscriptionScreen() {
   };
 
   return (
-    <Screen edges={['top']} scroll={!form.brand} keyboard={!form.brand} asBackground={false}>
-      <FormSheetHeader title="Nueva suscripción" onClose={router.back} />
+    <Screen edges={['top']} scroll={!form.brand} keyboard={!form.brand} asBackground={false} canGoBack={false}>
+      <FormSheetHeader title={t('subscriptions:new.title')} onClose={router.back} />
 
       {!form.brand ? (
         <BrandSearch onPick={form.setBrand} />
@@ -53,17 +54,17 @@ export default function NewSubscriptionScreen() {
               raw={form.price}
               animatedStyle={animatedStyle}
               error={form.attempted && !form.amountValid}
-              suffix={`/${form.period === 'yearly' ? 'año' : 'mes'}`}
+              suffix={`/${t(form.period === 'yearly' ? 'subscriptions:period.year' : 'subscriptions:period.month')}`}
             />
           </View>
 
           <CapturePanel
             panel={panel}
-            submitLabel="Agregar suscripción"
+            submitLabel={t('subscriptions:actions.add')}
             onSubmit={() => form.submit(shakeError)}
             chips={
               <>
-                <SegmentChips options={PERIODS} value={form.period} onChange={form.setPeriod} />
+                <SegmentChips options={periods} value={form.period} onChange={form.setPeriod} />
 
                 <PickerChip
                   icon={IconCalendarEvent}
@@ -74,7 +75,7 @@ export default function NewSubscriptionScreen() {
 
                 <PickerChip
                   icon={method?.Icon ?? IconCreditCard}
-                  label={method?.label ?? 'Método'}
+                  label={method ? t(method.labelKey) : t('subscriptions:new.methodPlaceholder')}
                   active={panel === 'method'}
                   onPress={() => togglePanel('method')}
                 />
@@ -93,7 +94,7 @@ export default function NewSubscriptionScreen() {
               ),
               method: (
                 <PillPicker
-                  options={METHOD_OPTIONS}
+                  options={methodOptions}
                   selectedId={form.methodId}
                   onSelect={(id) => {
                     form.setMethodId(id);

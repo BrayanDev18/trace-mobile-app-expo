@@ -1,4 +1,4 @@
 export {DebtCard} from './components/DebtCard';
 export {DebtsOverview} from './components/DebtsOverview';
-export {debtPaid, useDebtsStore} from './store';
-export type {DebtProps, DebtDirectionProps} from './types';
+export {debtPaid, outstandingFromSaving, useDebtsStore} from './store';
+export type {DebtProps, DebtDirectionProps, DebtSourceProps} from './types';

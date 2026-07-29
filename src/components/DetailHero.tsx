@@ -18,10 +18,10 @@ export const DetailHero = (props: DetailHeroProps) => {
   const {title, amount, badge, prefix = '', accent, meta, children} = props;
 
   return (
-    <View className="items-center gap-4 px-6 pb-8 pt-6">
+    <View className="items-center gap-6 px-6 pb-8 pt-6">
       {badge}
 
-      <View className="items-center gap-1">
+      <View className="items-center gap-4">
         <Text numberOfLines={2} className="text-center font-satoshi-medium">
           {title}
         </Text>

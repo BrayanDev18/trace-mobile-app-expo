@@ -1,6 +1,7 @@
 import {useCallback, useMemo} from 'react';
 import {View} from 'react-native';
 import {router} from 'expo-router';
+import {useTranslation} from 'react-i18next';
 import {FlashList, type ListRenderItem} from '@shopify/flash-list';
 
 import {Header, Screen,EmptyState,ListGap,SectionTitle} from '@/components';
@@ -18,6 +19,7 @@ const keyExtractor = (item: RowProps) => (item.type === 'section' ? item.title :
 const goNewDebt = () => router.push(ScreenRoutes.newDebt);
 
 const DebtsScreen = () => {
+  const {t} = useTranslation();
   const debts = useDebtsStore((s) => s.debts);
   const payments = useDebtsStore((s) => s.payments);
 
@@ -49,15 +51,15 @@ const DebtsScreen = () => {
 
     const result: RowProps[] = [];
     if (lent.length > 0) {
-      result.push({type: 'section', title: 'Me deben'});
+      result.push({type: 'section', title: t('debts:sections.lent')});
       lent.forEach(({debt, paid}) => result.push({type: 'debt', debt, paid}));
     }
     if (owed.length > 0) {
-      result.push({type: 'section', title: 'Yo debo'});
+      result.push({type: 'section', title: t('debts:sections.owed')});
       owed.forEach(({debt, paid}) => result.push({type: 'debt', debt, paid}));
     }
     return result;
-  }, [active]);
+  }, [active, t]);
 
   const renderItem = useCallback<ListRenderItem<RowProps>>(
     ({item}) =>
@@ -75,7 +77,7 @@ const DebtsScreen = () => {
 
   return (
     <Screen>
-      <Header title="Deudas" />
+      <Header title={t('debts:title')} />
 
       <View className="flex-1">
         <FlashList
@@ -87,7 +89,7 @@ const DebtsScreen = () => {
           ItemSeparatorComponent={ListGap}
           ListHeaderComponent={
             rows.length > 0 ? (
-              <View className="pb-3">
+              <View className="py-3">
                 <DebtsOverview
                   lent={totals.lent}
                   owed={totals.owed}
@@ -99,9 +101,9 @@ const DebtsScreen = () => {
           }
           ListEmptyComponent={
             <EmptyState
-              title="Sin deudas activas"
-              subtitle="Registra lo que te deben o lo que debes"
-              actionLabel="Nueva deuda"
+              title={t('debts:empty.title')}
+              subtitle={t('debts:empty.subtitle')}
+              actionLabel={t('debts:newDebt')}
               onAction={goNewDebt}
             />
           }

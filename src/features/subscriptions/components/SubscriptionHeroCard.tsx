@@ -1,5 +1,6 @@
 import {View} from 'react-native';
 import {Image} from 'expo-image';
+import {useTranslation} from 'react-i18next';
 import {IconApps} from '@tabler/icons-react-native';
 
 import {DottedGlowBackground, Text} from '@/components';
@@ -9,10 +10,11 @@ import {formatCurrency} from '@/utils';
 import type {SubscriptionProps} from '../types';
 
 export const SubscriptionHeroCard = ({subscription}: {subscription: SubscriptionProps}) => {
+  const {t} = useTranslation();
   const {primary} = useIconColors();
 
   const ServiceIcon = subscription.icon ?? IconApps;
-  const period = subscription.period === 'yearly' ? 'año' : 'mes';
+  const period = t(subscription.period === 'yearly' ? 'subscriptions:period.year' : 'subscriptions:period.month');
 
   return (
     <View className="overflow-hidden rounded-3xl">
@@ -60,7 +62,7 @@ export const SubscriptionHeroCard = ({subscription}: {subscription: Subscription
           </View>
 
           <Text className="text-sm text-secundary">
-            Próximo cobro · {subscription.nextCharge}
+            {t('subscriptions:hero.nextCharge', {date: subscription.nextCharge})}
           </Text>
         </View>
       </View>

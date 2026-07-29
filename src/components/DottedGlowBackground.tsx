@@ -1,5 +1,6 @@
 import {useMemo} from "react";
-import {StyleProp, StyleSheet, View, ViewStyle, useColorScheme} from "react-native";
+import {StyleProp, StyleSheet, View, ViewStyle} from "react-native";
+import {useColorScheme} from "@/hooks/useColorScheme";
 import {Canvas, Fill, Shader, Skia} from "@shopify/react-native-skia";
 
 const shader = Skia.RuntimeEffect.Make(`

@@ -1,17 +1,25 @@
-import {useColorScheme} from 'react-native';
+import {useEffect} from 'react';
 import {Calendar, LocaleConfig} from 'react-native-calendars';
+import {useTranslation} from 'react-i18next';
 
+import i18next from '@/i18n';
+import {useColorScheme} from '@/hooks/useColorScheme';
 import {useIconColors} from '@/hooks/useIconColors';
-import {MONTHS_LONG, MONTHS_SHORT, WEEKDAYS_LONG, WEEKDAYS_SHORT, capitalize} from '@/utils';
+import {capitalize, dateNames} from '@/utils';
 
-LocaleConfig.locales['es'] = {
-  monthNames: MONTHS_LONG.map(capitalize),
-  monthNamesShort: MONTHS_SHORT.map(capitalize),
-  dayNames: WEEKDAYS_LONG.map(capitalize),
-  dayNamesShort: WEEKDAYS_SHORT.map(capitalize),
-  today: 'Hoy',
-};
-LocaleConfig.defaultLocale = 'es';
+const CALENDAR_TODAY: Record<'es' | 'en', string> = {es: 'Hoy', en: 'Today'};
+
+(['es', 'en'] as const).forEach((language) => {
+  const names = dateNames(language);
+  LocaleConfig.locales[language] = {
+    monthNames: names.monthsLong.map(capitalize),
+    monthNamesShort: names.monthsShort.map(capitalize),
+    dayNames: names.weekdaysLong.map(capitalize),
+    dayNamesShort: names.weekdaysShort.map(capitalize),
+    today: CALENDAR_TODAY[language],
+  };
+});
+LocaleConfig.defaultLocale = i18next.language === 'en' ? 'en' : 'es';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 const toKey = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
@@ -26,14 +34,20 @@ type MonthCalendarProps = {
 };
 
 export const MonthCalendar = ({selected, onSelect}: MonthCalendarProps) => {
+  const {i18n} = useTranslation();
   const dark = useColorScheme() === 'dark';
   const {primary, muted} = useIconColors();
   const accentBg = dark ? '#005f5a' : '#009689';
   const accentText = dark ? '#00d5be' : '#009689';
   const key = toKey(selected);
 
+  useEffect(() => {
+    LocaleConfig.defaultLocale = i18n.language;
+  }, [i18n.language]);
+
   return (
     <Calendar
+      key={i18n.language}
       current={key}
       onDayPress={(day) => onSelect(fromKey(day.dateString))}
       markedDates={{[key]: {selected: true, selectedColor: accentBg}}}
@@ -49,7 +63,6 @@ export const MonthCalendar = ({selected, onSelect}: MonthCalendarProps) => {
         selectedDayBackgroundColor: accentBg,
         selectedDayTextColor: '#ffffff',
         arrowColor: primary,
-        textDayFontFamily: 'Satoshi-Regular',
         textMonthFontFamily: 'Satoshi-Bold',
         textDayHeaderFontFamily: 'Satoshi-Medium',
       }}

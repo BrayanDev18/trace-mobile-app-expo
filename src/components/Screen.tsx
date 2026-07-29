@@ -1,5 +1,6 @@
 import {ReactNode} from "react";
-import {ScrollView, useColorScheme, View, ViewProps} from "react-native";
+import {ScrollView, View, ViewProps} from "react-native";
+import {useColorScheme} from "@/hooks/useColorScheme";
 import {Edge, SafeAreaView} from "react-native-safe-area-context";
 import {
   KeyboardAvoidingView,
@@ -7,6 +8,7 @@ import {
 } from "react-native-keyboard-controller";
 import {cn} from "@/utils";
 import {LinearGradient} from "expo-linear-gradient";
+import {RowBack} from "@/components/RowBack";
 
 type ScreenProps = ViewProps & {
   children: ReactNode;
@@ -15,6 +17,7 @@ type ScreenProps = ViewProps & {
   scroll?: boolean;
   asBackground?: boolean;
   className?: string;
+  canGoBack?: boolean;
 };
 
 const DEFAULT_BG = "bg-primary";
@@ -27,6 +30,7 @@ export const Screen = (props: ScreenProps) => {
     scroll = false,
     asBackground = true,
     className,
+    canGoBack = true,
     ...rest
   } = props
 
@@ -86,6 +90,8 @@ export const Screen = (props: ScreenProps) => {
       <SafeAreaView className="flex-1" edges={edges}>
         {body}
       </SafeAreaView>
+
+      {canGoBack && <RowBack />}
     </View>
   );
 };

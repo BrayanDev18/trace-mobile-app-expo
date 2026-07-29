@@ -1,5 +1,6 @@
 import {useMemo, useRef, useState} from 'react';
 import {LayoutChangeEvent, Pressable, StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 import {Canvas, Fill, Shader} from '@shopify/react-native-skia';
 import {useDerivedValue, useReducedMotion} from 'react-native-reanimated';
 import {
@@ -16,32 +17,26 @@ import {useAnimationClock} from '@/hooks/useAnimationClock';
 import {amountSizeClass, formatCurrency, haptic} from '@/utils';
 
 import {BALANCE_PALETTES, balanceShader, hex01, type PaletteNameProps} from './balanceShader';
-import {OverviewPopover, type OverviewProps} from './OverviewPopover';
+import {OverviewPopover} from './OverviewPopover';
+import type {OverviewProps, PeriodProps} from '../utils';
 
 type BalanceCardSkiaProps = {
-  overviews?: OverviewProps[];
-  income?: number;
-  expense?: number;
+  overviews: OverviewProps[];
+  current: OverviewProps;
+  onSelectPeriod: (period: PeriodProps) => void;
   palette?: PaletteNameProps;
 };
 
 export const BalanceCardSkia = (props: BalanceCardSkiaProps) => {
-  const {
-    overviews = [{label: 'Hoy', value: 0}],
-    income = 0,
-    expense = 0,
-    palette = 'esmeralda',
-  } = props;
+  const {overviews, current, onSelectPeriod, palette = 'esmeralda'} = props;
 
+  const {t} = useTranslation();
   const [size, setSize] = useState({width: 0, height: 0});
-  const [selected, setSelected] = useState(0);
   const [open, setOpen] = useState(false);
   const [anchor, setAnchor] = useState({x: 0, y: 0, width: 0, height: 0});
   const triggerRef = useRef<View>(null);
   const reduced = useReducedMotion();
   const clock = useAnimationClock(30, !reduced);
-
-  const current = overviews[selected] ?? overviews[0];
 
   const openPopover = () => {
     triggerRef.current?.measureInWindow((x, y, width, height) => {
@@ -50,9 +45,9 @@ export const BalanceCardSkia = (props: BalanceCardSkiaProps) => {
     });
   };
 
-  const selectPeriod = (index: number) => {
+  const selectPeriod = (period: PeriodProps) => {
     haptic.select();
-    setSelected(index);
+    onSelectPeriod(period);
     setOpen(false);
   };
 
@@ -93,7 +88,7 @@ export const BalanceCardSkia = (props: BalanceCardSkiaProps) => {
               onPress={openPopover}
               hitSlop={8}
               accessibilityRole="button"
-              accessibilityLabel="Cambiar periodo"
+              accessibilityLabel={t('home:overview.changePeriod')}
               className="flex-row items-center gap-1 px-2.5 py-0.5 justify-center bg-teal-700/50 rounded-full"
             >
               <Text className="text-white">{current.label}</Text>
@@ -107,18 +102,30 @@ export const BalanceCardSkia = (props: BalanceCardSkiaProps) => {
             <IconDots size={20} color="rgba(255,255,255,0.9)" />
           </View>
 
-          <Text
-            selectable
-            numberOfLines={1}
-            className={`font-satoshi-medium text-white ${amountSizeClass(current.value, 'card')}`}
-            style={{fontVariant: ['tabular-nums']}}
-          >
-            $ {formatCurrency(current.value)}
-          </Text>
+          <View className="gap-1">
+            <Text
+              selectable
+              numberOfLines={1}
+              className={`font-satoshi-medium text-white ${amountSizeClass(current.balance, 'card')}`}
+              style={{fontVariant: ['tabular-nums']}}
+            >
+              {current.balance < 0 ? '-' : ''}$ {formatCurrency(Math.abs(current.balance))}
+            </Text>
+
+            <Text className="text-white/80">{current.caption}</Text>
+          </View>
 
           <View className="flex-row gap-3">
-            <Stat icon={IconArrowDownLeft} label="Ingresos" value={income} />
-            <Stat icon={IconArrowUpRight} label="Gastos" value={expense} />
+            <Stat
+              icon={IconArrowDownLeft}
+              label={t('home:overview.income')}
+              value={current.income}
+            />
+            <Stat
+              icon={IconArrowUpRight}
+              label={t('home:overview.expense')}
+              value={current.expense}
+            />
           </View>
         </View>
       </View>
@@ -127,7 +134,7 @@ export const BalanceCardSkia = (props: BalanceCardSkiaProps) => {
         visible={open}
         anchor={anchor}
         overviews={overviews}
-        selected={selected}
+        selected={current.period}
         onSelect={selectPeriod}
         onClose={() => setOpen(false)}
       />

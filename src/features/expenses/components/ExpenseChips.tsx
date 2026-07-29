@@ -1,3 +1,4 @@
+import {useTranslation} from 'react-i18next';
 import {IconCalendarEvent, IconCreditCard, IconTag} from '@tabler/icons-react-native';
 
 import {PickerChip} from '@/components/capture';
@@ -17,6 +18,7 @@ type ExpenseChipsProps = {
 
 export const ExpenseChips = (props: ExpenseChipsProps) => {
   const {panel, date, category, method, categoryError, onToggle} = props;
+  const {t} = useTranslation();
 
   return (
     <>
@@ -29,7 +31,7 @@ export const ExpenseChips = (props: ExpenseChipsProps) => {
 
       <PickerChip
         icon={category?.icon ?? IconTag}
-        label={category?.label ?? 'Categoría'}
+        label={category ? t(category.labelKey) : t('expenses:chips.category')}
         tint={category?.tint}
         error={categoryError}
         active={panel === 'category'}
@@ -38,7 +40,7 @@ export const ExpenseChips = (props: ExpenseChipsProps) => {
 
       <PickerChip
         icon={method?.Icon ?? IconCreditCard}
-        label={method?.label ?? 'Método'}
+        label={method ? t(method.labelKey) : t('expenses:chips.method')}
         active={panel === 'method'}
         onPress={() => onToggle('method')}
       />

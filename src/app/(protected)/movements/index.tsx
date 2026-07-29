@@ -1,6 +1,7 @@
 import {useMemo} from 'react';
 import {View} from 'react-native';
 import {router} from 'expo-router';
+import {useTranslation} from 'react-i18next';
 import {FlashList, type ListRenderItem} from '@shopify/flash-list';
 
 import {EmptyState, Group, Header, ListGap, Screen, SectionTitle} from '@/components';
@@ -17,6 +18,7 @@ const keyExtractor = (item: DayGroupProps) => item.title;
 const goNewExpense = () => router.push(ScreenRoutes.newExpense);
 
 const MovementsScreen = () => {
+  const {t} = useTranslation();
   const movements = useMovementsStore((s) => s.items);
 
   const groups = useMemo(() => {
@@ -36,7 +38,7 @@ const MovementsScreen = () => {
 
   return (
     <Screen>
-      <Header title="Transacciones" />
+      <Header title={t('movements:title')} />
 
       <View className="flex-1">
         <FlashList
@@ -47,9 +49,9 @@ const MovementsScreen = () => {
           ItemSeparatorComponent={Separator}
           ListEmptyComponent={
             <EmptyState
-              title="Sin movimientos aún"
-              subtitle="Registra tu primer gasto o ingreso para verlo aquí"
-              actionLabel="Nuevo gasto"
+              title={t('movements:empty.title')}
+              subtitle={t('movements:empty.subtitle')}
+              actionLabel={t('movements:empty.action')}
               onAction={goNewExpense}
             />
           }

@@ -1,7 +1,7 @@
 import {View} from 'react-native';
 
 import {DottedGlowBackground} from '@/components/DottedGlowBackground';
-import {PrimaryButton} from '@/components/PrimaryButton';
+import {Button} from '@/components/Button';
 import {Text} from '@/components/Text';
 import {amountSizeClass, cn, formatCurrency} from '@/utils';
 
@@ -43,7 +43,7 @@ export const OverviewBanner = (props: OverviewBannerProps) => {
           </Text>
         </View>
 
-        <PrimaryButton label={actionLabel} onPress={onAction} />
+        <Button label={actionLabel} onPress={onAction} />
       </View>
     </View>
   );

@@ -9,16 +9,17 @@ import {cn} from '@/utils';
 const PANEL_HEIGHT = 330;
 
 type CapturePanelProps = {
-  chips: ReactNode;
+  chips?: ReactNode;
   panel: string;
   panels: Record<string, ReactNode>;
   submitLabel: string;
   onSubmit: () => void;
   disabled?: boolean;
+  panelHeight?: number;
 };
 
 export const CapturePanel = (props: CapturePanelProps) => {
-  const {chips, panel, panels, submitLabel, onSubmit, disabled} = props;
+  const {chips, panel, panels, submitLabel, onSubmit, disabled, panelHeight} = props;
   const insets = useSafeAreaInsets();
 
   return (
@@ -29,9 +30,9 @@ export const CapturePanel = (props: CapturePanelProps) => {
         boxShadow: '0 -4px 24px rgba(0,0,0,0.04)',
       }}
     >
-      <View className="flex-row flex-wrap justify-center gap-3">{chips}</View>
+      {chips && <View className="flex-row flex-wrap justify-center gap-3">{chips}</View>}
 
-      <View style={{height: PANEL_HEIGHT}}>
+      <View style={{height: panelHeight || PANEL_HEIGHT}}>
         {Object.entries(panels).map(([name, content]) =>
           panel === name ? (
             <Animated.View

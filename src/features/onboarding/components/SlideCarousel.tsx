@@ -1,4 +1,5 @@
 import {FlatList, View, useWindowDimensions} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import {Text} from '@/components';
 
@@ -10,6 +11,7 @@ type SlideCarouselProps = {
 };
 
 export const SlideCarousel = ({slides, onIndexChange}: SlideCarouselProps) => {
+  const {t} = useTranslation();
   const {width} = useWindowDimensions();
 
   return (
@@ -18,7 +20,7 @@ export const SlideCarousel = ({slides, onIndexChange}: SlideCarouselProps) => {
       horizontal
       pagingEnabled
       showsHorizontalScrollIndicator={false}
-      keyExtractor={(slide) => slide.title}
+      keyExtractor={(slide) => slide.titleKey}
       getItemLayout={(_, i) => ({length: width, offset: width * i, index: i})}
       scrollEventThrottle={16}
       onScroll={(e) => {
@@ -28,11 +30,11 @@ export const SlideCarousel = ({slides, onIndexChange}: SlideCarouselProps) => {
       renderItem={({item}) => (
         <View style={{width}} className="items-center gap-4 px-8">
           <Text className="text-center font-satoshi-bold text-4xl leading-tight tracking-tight">
-            {item.title}
+            {t(item.titleKey)}
           </Text>
 
           <Text className="text-center text-xl leading-relaxed text-secundary">
-            {item.subtitle}
+            {t(item.subtitleKey)}
           </Text>
         </View>
       )}

@@ -1,58 +1,42 @@
-import {useMemo} from 'react';
 import {ScrollView} from 'react-native';
 
 import {Screen} from '@/components';
 import {navigate} from '@/constants';
-import {BalanceCardSkia, HomeHeader, QuickActions, TransactionsList} from '@/features/home';
-import {useMovementsStore} from '@/features/expenses';
-import {sameDay} from '@/utils';
+import {
+  BalanceCardSkia,
+  HomeHeader,
+  QuickActions,
+  TransactionsList,
+  useBalanceOverview,
+} from '@/features/home';
+import {useSessionStore} from '@/store/session';
+import {isOwner} from '@/utils';
 
 const goMovements = () => navigate('movements');
 
 export default function HomeScreen() {
-  const movements = useMovementsStore((s) => s.items);
-
-  const {daily, monthly, income, expense} = useMemo(() => {
-    const now = new Date();
-    const totals = {daily: 0, monthly: 0, income: 0, expense: 0};
-
-    for (const movement of movements) {
-      const date = new Date(movement.date);
-      const signed = movement.type === 'income' ? movement.amount : -movement.amount;
-
-      if (sameDay(date, now)) totals.daily += signed;
-
-      if (date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth()) {
-        totals.monthly += signed;
-        if (movement.type === 'income') totals.income += movement.amount;
-        else totals.expense += movement.amount;
-      }
-    }
-
-    return totals;
-  }, [movements]);
+  const name = useSessionStore((s) => s.user?.name.split(' ')[0]);
+  const owner = useSessionStore((s) => isOwner(s.user?.email));
+  const {overviews, current, setPeriod} = useBalanceOverview();
 
   return (
-    <Screen edges={['top']} asBackground={false}>
-      <HomeHeader/>
+    <Screen edges={['top']} asBackground={false} canGoBack={false}>
+      <HomeHeader name={name} isOwner={owner} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingHorizontal: 16, paddingTop: 12, paddingBottom: 24, gap: 20}}
       >
         <BalanceCardSkia
-          overviews={[
-            {label: 'Hoy', value: daily},
-            {label: 'Este mes', value: monthly},
-          ]}
-          income={income}
-          expense={expense}
+          overviews={overviews}
+          current={current}
+          onSelectPeriod={setPeriod}
           palette="esmeralda"
         />
 
         <QuickActions />
 
-        <TransactionsList onSeeAll={goMovements} />
+        <TransactionsList period={current.period} onSeeAll={goMovements} />
       </ScrollView>
     </Screen>
   );

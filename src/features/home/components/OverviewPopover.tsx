@@ -1,17 +1,18 @@
-import {Modal, Pressable, StyleSheet, View, useColorScheme} from 'react-native';
+import {Modal, Pressable, StyleSheet, View} from 'react-native';
+import {useColorScheme} from '@/hooks/useColorScheme';
 import {IconCheck} from '@tabler/icons-react-native';
 
 import {Text} from '@/components';
 import {formatCurrency} from '@/utils';
 
-export type OverviewProps = {label: string; value: number};
+import type {OverviewProps, PeriodProps} from '../utils';
 
 type OverviewPopoverProps = {
   visible: boolean;
   anchor: {x: number; y: number; width: number; height: number};
   overviews: OverviewProps[];
-  selected: number;
-  onSelect: (index: number) => void;
+  selected: PeriodProps;
+  onSelect: (period: PeriodProps) => void;
   onClose: () => void;
 };
 
@@ -37,10 +38,10 @@ export const OverviewPopover = (props: OverviewPopoverProps) => {
             shadowOffset: {width: 0, height: 1},
           }}
         >
-          {overviews.map((item, index) => (
+          {overviews.map((item) => (
             <Pressable
-              key={item.label}
-              onPress={() => onSelect(index)}
+              key={item.period}
+              onPress={() => onSelect(item.period)}
               className="flex-row items-center justify-between gap-6 rounded-xl px-3 py-2.5 active:bg-neutral-200 dark:active:bg-white/5"
             >
               <View>
@@ -52,10 +53,10 @@ export const OverviewPopover = (props: OverviewPopoverProps) => {
                   numberOfLines={1}
                   style={{fontVariant: ['tabular-nums']}}
                 >
-                  $ {formatCurrency(item.value)}
+                  {item.balance < 0 ? '-' : ''}$ {formatCurrency(Math.abs(item.balance))}
                 </Text>
               </View>
-              {index === selected && <IconCheck size={18} color={check} />}
+              {item.period === selected && <IconCheck size={18} color={check} />}
             </Pressable>
           ))}
         </Pressable>

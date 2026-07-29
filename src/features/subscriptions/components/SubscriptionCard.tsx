@@ -1,14 +1,14 @@
 import {memo} from 'react';
 import {Pressable, View} from 'react-native';
 import {Image} from 'expo-image';
+import {useTranslation} from 'react-i18next';
 import {IconApps, IconChevronRight, IconClock} from '@tabler/icons-react-native';
 
 import {Text} from '@/components';
 import {getPaymentMethod} from '@/constants';
 import {useIconColors} from '@/hooks/useIconColors';
-import {formatCurrency} from '@/utils';
+import {formatCurrency, sizedLogo} from '@/utils';
 
-import {sizedLogo} from '../hooks/useBrandSearch';
 import type {SubscriptionProps} from '../types';
 
 type SubscriptionCardProps = {
@@ -17,11 +17,13 @@ type SubscriptionCardProps = {
 };
 
 export const SubscriptionCard = memo(function SubscriptionCard({subscription, onPress}: SubscriptionCardProps) {
+  const {t} = useTranslation();
   const {primary: glyph, muted, faint} = useIconColors();
 
   const ServiceIcon = subscription.icon ?? IconApps;
   const method = subscription.methodId ? getPaymentMethod(subscription.methodId) : undefined;
-  const price = `$${formatCurrency(subscription.price)}/${subscription.period === 'yearly' ? 'año' : 'mes'}`;
+  const period = t(subscription.period === 'yearly' ? 'subscriptions:period.year' : 'subscriptions:period.month');
+  const price = `$${formatCurrency(subscription.price)}/${period}`;
 
   return (
     <Pressable
@@ -62,7 +64,7 @@ export const SubscriptionCard = memo(function SubscriptionCard({subscription, on
             <View className="shrink flex-row items-center gap-1">
               <method.Icon size={14}/>
               <Text numberOfLines={1} className="text-sm text-secundary">
-                {method.label}
+                {t(method.labelKey)}
               </Text>
             </View>
           )}

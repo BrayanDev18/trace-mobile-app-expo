@@ -1,5 +1,6 @@
 import {View, Pressable} from 'react-native';
 import {Image} from 'expo-image';
+import {useTranslation} from 'react-i18next';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {IconPlus} from '@tabler/icons-react-native';
 
@@ -25,14 +26,8 @@ const ICONS: Record<string, number> = {
   profile: require('@assets/images/tabIcons/profile.png'),
 };
 
-const LABELS: Record<string, string> = {
-  home: 'Inicio',
-  stats: 'Estadísticas',
-  explore: 'Explorar',
-  profile: 'Perfil',
-};
-
 export const TabBar = ({state, navigation}: TabBarProps) => {
+  const {t} = useTranslation();
   const {bottom} = useSafeAreaInsets();
   const {primary: active, faint: inactive} = useIconColors();
 
@@ -54,7 +49,7 @@ export const TabBar = ({state, navigation}: TabBarProps) => {
         key={route.key}
         onPress={onPress}
         accessibilityRole="tab"
-        accessibilityLabel={LABELS[iconKey] ?? iconKey}
+        accessibilityLabel={t('common:nav.' + iconKey, iconKey)}
         accessibilityState={{selected: focused}}
         className="flex-1 items-center justify-center py-1"
       >
@@ -79,9 +74,9 @@ export const TabBar = ({state, navigation}: TabBarProps) => {
 
       <Pressable
         onPress={() => navigate('newExpense')}
-        accessibilityLabel="Nuevo gasto"
+        accessibilityLabel={t('common:ui.newExpense')}
         className="w-16 h-16 rounded-full items-center justify-center mx-2 btn-primary"
-        style={{boxShadow: '0 6px 16px rgba(0, 150, 137, 0.35)'}}
+        style={{boxShadow: '0 6px 16px rgba(0, 150, 137, 0.45)'}}
       >
         <IconPlus size={26} color="#ffffff" />
       </Pressable>

@@ -4,37 +4,46 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
 import {router} from 'expo-router';
 
+import i18next from '@/i18n';
 import {getCategory} from '@/constants';
 import {haptic} from '@/utils';
 
 import {useMovementsStore} from '../store';
 
-const schema = z.object({
-  type: z.enum(['expense', 'income']),
-  reason: z.string().trim().min(1, 'Ingresa una razón'),
-  amount: z.string().min(1, 'Ingresa un monto').refine((v) => Number(v) > 0, 'Monto inválido'),
-  date: z.date(),
-  categoryId: z.string().min(1, 'Elige una categoría'),
-  methodId: z.string().optional(),
-  receiptUri: z.string().optional(),
-});
+const schema = z
+  .object({
+    type: z.enum(['expense', 'income']),
+    reason: z.string().trim(),
+    amount: z
+      .string()
+      .min(1, {error: () => i18next.t('expenses:validation.amountRequired')})
+      .refine((v) => Number(v) > 0, {error: () => i18next.t('expenses:validation.amountInvalid')}),
+    date: z.date(),
+    categoryId: z.string().min(1, {error: () => i18next.t('expenses:validation.category')}),
+    methodId: z.string().optional(),
+    receiptUris: z.array(z.string()),
+  })
+  .refine((data) => data.type === 'income' || data.reason.length >= 1, {
+    error: () => i18next.t('expenses:validation.reason'),
+    path: ['reason'],
+  });
 
 export type ExpenseFormValuesProps = z.infer<typeof schema>;
 
-export const useExpenseForm = () => {
+export const useExpenseForm = (initialType: ExpenseFormValuesProps['type'] = 'expense') => {
   const [attempted, setAttempted] = useState(false);
   const addMovement = useMovementsStore((s) => s.add);
 
   const form = useForm<ExpenseFormValuesProps>({
     resolver: zodResolver(schema),
     defaultValues: {
-      type: 'expense',
+      type: initialType,
       reason: '',
       amount: '',
       date: new Date(),
       categoryId: '',
       methodId: undefined,
-      receiptUri: undefined,
+      receiptUris: [],
     },
   });
 
@@ -57,7 +66,7 @@ export const useExpenseForm = () => {
           date: data.date.toISOString(),
           categoryId: data.categoryId,
           methodId: data.methodId,
-          receiptUri: data.receiptUri,
+          receiptUris: data.receiptUris.length ? data.receiptUris : undefined,
         });
         haptic.success();
         router.back();

@@ -3,9 +3,6 @@ import {useQuery} from '@tanstack/react-query';
 
 import type {BrandResultProps} from '../types';
 
-export const sizedLogo = (url: string, displaySize: number) =>
-  `${url}${url.includes('?') ? '&' : '?'}size=${displaySize * 2}`;
-
 const searchBrands = async (query: string): Promise<BrandResultProps[]> => {
   const response = await fetch(
     `https://api.logo.dev/search?q=${encodeURIComponent(query)}`,

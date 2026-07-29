@@ -13,6 +13,7 @@ type DebtsStateProps = {
   settleDebt: (id: string) => void;
   addPayment: (data: Omit<DebtPaymentProps, 'id' | 'date'>) => void;
   removePayment: (id: string) => void;
+  clear: () => void;
 };
 
 export const useDebtsStore = create<DebtsStateProps>()(
@@ -42,6 +43,7 @@ export const useDebtsStore = create<DebtsStateProps>()(
         })),
       removePayment: (id) =>
         set((state) => ({payments: state.payments.filter((p) => p.id !== id)})),
+      clear: () => set({debts: [], payments: []}),
     }),
     {
       name: 'trace-debts',
@@ -53,3 +55,14 @@ export const useDebtsStore = create<DebtsStateProps>()(
 
 export const debtPaid = (payments: DebtPaymentProps[], debtId: string) =>
   sumByKey(payments, 'debtId', debtId);
+
+export const outstandingFromSaving = (
+  debts: DebtProps[],
+  payments: DebtPaymentProps[],
+  savingId: string,
+) =>
+  debts.reduce((sum, debt) => {
+    if (debt.direction !== 'lent' || debt.settledAt) return sum;
+    if (debt.source?.kind !== 'saving' || debt.source.savingId !== savingId) return sum;
+    return sum + Math.max(0, debt.amount - debtPaid(payments, debt.id));
+  }, 0);

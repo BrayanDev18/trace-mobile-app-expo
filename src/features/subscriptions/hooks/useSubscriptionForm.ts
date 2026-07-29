@@ -50,6 +50,7 @@ export const useSubscriptionForm = () => {
       categoryId: 'subscriptions',
       methodId,
       subscriptionId: subscription.id,
+      platform: {name: brand.name, logo: brand.logo_url, domain: brand.domain},
     });
     haptic.success();
     router.back();

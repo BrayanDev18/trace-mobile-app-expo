@@ -21,8 +21,8 @@ export const amountSizeClass = (value: number, scale: 'hero' | 'card' = 'hero') 
   const digits = Math.floor(Math.abs(value)).toString().length;
   const sizes =
     scale === 'hero'
-      ? (['text-6xl', 'text-5xl', 'text-4xl'] as const)
-      : (['text-5xl', 'text-4xl', 'text-3xl'] as const);
+      ? (['text-5xl', 'text-4xl', 'text-3xl'] as const)
+      : (['text-4xl', 'text-3xl', 'text-2xl'] as const);
 
   if (digits <= 6) return sizes[0];
   if (digits <= 9) return sizes[1];
