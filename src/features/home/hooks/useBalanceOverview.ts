@@ -8,7 +8,7 @@ import {PERIODS, periodTotals, type OverviewProps, type PeriodProps} from '../ut
 export const useBalanceOverview = () => {
   const {t} = useTranslation();
   const movements = useMovementsStore((s) => s.items);
-  const [period, setPeriod] = useState<PeriodProps>('today');
+  const [period, setPeriod] = useState<PeriodProps>('month');
 
   const overviews = useMemo<OverviewProps[]>(() => {
     const totals = periodTotals(movements, new Date());

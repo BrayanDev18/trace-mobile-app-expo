@@ -1,6 +1,6 @@
 import type {MovementProps} from '@/features/expenses';
 
-export type PeriodProps = 'today' | 'week' | 'month' | 'year';
+export type PeriodProps = 'week' | 'biweekly' | 'month' | 'year';
 
 export type OverviewProps = {
   period: PeriodProps;
@@ -11,7 +11,7 @@ export type OverviewProps = {
   balance: number;
 };
 
-export const PERIODS: PeriodProps[] = ['today', 'week', 'month', 'year'];
+export const PERIODS: PeriodProps[] = ['week', 'biweekly', 'month', 'year'];
 
 const periodRange = (period: PeriodProps, now: Date): [number, number] => {
   const year = now.getFullYear();
@@ -19,8 +19,6 @@ const periodRange = (period: PeriodProps, now: Date): [number, number] => {
   const day = now.getDate();
 
   switch (period) {
-    case 'today':
-      return [new Date(year, month, day).getTime(), new Date(year, month, day + 1).getTime()];
     case 'week': {
       const weekday = (now.getDay() + 6) % 7;
       return [
@@ -28,6 +26,10 @@ const periodRange = (period: PeriodProps, now: Date): [number, number] => {
         new Date(year, month, day - weekday + 7).getTime(),
       ];
     }
+    case 'biweekly':
+      return day <= 15
+        ? [new Date(year, month, 1).getTime(), new Date(year, month, 16).getTime()]
+        : [new Date(year, month, 16).getTime(), new Date(year, month + 1, 1).getTime()];
     case 'month':
       return [new Date(year, month, 1).getTime(), new Date(year, month + 1, 1).getTime()];
     case 'year':

@@ -57,7 +57,7 @@ export const TransactionsList = ({period, onSeeAll}: TransactionsListProps) => {
             <Text className="font-satoshi-medium text-xl">
               {emptyInPeriod
                 ? t('home:transactions.emptyPeriod', {
-                    period: t(`home:overview.periods.${period}`).toLowerCase(),
+                    period: t(`home:overview.periodsLong.${period}`),
                   })
                 : t('home:transactions.emptyTitle')}
             </Text>
