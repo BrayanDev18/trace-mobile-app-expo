@@ -9,9 +9,11 @@ type NavRowProps = {
   icon: ComponentType<{size?: number; color?: string}>;
   label: string;
   onPress: () => void;
+  value?: string;
 };
 
-export const NavRow = ({icon: Icon, label, onPress}: NavRowProps) => {
+export const NavRow = (props: NavRowProps) => {
+  const {icon: Icon, label, onPress, value} = props;
   const colors = useIconColors();
 
   return (
@@ -21,6 +23,11 @@ export const NavRow = ({icon: Icon, label, onPress}: NavRowProps) => {
     >
       <Icon size={20} color={colors.muted} />
       <Text className="flex-1 font-satoshi-medium">{label}</Text>
+      {value ? (
+        <Text className="text-secundary" numberOfLines={1}>
+          {value}
+        </Text>
+      ) : null}
       <IconChevronRight size={18} color={colors.faint} />
     </Pressable>
   );

@@ -10,6 +10,9 @@ export const appendAmountKey = (current: string, key: string): string => {
   return current + key;
 };
 
+export const sanitizeAmount = (text: string): string =>
+  text.split('').reduce((acc, key) => (/[\d.]/.test(key) ? appendAmountKey(acc, key) : acc), '');
+
 export const displayAmount = (raw: string): string => {
   if (!raw) return '0';
   const [int, dec] = raw.split('.');

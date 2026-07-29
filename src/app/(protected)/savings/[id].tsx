@@ -82,7 +82,7 @@ export default function SavingDetailScreen() {
     });
 
   return (
-    <Screen edges={['top']} scroll>
+    <Screen safeAreaEdges={['top']} preset="scroll">
       <Header title={t('savings:detail.title')} />
 
       <DetailHero

@@ -13,6 +13,8 @@ export type OverviewProps = {
 
 export const PERIODS: PeriodProps[] = ['week', 'biweekly', 'month', 'year'];
 
+export type PeriodOverridesProps = Partial<Record<PeriodProps, [number, number]>>;
+
 const periodRange = (period: PeriodProps, now: Date): [number, number] => {
   const year = now.getFullYear();
   const month = now.getMonth();
@@ -37,8 +39,13 @@ const periodRange = (period: PeriodProps, now: Date): [number, number] => {
   }
 };
 
-export const movementsInPeriod = (movements: MovementProps[], period: PeriodProps, now: Date) => {
-  const [start, end] = periodRange(period, now);
+export const movementsInPeriod = (
+  movements: MovementProps[],
+  period: PeriodProps,
+  now: Date,
+  overrides?: PeriodOverridesProps,
+) => {
+  const [start, end] = overrides?.[period] ?? periodRange(period, now);
 
   return movements.filter((movement) => {
     const time = new Date(movement.date).getTime();
@@ -46,8 +53,12 @@ export const movementsInPeriod = (movements: MovementProps[], period: PeriodProp
   });
 };
 
-export const periodTotals = (movements: MovementProps[], now: Date) => {
-  const ranges = PERIODS.map((period) => periodRange(period, now));
+export const periodTotals = (
+  movements: MovementProps[],
+  now: Date,
+  overrides?: PeriodOverridesProps,
+) => {
+  const ranges = PERIODS.map((period) => overrides?.[period] ?? periodRange(period, now));
   const totals = PERIODS.map(() => ({income: 0, expense: 0}));
 
   for (const movement of movements) {

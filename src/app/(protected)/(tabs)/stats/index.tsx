@@ -23,7 +23,7 @@ export default function StatsScreen() {
   const stats = useMonthlyStats(month);
 
   return (
-    <Screen edges={['top']} canGoBack={false}>
+    <Screen canGoBack={false}>
       <View className="px-5 pb-2 pt-3">
         <Text className="font-satoshi-bold text-2xl tracking-tight">{t('stats:title')}</Text>
       </View>

@@ -88,7 +88,7 @@ export default function DebtDetailScreen() {
     });
 
   return (
-    <Screen edges={['top']} scroll>
+    <Screen safeAreaEdges={['top']} preset="scroll">
       <Header title={t('debts:detail.title')} />
 
       <DetailHero

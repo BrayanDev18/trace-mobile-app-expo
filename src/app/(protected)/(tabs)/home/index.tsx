@@ -1,6 +1,4 @@
 import {ScrollView} from 'react-native';
-
-import {Screen} from '@/components';
 import {navigate} from '@/constants';
 import {
   BalanceCardSkia,
@@ -9,8 +7,10 @@ import {
   TransactionsList,
   useBalanceOverview,
 } from '@/features/home';
+import {CycleCard, CycleSummarySheet} from '@/features/income';
 import {useSessionStore} from '@/store/session';
 import {isOwner} from '@/utils';
+import {Screen} from '@/components';
 
 const goMovements = () => navigate('movements');
 
@@ -20,8 +20,8 @@ export default function HomeScreen() {
   const {overviews, current, setPeriod} = useBalanceOverview();
 
   return (
-    <Screen edges={['top']} asBackground={false} canGoBack={false}>
-      <HomeHeader name={name} isOwner={owner} />
+    <Screen>
+      <HomeHeader name={name} isOwner={owner}/>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -34,10 +34,14 @@ export default function HomeScreen() {
           palette="esmeralda"
         />
 
-        <QuickActions />
+        <CycleCard/>
 
-        <TransactionsList period={current.period} onSeeAll={goMovements} />
+        <QuickActions/>
+
+        <TransactionsList period={current.period} onSeeAll={goMovements}/>
       </ScrollView>
+
+      <CycleSummarySheet/>
     </Screen>
   );
 }

@@ -8,6 +8,7 @@ export const ScreenRoutes = {
   verifyCode: '/verify-code',
 
   welcome: '/welcome',
+  incomeSetup: '/income-setup',
   home: '/home',
   movements: '/movements',
   stats: '/stats',

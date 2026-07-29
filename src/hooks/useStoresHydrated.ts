@@ -1,7 +1,9 @@
 import {useSyncExternalStore} from 'react';
 
+import {useBudgetsStore} from '@/features/budgets';
 import {useDebtsStore} from '@/features/debts';
 import {useMovementsStore} from '@/features/expenses';
+import {useIncomeStore} from '@/features/income';
 import {useSavingsStore} from '@/features/savings';
 import {useSubscriptionsStore} from '@/features/subscriptions';
 import {useLocaleStore} from '@/store/locale';
@@ -13,6 +15,8 @@ const stores = [
   useSubscriptionsStore,
   useDebtsStore,
   useSavingsStore,
+  useIncomeStore,
+  useBudgetsStore,
   useSessionStore,
   useThemeStore,
   useLocaleStore,

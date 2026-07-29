@@ -1,6 +1,7 @@
 import {Pressable, ScrollView} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {
+  IconChartPie,
   IconDeviceRemote,
   IconMoneybagMoveBack,
   IconMoneybagPlus,
@@ -20,6 +21,7 @@ type QuickActionProps = {
 
 const ACTIONS: QuickActionProps[] = [
   {labelKey: 'income', icon: IconMoneybagPlus, onPress: () => navigate('newIncome')},
+  {labelKey: 'budgets', icon: IconChartPie, onPress: () => navigate('budgets')},
   {labelKey: 'subscriptions', icon: IconDeviceRemote, onPress: () => navigate('subscriptions')},
   {labelKey: 'savings', icon: IconPigMoney, onPress: () => navigate('savings')},
   {labelKey: 'debts', icon: IconMoneybagMoveBack, onPress: () => navigate('debts')},

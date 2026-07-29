@@ -15,6 +15,7 @@ export {Keypad} from './Keypad';
 export {ListGap} from './ListGap';
 export {MonthCalendar} from './MonthCalendar';
 export {NavRow} from './NavRow';
+export {OptionRows} from './OptionRows';
 export {OverviewBanner} from './OverviewBanner';
 export {Screen} from './Screen';
 export {SectionTitle} from './SectionTitle';

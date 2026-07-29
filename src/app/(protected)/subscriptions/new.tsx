@@ -38,7 +38,7 @@ export default function NewSubscriptionScreen() {
   };
 
   return (
-    <Screen edges={['top']} scroll={!form.brand} keyboard={!form.brand} asBackground={false} canGoBack={false}>
+    <Screen safeAreaEdges={['top']} preset={form.brand ? 'fixed' : 'scroll'} withGlow={false} canGoBack={false}>
       <FormSheetHeader title={t('subscriptions:new.title')} onClose={router.back} />
 
       {!form.brand ? (

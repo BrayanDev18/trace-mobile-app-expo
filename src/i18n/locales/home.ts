@@ -31,6 +31,7 @@ export const home = {
     },
     quickActions: {
       income: 'Ingreso',
+      budgets: 'Topes',
       subscriptions: 'Suscripciones',
       savings: 'Ahorro',
       debts: 'Deudas',
@@ -74,6 +75,7 @@ export const home = {
     },
     quickActions: {
       income: 'Income',
+      budgets: 'Budgets',
       subscriptions: 'Subscriptions',
       savings: 'Savings',
       debts: 'Debts',

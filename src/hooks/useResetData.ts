@@ -1,3 +1,4 @@
+import {useBudgetsStore} from '@/features/budgets';
 import {useDebtsStore} from '@/features/debts';
 import {useMovementsStore} from '@/features/expenses';
 import {useSavingsStore} from '@/features/savings';
@@ -8,11 +9,13 @@ export const useResetData = () => {
   const clearSubscriptions = useSubscriptionsStore((s) => s.clear);
   const clearSavings = useSavingsStore((s) => s.clear);
   const clearDebts = useDebtsStore((s) => s.clear);
+  const clearBudgets = useBudgetsStore((s) => s.clear);
 
   return () => {
     clearMovements();
     clearSubscriptions();
     clearSavings();
     clearDebts();
+    clearBudgets();
   };
 };

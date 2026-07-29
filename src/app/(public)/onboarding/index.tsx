@@ -22,7 +22,7 @@ const OnboardingScreen = () => {
   };
 
   return (
-    <Screen edges={['bottom']} canGoBack={false}>
+    <Screen safeAreaEdges={['bottom']} canGoBack={false}>
       <OnboardingHero />
 
       <View className="gap-12 pt-2">

@@ -19,7 +19,7 @@ const VerifyCodeScreen = () => {
   const {seconds, canResend, resend} = useResendCountdown();
 
   return (
-    <Screen edges={['top']}>
+    <Screen safeAreaEdges={['top']}>
       <View className="flex-1 gap-10 px-6 pt-20">
         <AuthHeading
           title={t('auth:ui.verifyTitle')}

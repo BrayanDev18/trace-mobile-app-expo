@@ -21,7 +21,7 @@ const SignInScreen = () => {
   const socialSignIn = useSocialAuth();
 
   return (
-    <Screen scroll keyboard>
+    <Screen preset="scroll">
       <View className="h-screen items-center justify-center">
         <View className="gap-8 px-6 justify-center pb-28">
           <AuthHeading

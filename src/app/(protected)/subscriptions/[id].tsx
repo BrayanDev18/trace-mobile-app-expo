@@ -32,7 +32,7 @@ export default function SubscriptionDetailScreen() {
     });
 
   return (
-    <Screen edges={['top']} scroll>
+    <Screen safeAreaEdges={['top']} preset="scroll">
       <Header />
 
       <View className="gap-8 px-5 pb-10 pt-2">

@@ -1,6 +1,6 @@
 import {useAnimatedStyle, useSharedValue, withSequence, withTiming} from 'react-native-reanimated';
 
-import {appendAmountKey, haptic} from '@/utils';
+import {appendAmountKey, haptic, sanitizeAmount} from '@/utils';
 
 type UseAmountInputOptionsProps = {
   getValue: () => string;
@@ -21,6 +21,17 @@ export const useAmountInput = ({getValue, onChange}: UseAmountInputOptionsProps)
     if (next === current) return;
     haptic.tap();
     scale.set(withSequence(withTiming(1.04, {duration: 70}), withTiming(1, {duration: 110})));
+    onChange(next);
+  };
+
+  const onText = (text: string) => {
+    const current = getValue();
+    const next = sanitizeAmount(text);
+    if (next === current) return;
+    haptic.tap();
+    if (next.length > current.length) {
+      scale.set(withSequence(withTiming(1.04, {duration: 70}), withTiming(1, {duration: 110})));
+    }
     onChange(next);
   };
 
@@ -48,5 +59,5 @@ export const useAmountInput = ({getValue, onChange}: UseAmountInputOptionsProps)
     );
   };
 
-  return {animatedStyle, onKey, erase, clear, shakeError};
+  return {animatedStyle, onKey, onText, erase, clear, shakeError};
 };

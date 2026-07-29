@@ -98,7 +98,7 @@ export default function NewDebtScreen() {
   };
 
   return (
-    <Screen edges={['top']} asBackground={false} canGoBack={false}>
+    <Screen safeAreaEdges={['top']} withGlow={false} canGoBack={false}>
       <FormSheetHeader title={t('debts:newDebt')} onClose={router.back} />
 
       <View className="flex-1 pt-4">

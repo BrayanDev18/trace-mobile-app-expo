@@ -43,7 +43,7 @@ export default function ExpenseDetailScreen() {
     });
 
   return (
-    <Screen edges={['top']} scroll>
+    <Screen safeAreaEdges={['top']} preset="scroll">
       <Header title={isIncome ? t('expenses:detail.titleIncome') : t('expenses:detail.titleExpense')} />
 
       <DetailHero

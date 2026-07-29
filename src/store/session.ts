@@ -10,9 +10,11 @@ export type SessionUserProps = {
 type SessionStateProps = {
   hasOnboarded: boolean;
   hasSeenWelcome: boolean;
+  hasSeenIncomePrompt: boolean;
   user: SessionUserProps | null;
   completeOnboarding: () => void;
   completeWelcome: () => void;
+  completeIncomePrompt: () => void;
   signIn: (user: SessionUserProps) => void;
   signOut: () => void;
 };
@@ -22,9 +24,11 @@ export const useSessionStore = create<SessionStateProps>()(
     (set) => ({
       hasOnboarded: false,
       hasSeenWelcome: false,
+      hasSeenIncomePrompt: false,
       user: null,
       completeOnboarding: () => set({hasOnboarded: true}),
       completeWelcome: () => set({hasSeenWelcome: true}),
+      completeIncomePrompt: () => set({hasSeenIncomePrompt: true}),
       signIn: (user) => set({user}),
       signOut: () => set({user: null}),
     }),
@@ -34,6 +38,7 @@ export const useSessionStore = create<SessionStateProps>()(
       partialize: (state) => ({
         hasOnboarded: state.hasOnboarded,
         hasSeenWelcome: state.hasSeenWelcome,
+        hasSeenIncomePrompt: state.hasSeenIncomePrompt,
         user: state.user,
       }),
     },

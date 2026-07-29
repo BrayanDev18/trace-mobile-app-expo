@@ -6,6 +6,7 @@ import {Group, Text} from '@/components';
 import {TransactionRow, useMovementsStore, type MovementProps} from '@/features/expenses';
 import {relativeDate} from '@/utils';
 
+import {useCycleOverrides} from '../hooks/useCycleOverrides';
 import {movementsInPeriod, type PeriodProps} from '../utils';
 
 const RECENT_COUNT = 5;
@@ -18,9 +19,12 @@ type TransactionsListProps = {
 export const TransactionsList = ({period, onSeeAll}: TransactionsListProps) => {
   const {t} = useTranslation();
   const movements = useMovementsStore((s) => s.items);
+  const overrides = useCycleOverrides();
 
   const groups = useMemo(() => {
-    const scoped = period ? movementsInPeriod(movements, period, new Date()) : [...movements];
+    const scoped = period
+      ? movementsInPeriod(movements, period, new Date(), overrides)
+      : [...movements];
     const recent = scoped
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, RECENT_COUNT);
@@ -33,7 +37,7 @@ export const TransactionsList = ({period, onSeeAll}: TransactionsListProps) => {
       else result.push({title, movements: [movement]});
     }
     return result;
-  }, [movements, period]);
+  }, [movements, period, overrides]);
 
   const emptyInPeriod = period !== undefined && movements.length > 0;
 

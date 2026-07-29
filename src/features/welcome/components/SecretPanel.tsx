@@ -1,5 +1,5 @@
 import {useEffect, useRef} from 'react';
-import {Pressable, StyleSheet, TextInput, View} from 'react-native';
+import {StyleSheet, TextInput, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import Animated, {
   useAnimatedStyle,

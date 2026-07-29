@@ -49,7 +49,7 @@ export const MovementCapture = ({type}: MovementCaptureProps) => {
   };
 
   return (
-    <Screen edges={['top']} asBackground={false} canGoBack={false}>
+    <Screen safeAreaEdges={['top']} withGlow={false} canGoBack={false}>
       <FormSheetHeader
         onClose={router.back}
         title={type === 'income' ? t('expenses:new.incomeTitle') : t('expenses:new.expenseTitle')}
