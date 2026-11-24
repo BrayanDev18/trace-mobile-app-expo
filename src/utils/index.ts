@@ -18,6 +18,7 @@ export {
   weekdaysShort,
 } from './formatDate';
 export {haptic} from './haptics';
+export {nextId} from './id';
 export {sizedLogo} from './logo';
 export {isOwner} from './owner';
 export {useSafeAreaInsetsStyle, type ExtendedEdge} from './useSafeAreaInsetsStyle';

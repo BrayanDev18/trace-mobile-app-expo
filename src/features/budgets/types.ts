@@ -1,4 +1,7 @@
 export type BudgetProps = {
-  categoryId: string;
-  cap: number;
+  id: string;
+  name: string;
+  themeId: string;
+  assigned: number;
+  createdAt: string;
 };

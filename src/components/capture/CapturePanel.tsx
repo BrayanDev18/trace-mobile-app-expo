@@ -2,6 +2,7 @@ import {ReactNode} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
+import {KeyboardStickyView, useKeyboardState} from 'react-native-keyboard-controller';
 
 import {Text} from '@/components/Text';
 import {cn} from '@/utils';
@@ -21,6 +22,7 @@ type CapturePanelProps = {
 export const CapturePanel = (props: CapturePanelProps) => {
   const {chips, panel, panels, submitLabel, onSubmit, disabled, panelHeight} = props;
   const insets = useSafeAreaInsets();
+  const keyboardOpen = useKeyboardState((state) => state.isVisible);
 
   return (
     <View
@@ -34,7 +36,7 @@ export const CapturePanel = (props: CapturePanelProps) => {
 
       <View style={{height: panelHeight || PANEL_HEIGHT}}>
         {Object.entries(panels).map(([name, content]) =>
-          panel === name ? (
+          panel === name && !keyboardOpen ? (
             <Animated.View
               key={name}
               entering={FadeIn.duration(150)}
@@ -48,16 +50,18 @@ export const CapturePanel = (props: CapturePanelProps) => {
         )}
       </View>
 
-      <Pressable
-        onPress={onSubmit}
-        disabled={disabled}
-        className={cn(
-          'h-14 items-center justify-center rounded-full btn-primary active:bg-accent-pressed',
-          disabled && 'opacity-40',
-        )}
-      >
-        <Text className="font-satoshi-bold text-white">{submitLabel}</Text>
-      </Pressable>
+      <KeyboardStickyView offset={{opened: insets.bottom + 10}}>
+        <Pressable
+          onPress={onSubmit}
+          disabled={disabled}
+          className={cn(
+            'h-14 items-center justify-center rounded-full btn-primary active:bg-accent-pressed',
+            disabled && 'opacity-40',
+          )}
+        >
+          <Text className="font-satoshi-bold text-white">{submitLabel}</Text>
+        </Pressable>
+      </KeyboardStickyView>
     </View>
   );
 };

@@ -1,7 +1,7 @@
 import {Alert, View} from 'react-native';
 import {router} from 'expo-router';
 import {useTranslation} from 'react-i18next';
-import {IconBell, IconCash, IconCoin, IconUser} from '@tabler/icons-react-native';
+import {IconBell, IconCash, IconCoin, IconHistory, IconUser} from '@tabler/icons-react-native';
 
 import {
   Group,
@@ -106,6 +106,18 @@ export default function ProfileScreen() {
               value={incomeValue}
               onPress={() => router.push(ScreenRoutes.incomeSetup)}
             />
+
+            {incomeConfig ? (
+              <>
+                <Separator/>
+                <NavRow
+                  icon={IconHistory}
+                  label={t('income:profile.history')}
+                  onPress={() => router.push(ScreenRoutes.cycles)}
+                />
+              </>
+            ) : null}
+
             <Separator/>
             <NavRow icon={IconUser} label={t('profile:editProfile')} onPress={soon}/>
             <Separator/>

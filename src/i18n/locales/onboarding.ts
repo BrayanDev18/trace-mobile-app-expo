@@ -7,7 +7,7 @@ export const onboarding = {
       },
       1: {
         title: 'Descubre en qué\nse te va la plata',
-        subtitle: 'Categorías, estadísticas y presupuestos que te lo muestran claro.',
+        subtitle: 'Categorías, historial y estadísticas que te lo muestran claro.',
       },
       2: {
         title: 'Todo tu dinero\nen un solo lugar',
@@ -24,7 +24,7 @@ export const onboarding = {
       },
       1: {
         title: 'See where\nyour money goes',
-        subtitle: 'Categories, stats and budgets that show it clearly.',
+        subtitle: 'Categories, history and stats that show it clearly.',
       },
       2: {
         title: 'All your money\nin one place',

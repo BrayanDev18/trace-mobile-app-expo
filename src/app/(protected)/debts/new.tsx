@@ -4,7 +4,7 @@ import {router} from 'expo-router';
 import {useTranslation} from 'react-i18next';
 import {IconCalendarEvent, IconCoin, IconUser, IconWallet} from '@tabler/icons-react-native';
 
-import {Input, Keypad, Screen} from '@/components';
+import {Input, Keypad} from '@/components';
 import {
   AmountDisplay,
   CapturePanel,
@@ -98,10 +98,10 @@ export default function NewDebtScreen() {
   };
 
   return (
-    <Screen safeAreaEdges={['top']} withGlow={false} canGoBack={false}>
+    <View className="bg-primary h-full w-full gap-10">
       <FormSheetHeader title={t('debts:newDebt')} onClose={router.back} />
 
-      <View className="flex-1 pt-4">
+      <View className="flex-1">
         <View className="px-5">
           <Input
             icon={IconUser}
@@ -166,6 +166,6 @@ export default function NewDebtScreen() {
           }}
         />
       </View>
-    </Screen>
+    </View>
   );
 }

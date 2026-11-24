@@ -3,24 +3,19 @@ import {ScrollView, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 import {Screen, Text} from '@/components';
-import {navigate} from '@/constants';
-import {TransactionsList} from '@/features/home';
 import {
   CategoryBreakdown,
-  MonthSelector,
-  MonthTrend,
+  CycleSelector,
+  CycleTrend,
   StatTiles,
   SubscriptionsRow,
-  useMonthlyStats,
+  useCycleStats,
 } from '@/features/stats';
-
-const startOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1);
-const goMovements = () => navigate('movements');
 
 export default function StatsScreen() {
   const {t} = useTranslation();
-  const [month, setMonth] = useState(() => startOfMonth(new Date()));
-  const stats = useMonthlyStats(month);
+  const [offset, setOffset] = useState(0);
+  const stats = useCycleStats(offset);
 
   return (
     <Screen canGoBack={false}>
@@ -32,17 +27,26 @@ export default function StatsScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingHorizontal: 20, paddingTop: 8, paddingBottom: 24, gap: 20}}
       >
-        <MonthSelector month={month} onChange={setMonth} />
+        {stats.cycle ? (
+          <CycleSelector
+            cycle={stats.cycle}
+            isCurrent={offset === 0}
+            onShift={(delta) => setOffset((current) => Math.min(0, current + delta))}
+          />
+        ) : (
+          <Text className="px-1 font-satoshi-bold text-lg">{t('stats:period.allTime')}</Text>
+        )}
 
         <StatTiles income={stats.income} expense={stats.expense} balance={stats.balance} />
 
-        <MonthTrend points={stats.trend} />
+        {stats.trend.length > 0 && <CycleTrend points={stats.trend} />}
 
-        <CategoryBreakdown items={stats.categories} />
+        <CategoryBreakdown
+          items={stats.categories}
+          emptyLabel={t(stats.cycle ? 'stats:categories.emptyCycle' : 'stats:categories.emptyAll')}
+        />
 
         <SubscriptionsRow />
-
-        <TransactionsList onSeeAll={goMovements} />
       </ScrollView>
     </Screen>
   );

@@ -9,6 +9,7 @@ sus reglas prevalecen sobre defaults, plantillas y skills genéricos.
 | Documento | Qué fija | Cuándo leerlo |
 | --- | --- | --- |
 | [product.md](foundations/product.md) | Qué es Trace, alcance, funcionalidades | siempre |
+| [flow.md](foundations/flow.md) | Eje del producto, ciclo y rol de cada módulo | siempre |
 | [stack.md](foundations/stack.md) | Tecnologías y restricciones de dependencias | siempre |
 | [architecture.md](foundations/architecture.md) | Capas, features, separación de lógica | siempre |
 | [conventions.md](foundations/conventions.md) | Naming, comentarios, forma de las props | siempre |
@@ -21,6 +22,7 @@ sus reglas prevalecen sobre defaults, plantillas y skills genéricos.
 cualquier UI. El resto entra en contexto automáticamente:
 
 @foundations/product.md
+@foundations/flow.md
 @foundations/stack.md
 @foundations/architecture.md
 @foundations/conventions.md

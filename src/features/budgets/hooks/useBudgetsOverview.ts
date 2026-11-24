@@ -1,79 +1,49 @@
 import {useMemo} from 'react';
-import {useTranslation} from 'react-i18next';
-import {type Icon} from '@tabler/icons-react-native';
 
-import {categoriesByKind, getCategory} from '@/constants';
 import {useMovementsStore} from '@/features/expenses';
-import {
-  activeCycle,
-  previousCycle,
-  spentByCategoryInCycle,
-  useIncomeStore,
-  type CycleRangeProps,
-} from '@/features/income';
+import {useActiveCycle, useIncomeStore} from '@/features/income';
 
 import {useBudgetsStore} from '../store';
+import {getBudgetTheme, type BudgetThemeProps} from '../themes';
+import type {BudgetProps} from '../types';
+import {spentByBudgetInCycle} from '../utils';
 
 export type BudgetRowItemProps = {
-  categoryId: string;
-  label: string;
-  icon: Icon;
-  tint: string;
-  cap: number;
+  budget: BudgetProps;
+  theme: BudgetThemeProps;
   spent: number;
+  available: number;
   ratio: number;
 };
 
-const calendarMonth = (now: Date, offset = 0): CycleRangeProps => ({
-  start: new Date(now.getFullYear(), now.getMonth() + offset, 1),
-  end: new Date(now.getFullYear(), now.getMonth() + offset + 1, 1),
-});
-
 export const useBudgetsOverview = () => {
-  const {t} = useTranslation();
   const config = useIncomeStore((s) => s.config);
   const budgets = useBudgetsStore((s) => s.items);
-  const upsert = useBudgetsStore((s) => s.upsert);
   const movements = useMovementsStore((s) => s.items);
+  const cycle = useActiveCycle();
 
   return useMemo(() => {
-    const now = new Date();
-    const cycle = config ? activeCycle(config, now) : calendarMonth(now);
-    const spentMap = spentByCategoryInCycle(movements, cycle);
+    if (!cycle) return null;
+
+    const spentMap = spentByBudgetInCycle(movements, cycle);
 
     const rows: BudgetRowItemProps[] = budgets.map((budget) => {
-      const category = getCategory(budget.categoryId);
-      const spent = spentMap.get(budget.categoryId) ?? 0;
+      const spent = spentMap.get(budget.id) ?? 0;
 
       return {
-        categoryId: budget.categoryId,
-        label: t(category.labelKey),
-        icon: category.icon,
-        tint: category.tint,
-        cap: budget.cap,
+        budget,
+        theme: getBudgetTheme(budget.themeId),
         spent,
-        ratio: budget.cap > 0 ? spent / budget.cap : 0,
+        available: budget.assigned - spent,
+        ratio: budget.assigned > 0 ? spent / budget.assigned : 0,
       };
     });
 
-    const availableCategories = categoriesByKind('expense').filter(
-      (category) => !budgets.some((budget) => budget.categoryId === category.id),
-    );
+    const assigned = rows.reduce((sum, row) => sum + row.budget.assigned, 0);
+    const spent = rows.reduce((sum, row) => sum + row.spent, 0);
+    const income = config?.amount ?? null;
+    const toAssign = income === null ? null : income - assigned;
 
-    const totals = rows.reduce(
-      (acc, row) => ({cap: acc.cap + row.cap, spent: acc.spent + row.spent}),
-      {cap: 0, spent: 0},
-    );
-
-    const history = spentByCategoryInCycle(
-      movements,
-      config ? previousCycle(config, now) : calendarMonth(now, -1),
-    );
-
-    const bootstrap = () => {
-      history.forEach((spent, categoryId) => upsert(categoryId, spent));
-    };
-
-    return {rows, availableCategories, totals, historyCount: history.size, bootstrap, cycle};
-  }, [config, budgets, movements, upsert, t]);
+    return {rows, assigned, spent, income, toAssign};
+  }, [cycle, config, budgets, movements]);
 };

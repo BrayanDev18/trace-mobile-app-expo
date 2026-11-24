@@ -4,11 +4,13 @@ import {type Icon} from '@tabler/icons-react-native';
 
 import {getCategory} from '@/constants';
 import {useMovementsStore} from '@/features/expenses';
+import {useSavingsStore} from '@/features/savings';
+import {haptic} from '@/utils';
 
 import {useIncomeStore} from '../store';
 import {
   activeCycle,
-  incomeInCycle,
+  cycleRecap,
   previousCycle,
   spentByCategoryInCycle,
   spentInCycle,
@@ -28,6 +30,8 @@ export const useCycleSummary = () => {
   const summarySeenAt = useIncomeStore((s) => s.summarySeenAt);
   const markSummarySeen = useIncomeStore((s) => s.markSummarySeen);
   const movements = useMovementsStore((s) => s.items);
+  const savings = useSavingsStore((s) => s.savings);
+  const addContribution = useSavingsStore((s) => s.addContribution);
 
   const summary = useMemo(() => {
     if (!config || !summarySeenAt) return null;
@@ -37,12 +41,8 @@ export const useCycleSummary = () => {
     if (new Date(summarySeenAt).getTime() >= cycle.start.getTime()) return null;
 
     const closed = previousCycle(config, now);
-    const spent = spentInCycle(movements, closed);
-    const registered = incomeInCycle(movements, closed);
-    if (spent === 0 && registered === 0) return null;
-
-    const received = config.amount ?? (registered > 0 ? registered : null);
-    const leftover = received === null ? null : received - spent;
+    const recap = cycleRecap(movements, config, closed);
+    if (recap.spent === 0 && recap.registered === 0) return null;
 
     const top: SummaryCategoryProps[] = [...spentByCategoryInCycle(movements, closed).entries()]
       .sort((a, b) => b[1] - a[1])
@@ -58,8 +58,21 @@ export const useCycleSummary = () => {
         };
       });
 
-    return {cycle: closed, spent, received, leftover, top};
+    const previousSpent = spentInCycle(movements, previousCycle(config, closed.start));
+
+    return {...recap, top, previousSpent};
   }, [config, summarySeenAt, movements, t]);
 
-  return {summary, dismiss: markSummarySeen};
+  const openSavings = useMemo(() => savings.filter((s) => !s.archivedAt), [savings]);
+
+  const moveLeftover = (savingId: string) => {
+    const leftover = summary?.leftover;
+    if (!leftover || leftover <= 0) return;
+
+    haptic.success();
+    addContribution({savingId, amount: leftover});
+    markSummarySeen();
+  };
+
+  return {summary, savings: openSavings, moveLeftover, dismiss: markSummarySeen};
 };

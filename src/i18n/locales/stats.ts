@@ -1,9 +1,13 @@
 export const stats = {
   es: {
     title: 'Estadísticas',
-    month: {
-      previous: 'Mes anterior',
-      next: 'Mes siguiente',
+    cycle: {
+      range: '{{from}} – {{to}}',
+      previous: 'Ciclo anterior',
+      next: 'Ciclo siguiente',
+    },
+    period: {
+      allTime: 'Todo lo registrado',
     },
     tiles: {
       income: 'Ingresos',
@@ -11,12 +15,13 @@ export const stats = {
       balance: 'Balance',
     },
     trend: {
-      title: 'Gasto últimos {{months}} meses',
-      a11y: 'Gasto de los últimos {{months}} meses',
+      title: 'Gasto últimos {{count}} ciclos',
+      a11y: 'Gasto de los últimos {{count}} ciclos',
     },
     categories: {
       title: 'Por categoría',
-      empty: 'Sin gastos este mes',
+      emptyCycle: 'Sin gastos en este ciclo',
+      emptyAll: 'Sin gastos registrados',
     },
     subscriptions: {
       label: 'Suscripciones',
@@ -25,9 +30,13 @@ export const stats = {
   },
   en: {
     title: 'Statistics',
-    month: {
-      previous: 'Previous month',
-      next: 'Next month',
+    cycle: {
+      range: '{{from}} – {{to}}',
+      previous: 'Previous cycle',
+      next: 'Next cycle',
+    },
+    period: {
+      allTime: 'All recorded',
     },
     tiles: {
       income: 'Income',
@@ -35,12 +44,13 @@ export const stats = {
       balance: 'Balance',
     },
     trend: {
-      title: 'Spending last {{months}} months',
-      a11y: 'Spending over the last {{months}} months',
+      title: 'Spending last {{count}} cycles',
+      a11y: 'Spending over the last {{count}} cycles',
     },
     categories: {
       title: 'By category',
-      empty: 'No expenses this month',
+      emptyCycle: 'No expenses in this cycle',
+      emptyAll: 'No expenses recorded',
     },
     subscriptions: {
       label: 'Subscriptions',

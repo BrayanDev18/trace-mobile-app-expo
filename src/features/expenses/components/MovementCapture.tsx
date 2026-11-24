@@ -1,15 +1,16 @@
 import {useState} from 'react';
-import {View} from 'react-native';
+import {Keyboard, View} from 'react-native';
 import {useWatch} from 'react-hook-form';
 import {router} from 'expo-router';
 import {useTranslation} from 'react-i18next';
 import {IconAlignLeft} from '@tabler/icons-react-native';
 
-import {Input, Keypad, Screen} from '@/components';
+import {Input, Keypad, Text} from '@/components';
 import {CapturePanel, DatePanel, FormSheetHeader, PillPicker} from '@/components/capture';
 import {useAmountInput} from '@/hooks/useAmountInput';
-import {categoriesByKind, getCategory, getPaymentMethod, PAYMENT_METHODS} from '@/constants';
-import {haptic} from '@/utils';
+import {selectableCategories, getCategory, getPaymentMethod, PAYMENT_METHODS} from '@/constants';
+import {useBudgetsOverview} from '@/features/budgets';
+import {formatCurrency, haptic} from '@/utils';
 
 import {useExpenseForm} from '../hooks/useExpenseForm';
 import {useReceiptPicker} from '../hooks/useReceiptPicker';
@@ -34,22 +35,43 @@ export const MovementCapture = ({type}: MovementCaptureProps) => {
     onChange: (raw) => setValue('amount', raw, {shouldValidate: attempted}),
   });
 
-  const [date, categoryId, methodId, receiptUris] = useWatch({
+  const [date, categoryId, methodId, budgetId, amount, receiptUris] = useWatch({
     control,
-    name: ['date', 'categoryId', 'methodId', 'receiptUris'],
+    name: ['date', 'categoryId', 'methodId', 'budgetId', 'amount', 'receiptUris'],
   });
 
   const category = categoryId ? getCategory(categoryId) : null;
   const method = methodId ? getPaymentMethod(methodId) : undefined;
+  const budgetsOverview = useBudgetsOverview();
+  const budgetRows = type === 'expense' ? (budgetsOverview?.rows ?? []) : [];
+  const selectedBudget = budgetId
+    ? (budgetRows.find((row) => row.budget.id === budgetId) ?? null)
+    : null;
+  const noFunds = !!selectedBudget && Number(amount) > selectedBudget.available;
   const {add, removeAt} = useReceiptPicker(receiptUris, (next) => setValue('receiptUris', next));
 
   const togglePanel = (target: ExpensePanelProps) => {
     haptic.select();
+    Keyboard.dismiss();
     setPanel((prev) => (prev === target ? 'keypad' : target));
   };
 
+  const validationMessage = attempted
+    ? (errors.amount?.message ?? errors.categoryId?.message)
+    : undefined;
+
+  const budgetMessage =
+    noFunds && selectedBudget
+      ? t('expenses:budget.noFunds', {
+          name: selectedBudget.budget.name,
+          amount: `$${formatCurrency(selectedBudget.available)}`,
+        })
+      : undefined;
+
+  const message = validationMessage ?? budgetMessage;
+
   return (
-    <Screen safeAreaEdges={['top']} withGlow={false} canGoBack={false}>
+    <View className="bg-primary h-full w-full gap-10">
       <FormSheetHeader
         onClose={router.back}
         title={type === 'income' ? t('expenses:new.incomeTitle') : t('expenses:new.expenseTitle')}
@@ -66,9 +88,15 @@ export const MovementCapture = ({type}: MovementCaptureProps) => {
             icon={IconAlignLeft}
             placeholder={type === 'expense' ? t('expenses:form.reasonExpense') : t('expenses:form.reasonIncome')}
             returnKeyType="done"
-            error={attempted && !!errors.reason}
           />
+        </View>
 
+        <View className="h-5 w-full items-center justify-center px-8">
+          {message ? (
+            <Text numberOfLines={1} className="text-sm text-red-400">
+              {message}
+            </Text>
+          ) : null}
         </View>
 
         <ReceiptGallery uris={receiptUris} onRemove={removeAt}/>
@@ -84,6 +112,9 @@ export const MovementCapture = ({type}: MovementCaptureProps) => {
             date={date}
             category={category}
             method={method}
+            budget={selectedBudget}
+            showBudget={budgetRows.length > 0}
+            budgetWarning={noFunds}
             categoryError={attempted && !!errors.categoryId}
             onToggle={togglePanel}
           />
@@ -101,7 +132,7 @@ export const MovementCapture = ({type}: MovementCaptureProps) => {
           ),
           category: (
             <PillPicker
-              options={categoriesByKind(type).map((c) => ({
+              options={selectableCategories(type).map((c) => ({
                 id: c.id,
                 label: t(c.labelKey),
                 icon: c.icon,
@@ -124,8 +155,23 @@ export const MovementCapture = ({type}: MovementCaptureProps) => {
               }}
             />
           ),
+          budget: (
+            <PillPicker
+              options={budgetRows.map((row) => ({
+                id: row.budget.id,
+                label: row.budget.name,
+                icon: row.theme.icon,
+                tint: row.theme.tint,
+              }))}
+              selectedId={budgetId}
+              onSelect={(id) => {
+                setValue('budgetId', id === budgetId ? undefined : id);
+                setPanel('keypad');
+              }}
+            />
+          ),
         }}
       />
-    </Screen>
+    </View>
   );
 };

@@ -3,34 +3,34 @@ import {useTranslation} from 'react-i18next';
 import {IconChevronLeft, IconChevronRight} from '@tabler/icons-react-native';
 
 import {Text} from '@/components';
+import {type CycleRangeProps} from '@/features/income';
 import {useIconColors} from '@/hooks/useIconColors';
-import {capitalize, cn, haptic, monthsLong} from '@/utils';
+import {cn, haptic, shortDate} from '@/utils';
 
-type MonthSelectorProps = {
-  month: Date;
-  onChange: (month: Date) => void;
+type CycleSelectorProps = {
+  cycle: CycleRangeProps;
+  isCurrent: boolean;
+  onShift: (delta: number) => void;
 };
 
-export const MonthSelector = ({month, onChange}: MonthSelectorProps) => {
+export const CycleSelector = ({cycle, isCurrent, onShift}: CycleSelectorProps) => {
   const {t} = useTranslation();
   const {primary} = useIconColors();
 
-  const now = new Date();
-  const isCurrent =
-    month.getFullYear() === now.getFullYear() && month.getMonth() === now.getMonth();
-  const label = `${capitalize(monthsLong()[month.getMonth()])}${
-    month.getFullYear() !== now.getFullYear() ? ` ${month.getFullYear()}` : ''
-  }`;
+  const label = t('stats:cycle.range', {
+    from: shortDate(cycle.start),
+    to: shortDate(new Date(cycle.end.getTime() - 1)),
+  });
 
   const shift = (delta: number) => {
     haptic.select();
-    onChange(new Date(month.getFullYear(), month.getMonth() + delta, 1));
+    onShift(delta);
   };
 
   return (
     <View className="flex-row items-center justify-between px-1">
       <Pressable
-        accessibilityLabel={t('stats:month.previous')}
+        accessibilityLabel={t('stats:cycle.previous')}
         onPress={() => shift(-1)}
         hitSlop={8}
         className="h-10 w-10 items-center justify-center rounded-full active:bg-neutral-200 dark:active:bg-white/5"
@@ -38,10 +38,12 @@ export const MonthSelector = ({month, onChange}: MonthSelectorProps) => {
         <IconChevronLeft size={20} color={primary} />
       </Pressable>
 
-      <Text className="font-satoshi-bold text-lg">{label}</Text>
+      <Text numberOfLines={1} className="font-satoshi-bold text-lg">
+        {label}
+      </Text>
 
       <Pressable
-        accessibilityLabel={t('stats:month.next')}
+        accessibilityLabel={t('stats:cycle.next')}
         onPress={() => shift(1)}
         disabled={isCurrent}
         hitSlop={8}

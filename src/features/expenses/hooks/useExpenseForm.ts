@@ -9,30 +9,31 @@ import {getCategory} from '@/constants';
 import {haptic} from '@/utils';
 
 import {useMovementsStore} from '../store';
+import {suggestedCategory} from '../utils';
 
-const schema = z
-  .object({
-    type: z.enum(['expense', 'income']),
-    reason: z.string().trim(),
-    amount: z
-      .string()
-      .min(1, {error: () => i18next.t('expenses:validation.amountRequired')})
-      .refine((v) => Number(v) > 0, {error: () => i18next.t('expenses:validation.amountInvalid')}),
-    date: z.date(),
-    categoryId: z.string().min(1, {error: () => i18next.t('expenses:validation.category')}),
-    methodId: z.string().optional(),
-    receiptUris: z.array(z.string()),
-  })
-  .refine((data) => data.type === 'income' || data.reason.length >= 1, {
-    error: () => i18next.t('expenses:validation.reason'),
-    path: ['reason'],
-  });
+const schema = z.object({
+  type: z.enum(['expense', 'income']),
+  reason: z.string().trim(),
+  amount: z
+    .string()
+    .min(1, {error: () => i18next.t('expenses:validation.amountRequired')})
+    .refine((v) => Number(v) > 0, {error: () => i18next.t('expenses:validation.amountInvalid')}),
+  date: z.date(),
+  categoryId: z.string().min(1, {error: () => i18next.t('expenses:validation.category')}),
+  methodId: z.string().optional(),
+  budgetId: z.string().optional(),
+  receiptUris: z.array(z.string()),
+});
 
 export type ExpenseFormValuesProps = z.infer<typeof schema>;
 
 export const useExpenseForm = (initialType: ExpenseFormValuesProps['type'] = 'expense') => {
   const [attempted, setAttempted] = useState(false);
   const addMovement = useMovementsStore((s) => s.add);
+
+  const [initialCategory] = useState(() =>
+    suggestedCategory(useMovementsStore.getState().items, initialType),
+  );
 
   const form = useForm<ExpenseFormValuesProps>({
     resolver: zodResolver(schema),
@@ -41,8 +42,9 @@ export const useExpenseForm = (initialType: ExpenseFormValuesProps['type'] = 'ex
       reason: '',
       amount: '',
       date: new Date(),
-      categoryId: '',
+      categoryId: initialCategory,
       methodId: undefined,
+      budgetId: undefined,
       receiptUris: [],
     },
   });
@@ -50,6 +52,7 @@ export const useExpenseForm = (initialType: ExpenseFormValuesProps['type'] = 'ex
   const pickType = (t: ExpenseFormValuesProps['type']) => {
     haptic.select();
     form.setValue('type', t);
+    if (t === 'income') form.setValue('budgetId', undefined);
     const currentCategory = form.getValues('categoryId');
     if (currentCategory && getCategory(currentCategory).kind !== t) {
       form.setValue('categoryId', '', {shouldValidate: attempted});
@@ -66,6 +69,7 @@ export const useExpenseForm = (initialType: ExpenseFormValuesProps['type'] = 'ex
           date: data.date.toISOString(),
           categoryId: data.categoryId,
           methodId: data.methodId,
+          budgetId: data.type === 'expense' ? data.budgetId : undefined,
           receiptUris: data.receiptUris.length ? data.receiptUris : undefined,
         });
         haptic.success();

@@ -15,6 +15,7 @@ export const ExpenseRow = memo(function ExpenseRow({expense}: ExpenseRowProps) {
   const {t} = useTranslation();
   const category = getCategory(expense.categoryId);
   const Icon = category.icon;
+  const categoryLabel = t(category.labelKey);
 
   return (
     <View className="flex-row items-center gap-3 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/60 dark:bg-white/5 px-4 py-3">
@@ -26,8 +27,8 @@ export const ExpenseRow = memo(function ExpenseRow({expense}: ExpenseRowProps) {
       </View>
 
       <View className="flex-1">
-        <Text className="font-satoshi-medium">{expense.reason}</Text>
-        <Text className="text-xs text-secundary">{t(category.labelKey)}</Text>
+        <Text className="font-satoshi-medium">{expense.reason || categoryLabel}</Text>
+        {expense.reason ? <Text className="text-xs text-secundary">{categoryLabel}</Text> : null}
       </View>
 
       <Text className="font-satoshi-bold" style={{fontVariant: ['tabular-nums']}}>

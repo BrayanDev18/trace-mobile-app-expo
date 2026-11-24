@@ -26,12 +26,13 @@ export type CategoryProps = {
   icon: Icon;
   tint: string;
   kind: CategoryKindProps;
+  system?: boolean;
 };
 
 const CATEGORIES: CategoryProps[] = [
   {id: 'food', labelKey: 'categories:food', icon: IconToolsKitchen2, tint: '#f4c24e', kind: 'expense'},
   {id: 'transport', labelKey: 'categories:transport', icon: IconCar, tint: '#208aef', kind: 'expense'},
-  {id: 'subscriptions', labelKey: 'categories:subscriptions', icon: IconRepeat, tint: '#0f6b43', kind: 'expense'},
+  {id: 'subscriptions', labelKey: 'categories:subscriptions', icon: IconRepeat, tint: '#0f6b43', kind: 'expense', system: true},
   {id: 'shopping', labelKey: 'categories:shopping', icon: IconShoppingCart, tint: '#e0559d', kind: 'expense'},
   {id: 'home', labelKey: 'categories:home', icon: IconHome, tint: '#8b5cf6', kind: 'expense'},
   {id: 'health', labelKey: 'categories:health', icon: IconHeartbeat, tint: '#ef4444', kind: 'expense'},
@@ -48,8 +49,8 @@ const CATEGORIES: CategoryProps[] = [
   {id: 'other-income', labelKey: 'categories:other-income', icon: IconDots, tint: '#5c636d', kind: 'income'},
 ];
 
-export const categoriesByKind = (kind: CategoryKindProps): CategoryProps[] =>
-  CATEGORIES.filter((c) => c.kind === kind);
+export const selectableCategories = (kind: CategoryKindProps): CategoryProps[] =>
+  CATEGORIES.filter((c) => c.kind === kind && !c.system);
 
 const CATEGORIES_BY_ID: Record<string, CategoryProps> = Object.fromEntries(
   CATEGORIES.map((c) => [c.id, c]),

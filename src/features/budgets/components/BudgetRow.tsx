@@ -11,29 +11,30 @@ type BudgetRowProps = {
 };
 
 export const BudgetRow = ({item, onPress}: BudgetRowProps) => {
-  const Icon = item.icon;
-  const over = item.ratio > 1;
+  const {budget, theme, spent, ratio} = item;
+  const ThemeIcon = theme.icon;
+  const over = ratio > 1;
 
   return (
     <Pressable onPress={onPress} className="flex-row items-center gap-3 active:opacity-70">
       <View
         className="h-10 w-10 items-center justify-center rounded-xl"
-        style={{backgroundColor: `${item.tint}1f`}}
+        style={{backgroundColor: `${theme.tint}1f`}}
       >
-        <Icon size={18} color={item.tint} />
+        <ThemeIcon size={18} color={theme.tint} />
       </View>
 
       <View className="flex-1 gap-1.5">
         <View className="flex-row items-baseline justify-between gap-3">
           <Text numberOfLines={1} className="flex-1 font-satoshi-medium">
-            {item.label}
+            {budget.name}
           </Text>
 
           <Text
             className={cn('text-sm', over ? 'text-red-400' : 'text-secundary')}
             style={{fontVariant: ['tabular-nums']}}
           >
-            ${formatCurrency(item.spent)} / ${formatCurrency(item.cap)}
+            ${formatCurrency(spent)} / ${formatCurrency(budget.assigned)}
           </Text>
         </View>
 
@@ -41,8 +42,8 @@ export const BudgetRow = ({item, onPress}: BudgetRowProps) => {
           <View
             className={cn('h-full rounded-full', over && 'bg-red-400')}
             style={{
-              width: `${Math.min(1, item.ratio) * 100}%`,
-              backgroundColor: over ? undefined : item.tint,
+              width: `${Math.min(1, ratio) * 100}%`,
+              backgroundColor: over ? undefined : theme.tint,
             }}
           />
         </View>

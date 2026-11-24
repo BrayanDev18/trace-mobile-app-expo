@@ -4,7 +4,7 @@ import {router} from 'expo-router';
 import {useTranslation} from 'react-i18next';
 import {IconCalendarEvent, IconPigMoney} from '@tabler/icons-react-native';
 
-import {Input, Keypad, Screen, Text} from '@/components';
+import {Input, Keypad, Text} from '@/components';
 import {AmountDisplay, CapturePanel, DatePanel, FormSheetHeader, PickerChip, PillPicker} from '@/components/capture';
 import {useAmountInput} from '@/hooks/useAmountInput';
 import {SAVING_THEMES, getSavingTheme, useSavingForm} from '@/features/savings';
@@ -41,10 +41,10 @@ export default function NewSavingScreen() {
   };
 
   return (
-    <Screen safeAreaEdges={['top']} withGlow={false} canGoBack={false}>
+    <View className="bg-primary h-full w-full gap-10">
       <FormSheetHeader title={t('savings:newSaving')} onClose={router.back} />
 
-      <View className="flex-1 pt-4">
+      <View className="flex-1">
         <View className="px-5">
           <Input
             icon={IconPigMoney}
@@ -106,6 +106,6 @@ export default function NewSavingScreen() {
           }}
         />
       </View>
-    </Screen>
+    </View>
   );
 }

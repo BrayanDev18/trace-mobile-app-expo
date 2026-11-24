@@ -1,10 +1,10 @@
-import {Alert, Pressable, ScrollView, View} from 'react-native';
+import {Pressable, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
-import {Button, EmptyState, Header, Keypad, OptionRows, Screen, SheetModal, Text} from '@/components';
+import {Button, EmptyState, Header, Keypad, Screen, SheetModal, Text} from '@/components';
 import {AmountDisplay} from '@/components/capture';
-import {getCategory} from '@/constants';
-import {formatCurrency, haptic} from '@/utils';
+import {navigate} from '@/constants';
+import {cn, formatCurrency} from '@/utils';
 
 import {useBudgetEditor} from '../hooks/useBudgetEditor';
 import {useBudgetsOverview} from '../hooks/useBudgetsOverview';
@@ -15,41 +15,53 @@ export const BudgetsBoard = () => {
   const overview = useBudgetsOverview();
   const editor = useBudgetEditor();
 
-  const sheetTitle =
-    editor.target === 'pick'
-      ? t('budgets:chooseCategory')
-      : editor.editingId
-        ? t(getCategory(editor.editingId).labelKey)
-        : undefined;
-
-  const onBootstrap = () => {
-    Alert.alert(
-      t('budgets:bootstrap.confirmTitle'),
-      t('budgets:bootstrap.confirmBody', {count: overview.historyCount}),
-      [
-        {text: t('common:actions.cancel'), style: 'cancel'},
-        {
-          text: t('budgets:bootstrap.action'),
-          onPress: () => {
-            overview.bootstrap();
-            haptic.success();
-          },
-        },
-      ],
+  if (!overview) {
+    return (
+      <Screen safeAreaEdges={['top']}>
+        <Header title={t('budgets:title')} />
+        <View className="px-5">
+          <EmptyState
+            title={t('budgets:noCycle.title')}
+            subtitle={t('budgets:noCycle.body')}
+            actionLabel={t('budgets:noCycle.action')}
+            onAction={() => navigate('incomeSetup')}
+          />
+        </View>
+      </Screen>
     );
-  };
+  }
+
+  const overAssigned = overview.toAssign !== null && overview.toAssign < 0;
 
   return (
     <Screen safeAreaEdges={['top']} preset="scroll">
       <Header title={t('budgets:title')} />
 
       <View className="gap-6 px-5 pb-10 pt-2">
+        {overview.toAssign !== null && (
+          <View className="items-center gap-1 rounded-2xl bg-secundary p-5">
+            <Text className="text-sm text-secundary">{t('budgets:toAssign')}</Text>
+            <Text
+              numberOfLines={1}
+              className={cn('font-satoshi-bold text-5xl tracking-tight', overAssigned && 'text-red-400')}
+              style={{fontVariant: ['tabular-nums']}}
+            >
+              ${formatCurrency(overview.toAssign)}
+            </Text>
+            <Text className="text-xs text-secundary">
+              {overAssigned
+                ? t('budgets:overAssigned')
+                : t('budgets:ofIncome', {amount: `$${formatCurrency(overview.income ?? 0)}`})}
+            </Text>
+          </View>
+        )}
+
         {overview.rows.length === 0 ? (
           <EmptyState
             title={t('budgets:empty.title')}
             subtitle={t('budgets:empty.body')}
-            actionLabel={t('budgets:add')}
-            onAction={editor.openPick}
+            actionLabel={t('budgets:newBudget')}
+            onAction={() => navigate('newBudget')}
           />
         ) : (
           <View className="gap-4 rounded-2xl bg-secundary p-4">
@@ -57,63 +69,35 @@ export const BudgetsBoard = () => {
               <Text className="font-satoshi-medium">{t('budgets:cycleTitle')}</Text>
               <Text className="text-xs text-secundary" style={{fontVariant: ['tabular-nums']}}>
                 {t('budgets:summary', {
-                  spent: `$${formatCurrency(overview.totals.spent)}`,
-                  cap: `$${formatCurrency(overview.totals.cap)}`,
+                  spent: `$${formatCurrency(overview.spent)}`,
+                  assigned: `$${formatCurrency(overview.assigned)}`,
                 })}
               </Text>
             </View>
 
             {overview.rows.map((row) => (
-              <BudgetRow
-                key={row.categoryId}
-                item={row}
-                onPress={() => editor.openEdit(row.categoryId)}
-              />
+              <BudgetRow key={row.budget.id} item={row} onPress={() => editor.open(row.budget.id)} />
             ))}
           </View>
         )}
 
-        {overview.rows.length > 0 && overview.availableCategories.length > 0 ? (
-          <Button label={t('budgets:add')} onPress={editor.openPick} />
-        ) : null}
-
-        {overview.rows.length === 0 && overview.historyCount > 0 ? (
-          <Pressable onPress={onBootstrap} hitSlop={8} className="items-center active:opacity-50">
-            <Text className="font-satoshi-medium text-accent dark:text-teal-400">
-              {t('budgets:fromHistory')}
-            </Text>
-          </Pressable>
-        ) : null}
+        {overview.rows.length > 0 && (
+          <Button label={t('budgets:newBudget')} onPress={() => navigate('newBudget')} />
+        )}
       </View>
 
-      <SheetModal visible={editor.target !== null} onClose={editor.close} title={sheetTitle}>
-        {editor.target === 'pick' ? (
-          <ScrollView style={{maxHeight: 440}} showsVerticalScrollIndicator={false}>
-            <OptionRows
-              options={overview.availableCategories.map((category) => ({
-                value: category.id,
-                label: t(category.labelKey),
-                icon: category.icon,
-                tint: category.tint,
-              }))}
-              onSelect={editor.openEdit}
-            />
-          </ScrollView>
-        ) : editor.editingId ? (
-          <View className="gap-4 pt-2">
-            <AmountDisplay raw={editor.raw} animatedStyle={editor.animatedStyle} />
+      <SheetModal visible={editor.editing !== null} onClose={editor.close} title={editor.editing?.name}>
+        <View className="gap-4 pt-2">
+          <AmountDisplay raw={editor.raw} animatedStyle={editor.animatedStyle} />
 
-            <Keypad onKey={editor.onKey} onErase={editor.erase} onClear={editor.clear} />
+          <Keypad onKey={editor.onKey} onErase={editor.erase} onClear={editor.clear} />
 
-            <Button label={t('common:actions.save')} onPress={editor.save} />
+          <Button label={t('common:actions.save')} onPress={editor.save} />
 
-            {editor.isExisting ? (
-              <Pressable onPress={editor.remove} hitSlop={8} className="items-center active:opacity-50">
-                <Text className="font-satoshi-medium text-red-400">{t('budgets:remove')}</Text>
-              </Pressable>
-            ) : null}
-          </View>
-        ) : null}
+          <Pressable onPress={editor.remove} hitSlop={8} className="items-center active:opacity-50">
+            <Text className="font-satoshi-medium text-red-400">{t('budgets:remove')}</Text>
+          </Pressable>
+        </View>
       </SheetModal>
     </Screen>
   );

@@ -14,6 +14,7 @@ export type MovementProps = {
   date: string;
   categoryId: string;
   methodId?: string;
+  budgetId?: string;
   receiptUris?: string[];
   subscriptionId?: string;
   platform?: PlatformProps;

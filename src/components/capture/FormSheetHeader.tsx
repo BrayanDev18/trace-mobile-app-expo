@@ -17,7 +17,7 @@ export const FormSheetHeader = ({title, onClose, right}: FormSheetHeaderProps) =
   const {primary} = useIconColors();
 
   return (
-    <View className="flex-row items-center justify-between px-5 pb-2 pt-3">
+    <View className="flex-row items-center justify-between px-5 pt-6">
       <Pressable
         accessibilityLabel={t('common:actions.close')}
         onPress={onClose}

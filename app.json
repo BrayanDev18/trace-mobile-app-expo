@@ -55,7 +55,16 @@
         }
       ],
       "expo-localization",
-      "expo-status-bar"
+      "expo-status-bar",
+      "expo-sqlite",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "enableSceneSupport": true
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

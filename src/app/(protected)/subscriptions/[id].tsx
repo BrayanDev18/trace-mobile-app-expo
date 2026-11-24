@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import {Group, Header, Row, Screen, Separator, Text,GroupAction} from '@/components';
 import {getPaymentMethod} from '@/constants';
 import {SubscriptionHeroCard,useSubscriptionsStore} from '@/features/subscriptions';
-import {formatCurrency,confirmDestructive} from '@/utils';
+import {formatCurrency,confirmDestructive,shortDate} from '@/utils';
 
 export default function SubscriptionDetailScreen() {
   const {t} = useTranslation();
@@ -58,7 +58,9 @@ export default function SubscriptionDetailScreen() {
             <Separator />
 
             <Row label={t('subscriptions:detail.nextCharge')}>
-              <Text className="text-secundary">{subscription.nextCharge}</Text>
+              <Text className="text-secundary">
+                {shortDate(new Date(subscription.nextCharge))}
+              </Text>
             </Row>
 
             <Separator />

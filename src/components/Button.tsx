@@ -25,7 +25,9 @@ export const Button = (props: ButtonProps) => {
       )}
     >
       {LeadingIcon && <LeadingIcon size={18} color={onAccent}/>}
-      <Text className="font-satoshi-bold">{label}</Text>
+      <Text numberOfLines={1} className="font-satoshi-bold">
+        {label}
+      </Text>
     </Pressable>
   );
 };

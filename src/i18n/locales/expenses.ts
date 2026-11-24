@@ -19,10 +19,14 @@ export const expenses = {
     chips: {
       category: 'Categoría',
       method: 'Método',
+      budget: 'Presupuesto',
+    },
+    budget: {
+      noFunds: 'Sin fondos en {{name}}: quedan {{amount}}',
     },
     form: {
-      reasonExpense: '¿En qué fue?',
-      reasonIncome: 'Detalle (opcional)',
+      reasonExpense: '¿En qué fue? (opcional)',
+      reasonIncome: '¿De dónde vino? (opcional)',
       submitExpense: 'Agregar gasto',
       submitIncome: 'Agregar ingreso',
       addReceipt: 'Adjuntar factura',
@@ -46,7 +50,6 @@ export const expenses = {
       actionIncome: 'Eliminar ingreso',
     },
     validation: {
-      reason: 'Ingresa una razón',
       amountRequired: 'Ingresa un monto',
       amountInvalid: 'Monto inválido',
       category: 'Elige una categoría',
@@ -72,10 +75,14 @@ export const expenses = {
     chips: {
       category: 'Category',
       method: 'Method',
+      budget: 'Budget',
+    },
+    budget: {
+      noFunds: 'No funds in {{name}}: {{amount}} left',
     },
     form: {
-      reasonExpense: 'What was it for?',
-      reasonIncome: 'Detail (optional)',
+      reasonExpense: 'What was it for? (optional)',
+      reasonIncome: 'Where from? (optional)',
       submitExpense: 'Add expense',
       submitIncome: 'Add income',
       addReceipt: 'Attach receipt',
@@ -99,7 +106,6 @@ export const expenses = {
       actionIncome: 'Delete income',
     },
     validation: {
-      reason: 'Enter a reason',
       amountRequired: 'Enter an amount',
       amountInvalid: 'Invalid amount',
       category: 'Choose a category',

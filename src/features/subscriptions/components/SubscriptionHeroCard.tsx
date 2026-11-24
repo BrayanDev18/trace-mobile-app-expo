@@ -5,7 +5,7 @@ import {IconApps} from '@tabler/icons-react-native';
 
 import {DottedGlowBackground, Text} from '@/components';
 import {useIconColors} from '@/hooks/useIconColors';
-import {formatCurrency} from '@/utils';
+import {formatCurrency, shortDate} from '@/utils';
 
 import type {SubscriptionProps} from '../types';
 
@@ -62,7 +62,7 @@ export const SubscriptionHeroCard = ({subscription}: {subscription: Subscription
           </View>
 
           <Text className="text-sm text-secundary">
-            {t('subscriptions:hero.nextCharge', {date: subscription.nextCharge})}
+            {t('subscriptions:hero.nextCharge', {date: shortDate(new Date(subscription.nextCharge))})}
           </Text>
         </View>
       </View>

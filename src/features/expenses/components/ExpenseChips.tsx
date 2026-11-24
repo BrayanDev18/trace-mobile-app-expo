@@ -1,23 +1,27 @@
 import {useTranslation} from 'react-i18next';
-import {IconCalendarEvent, IconCreditCard, IconTag} from '@tabler/icons-react-native';
+import {IconCalendarEvent, IconCreditCard, IconTag, IconWallet} from '@tabler/icons-react-native';
 
 import {PickerChip} from '@/components/capture';
 import {relativeDate} from '@/utils';
 import type {CategoryProps, PaymentMethodProps} from '@/constants';
+import type {BudgetRowItemProps} from '@/features/budgets';
 
-export type ExpensePanelProps = 'keypad' | 'date' | 'category' | 'method';
+export type ExpensePanelProps = 'keypad' | 'date' | 'category' | 'method' | 'budget';
 
 type ExpenseChipsProps = {
   panel: ExpensePanelProps;
   date: Date;
   category: CategoryProps | null;
   method?: PaymentMethodProps;
+  budget?: BudgetRowItemProps | null;
+  showBudget?: boolean;
+  budgetWarning?: boolean;
   categoryError: boolean;
   onToggle: (panel: ExpensePanelProps) => void;
 };
 
 export const ExpenseChips = (props: ExpenseChipsProps) => {
-  const {panel, date, category, method, categoryError, onToggle} = props;
+  const {panel, date, category, method, budget, showBudget, budgetWarning, categoryError, onToggle} = props;
   const {t} = useTranslation();
 
   return (
@@ -44,6 +48,17 @@ export const ExpenseChips = (props: ExpenseChipsProps) => {
         active={panel === 'method'}
         onPress={() => onToggle('method')}
       />
+
+      {showBudget ? (
+        <PickerChip
+          icon={budget?.theme.icon ?? IconWallet}
+          label={budget ? budget.budget.name : t('expenses:chips.budget')}
+          tint={budget?.theme.tint}
+          error={budgetWarning}
+          active={panel === 'budget'}
+          onPress={() => onToggle('budget')}
+        />
+      ) : null}
     </>
   );
 };

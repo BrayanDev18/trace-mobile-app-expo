@@ -5,9 +5,9 @@ import {
   HomeHeader,
   QuickActions,
   TransactionsList,
-  useBalanceOverview,
+  useHomeBalance,
 } from '@/features/home';
-import {CycleCard, CycleSummarySheet} from '@/features/income';
+import {CycleProposalCard, CycleSummarySheet, useCycleProposal} from '@/features/income';
 import {useSessionStore} from '@/store/session';
 import {isOwner} from '@/utils';
 import {Screen} from '@/components';
@@ -17,28 +17,30 @@ const goMovements = () => navigate('movements');
 export default function HomeScreen() {
   const name = useSessionStore((s) => s.user?.name.split(' ')[0]);
   const owner = useSessionStore((s) => isOwner(s.user?.email));
-  const {overviews, current, setPeriod} = useBalanceOverview();
+  const overview = useHomeBalance();
+  const proposal = useCycleProposal();
 
   return (
-    <Screen>
+    <Screen canGoBack={false}>
       <HomeHeader name={name} isOwner={owner}/>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingHorizontal: 16, paddingTop: 12, paddingBottom: 24, gap: 20}}
       >
-        <BalanceCardSkia
-          overviews={overviews}
-          current={current}
-          onSelectPeriod={setPeriod}
-          palette="esmeralda"
-        />
+        <BalanceCardSkia overview={overview} palette="esmeralda"/>
 
-        <CycleCard/>
+        {proposal.detected && (
+          <CycleProposalCard
+            cycle={proposal.detected}
+            onAccept={proposal.accept}
+            onDismiss={proposal.dismiss}
+          />
+        )}
 
         <QuickActions/>
 
-        <TransactionsList period={current.period} onSeeAll={goMovements}/>
+        <TransactionsList onSeeAll={goMovements}/>
       </ScrollView>
 
       <CycleSummarySheet/>

@@ -20,8 +20,10 @@ export const ScreenRoutes = {
   newIncome: '/income/new',
   newMovement: '/movements/new',
 
-  categories: '/categories',
+  cycles: '/cycles',
   budgets: '/budgets',
+  newBudget: '/budgets/new',
+  categories: '/categories',
   debts: '/debts',
   newDebt: '/debts/new',
   savings: '/savings',
@@ -38,7 +40,6 @@ export const DynamicRoutes = {
   saving: (id: string) => `/savings/${id}` as Href,
   movement: (id: string) => `/movements/${id}` as Href,
   category: (id: string) => `/categories/${id}` as Href,
-  budget: (id: string) => `/budgets/${id}` as Href,
   debt: (id: string) => `/debts/${id}` as Href,
 } as const;
 

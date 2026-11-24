@@ -5,4 +5,4 @@ export {useSavingForm} from './hooks/useSavingForm';
 export {savingSaved, useSavingsStore} from './store';
 export {SAVING_THEMES, getSavingTheme} from './themes';
 export {savingProgress} from './utils';
-export type {SavingProps} from './types';
+export type {SavingContributionProps, SavingProps} from './types';

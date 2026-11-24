@@ -4,28 +4,20 @@ import {useTranslation} from 'react-i18next';
 
 import {Group, Text} from '@/components';
 import {TransactionRow, useMovementsStore, type MovementProps} from '@/features/expenses';
+import {useActiveCycle} from '@/features/income';
 import {relativeDate} from '@/utils';
 
-import {useCycleOverrides} from '../hooks/useCycleOverrides';
-import {movementsInPeriod, type PeriodProps} from '../utils';
+import {movementsInCycle} from '../utils';
 
 const RECENT_COUNT = 5;
 
-type TransactionsListProps = {
-  period?: PeriodProps;
-  onSeeAll?: () => void;
-};
-
-export const TransactionsList = ({period, onSeeAll}: TransactionsListProps) => {
+export const TransactionsList = ({onSeeAll}: {onSeeAll?: () => void}) => {
   const {t} = useTranslation();
   const movements = useMovementsStore((s) => s.items);
-  const overrides = useCycleOverrides();
+  const cycle = useActiveCycle();
 
   const groups = useMemo(() => {
-    const scoped = period
-      ? movementsInPeriod(movements, period, new Date(), overrides)
-      : [...movements];
-    const recent = scoped
+    const recent = [...movementsInCycle(movements, cycle)]
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, RECENT_COUNT);
 
@@ -37,9 +29,9 @@ export const TransactionsList = ({period, onSeeAll}: TransactionsListProps) => {
       else result.push({title, movements: [movement]});
     }
     return result;
-  }, [movements, period, overrides]);
+  }, [movements, cycle]);
 
-  const emptyInPeriod = period !== undefined && movements.length > 0;
+  const emptyInCycle = cycle !== null && movements.length > 0;
 
   return (
     <View className="gap-2">
@@ -59,14 +51,12 @@ export const TransactionsList = ({period, onSeeAll}: TransactionsListProps) => {
         {groups.length === 0 ? (
           <View className="items-center gap-1 px-4 pb-8 pt-4">
             <Text className="font-satoshi-medium text-xl">
-              {emptyInPeriod
-                ? t('home:transactions.emptyPeriod', {
-                    period: t(`home:overview.periodsLong.${period}`),
-                  })
+              {emptyInCycle
+                ? t('home:transactions.emptyCycle')
                 : t('home:transactions.emptyTitle')}
             </Text>
 
-            {!emptyInPeriod && (
+            {!emptyInCycle && (
               <Text className="text-center text-secundary text-lg">
                 {t('home:transactions.emptyBody')}
               </Text>

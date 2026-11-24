@@ -4,13 +4,14 @@ import {useTranslation} from 'react-i18next';
 import {Text} from '@/components';
 import {formatCurrency} from '@/utils';
 
-import {type CategoryTotalProps} from '../hooks/useMonthlyStats';
+import {type CategoryTotalProps} from '../hooks/useCycleStats';
 
 type CategoryBreakdownProps = {
   items: CategoryTotalProps[];
+  emptyLabel: string;
 };
 
-export const CategoryBreakdown = ({items}: CategoryBreakdownProps) => {
+export const CategoryBreakdown = ({items, emptyLabel}: CategoryBreakdownProps) => {
   const {t} = useTranslation();
 
   return (
@@ -18,7 +19,7 @@ export const CategoryBreakdown = ({items}: CategoryBreakdownProps) => {
       <Text className="font-satoshi-medium">{t('stats:categories.title')}</Text>
 
       {items.length === 0 ? (
-        <Text className="py-4 text-center text-secundary">{t('stats:categories.empty')}</Text>
+        <Text className="py-4 text-center text-secundary">{emptyLabel}</Text>
       ) : (
         <View className="gap-4">
           {items.map((item) => (

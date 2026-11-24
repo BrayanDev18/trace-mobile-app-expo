@@ -7,7 +7,7 @@ import {IconApps, IconChevronRight, IconClock} from '@tabler/icons-react-native'
 import {Text} from '@/components';
 import {getPaymentMethod} from '@/constants';
 import {useIconColors} from '@/hooks/useIconColors';
-import {formatCurrency, sizedLogo} from '@/utils';
+import {formatCurrency, shortDate, sizedLogo} from '@/utils';
 
 import type {SubscriptionProps} from '../types';
 
@@ -56,7 +56,7 @@ export const SubscriptionCard = memo(function SubscriptionCard({subscription, on
           <View className="flex-row items-center gap-1">
             <IconClock size={14} color={muted}/>
             <Text className="text-sm text-secundary">
-              {subscription.nextCharge}
+              {shortDate(new Date(subscription.nextCharge))}
             </Text>
           </View>
 

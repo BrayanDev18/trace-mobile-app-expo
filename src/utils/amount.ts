@@ -1,4 +1,6 @@
 export const appendAmountKey = (current: string, key: string): string => {
+  if (key.length > 1) return key.split('').reduce(appendAmountKey, current);
+
   if (key === '.') {
     if (current.includes('.')) return current;
     return current === '' ? '0.' : `${current}.`;

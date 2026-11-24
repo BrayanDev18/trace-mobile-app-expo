@@ -5,11 +5,11 @@ import {useTranslation} from 'react-i18next';
 import {Image} from 'expo-image';
 import {IconChevronRight} from '@tabler/icons-react-native';
 
-import {Group, Header, Row, Screen, Separator, SheetModal, Text,DetailHero,GroupAction} from '@/components';
+import {Group, Header, Row, Screen, Separator, SheetModal, Text,DetailBadge,DetailHero,GroupAction} from '@/components';
 import {getCategory, getPaymentMethod} from '@/constants';
 import {useIconColors} from '@/hooks/useIconColors';
 import {useMovementsStore} from '@/features/expenses';
-import {longDate, relativeDate,confirmDestructive} from '@/utils';
+import {longDate, relativeDate,confirmDestructive,sizedLogo} from '@/utils';
 
 export default function ExpenseDetailScreen() {
   const {t} = useTranslation();
@@ -29,6 +29,7 @@ export default function ExpenseDetailScreen() {
   const category = getCategory(movement.categoryId);
   const method = movement.methodId ? getPaymentMethod(movement.methodId) : undefined;
   const CategoryIcon = category.icon;
+  const platform = movement.platform;
   const receipts = movement.receiptUris ?? [];
 
   const deleteConfirm = () =>
@@ -47,6 +48,21 @@ export default function ExpenseDetailScreen() {
       <Header title={isIncome ? t('expenses:detail.titleIncome') : t('expenses:detail.titleExpense')} />
 
       <DetailHero
+        badge={
+          platform ? (
+            <View className="h-14 w-14 items-center justify-center rounded-xl">
+              <Image
+                source={{uri: sizedLogo(platform.logo, 48)}}
+                style={{width: 48, height: 48, borderRadius: 9}}
+                contentFit="contain"
+              />
+            </View>
+          ) : (
+            <DetailBadge tint={category.tint}>
+              <CategoryIcon size={25} color={category.tint} />
+            </DetailBadge>
+          )
+        }
         title={movement.reason || t(category.labelKey)}
         amount={movement.amount}
         prefix={isIncome ? '+' : '-'}

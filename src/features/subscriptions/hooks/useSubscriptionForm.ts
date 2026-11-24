@@ -2,10 +2,11 @@ import {useState} from 'react';
 import {router} from 'expo-router';
 
 import {useMovementsStore} from '@/features/expenses';
-import {haptic, shortDate} from '@/utils';
+import {haptic} from '@/utils';
 
 import {useSubscriptionsStore} from '../store';
 import type {BrandResultProps, SubscriptionProps} from '../types';
+import {advanceCharge} from '../utils';
 
 export const useSubscriptionForm = () => {
   const add = useSubscriptionsStore((s) => s.add);
@@ -29,17 +30,13 @@ export const useSubscriptionForm = () => {
       return;
     }
 
-    const next = new Date(date);
-    if (period === 'yearly') next.setFullYear(next.getFullYear() + 1);
-    else next.setMonth(next.getMonth() + 1);
-
     const subscription = add({
       name: brand.name,
       domain: brand.domain,
       logoUrl: brand.logo_url,
       price: Number(price),
       period,
-      nextCharge: shortDate(next),
+      nextCharge: advanceCharge(date, period).toISOString(),
       methodId,
     });
     addFirstCharge({

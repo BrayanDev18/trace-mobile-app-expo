@@ -9,10 +9,10 @@ import {useBudgetsStore} from '../store';
 export const useBudgetEditor = () => {
   const {t} = useTranslation();
   const budgets = useBudgetsStore((s) => s.items);
-  const upsert = useBudgetsStore((s) => s.upsert);
+  const updateBudget = useBudgetsStore((s) => s.update);
   const removeBudget = useBudgetsStore((s) => s.remove);
 
-  const [target, setTarget] = useState<'pick' | string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [raw, setRaw] = useState('');
 
   const {animatedStyle, onKey, erase, clear, shakeError} = useAmountInput({
@@ -20,36 +20,30 @@ export const useBudgetEditor = () => {
     onChange: setRaw,
   });
 
-  const editingId = target !== null && target !== 'pick' ? target : null;
-  const isExisting = editingId !== null && budgets.some((b) => b.categoryId === editingId);
+  const editing = editingId ? (budgets.find((budget) => budget.id === editingId) ?? null) : null;
 
-  const openPick = () => {
-    haptic.select();
-    setTarget('pick');
-  };
-
-  const openEdit = (categoryId: string) => {
-    const existing = budgets.find((b) => b.categoryId === categoryId);
-    setRaw(existing ? String(existing.cap) : '');
-    setTarget(categoryId);
+  const open = (id: string) => {
+    const budget = budgets.find((item) => item.id === id);
+    setRaw(budget ? String(budget.assigned) : '');
+    setEditingId(id);
   };
 
   const close = () => {
-    setTarget(null);
+    setEditingId(null);
     setRaw('');
   };
 
   const save = () => {
     if (!editingId) return;
-    const cap = Number(raw);
+    const assigned = Number(raw);
 
-    if (!(cap > 0)) {
+    if (!(assigned > 0)) {
       haptic.error();
       shakeError();
       return;
     }
 
-    upsert(editingId, cap);
+    updateBudget(editingId, {assigned});
     haptic.success();
     close();
   };
@@ -68,19 +62,5 @@ export const useBudgetEditor = () => {
     });
   };
 
-  return {
-    target,
-    editingId,
-    isExisting,
-    raw,
-    animatedStyle,
-    onKey,
-    erase,
-    clear,
-    openPick,
-    openEdit,
-    close,
-    save,
-    remove,
-  };
+  return {editing, raw, animatedStyle, onKey, erase, clear, open, close, save, remove};
 };
